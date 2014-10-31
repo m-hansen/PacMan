@@ -15,20 +15,41 @@ void Player::Initialize()
 	boundingRect.h = SIZE;
 
 	livesLeft = 3;
-	speed = 2.0f;
+	speed = 0.1f;
 	position.x = 20.0f;
 	position.y = 20.0f;
 }
 
 void Player::Update()
 {
+	// Update the position
+	switch (direction)
+	{
+		case Up:
+			position.y -= speed;
+			break;
+		case Down:
+			position.y += speed;
+			break;
+		case Left:
+			position.x -= speed;
+			break;
+		case Right:
+			position.x += speed;
+			break;
+	}
+
+	// Update the bounding rectangle
 	boundingRect.x = position.x;
 	boundingRect.y = position.y;
-	
-	position.x += 0.1;
 }
 
 void Player::Render(SDL_Renderer* renderer)
 {
 	SDL_RenderCopy(renderer, TextureManager::GetTexture("pacman"), NULL, &boundingRect);
+}
+
+void Player::SetDirection(DirectionEnum dirEnum)
+{
+	direction = dirEnum;
 }

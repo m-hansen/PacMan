@@ -94,6 +94,25 @@ void Game::Run()
 			{
 				isRunning = false;
 			}
+			// User presses a key
+			else if (e.type == SDL_KEYDOWN)
+			{
+				switch (e.key.keysym.sym)
+				{
+					case SDLK_UP:
+						player->SetDirection(Up);
+						break;
+					case SDLK_DOWN:
+						player->SetDirection(Down);
+						break;
+					case SDLK_LEFT:
+						player->SetDirection(Left);
+						break;
+					case SDLK_RIGHT:
+						player->SetDirection(Right);
+						break;
+				}
+			}
 		}
 
 		Update();

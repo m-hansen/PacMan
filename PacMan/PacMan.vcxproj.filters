@@ -19,6 +19,9 @@
     <Filter Include="Source Files\Framework">
       <UniqueIdentifier>{09a69655-1ffd-4368-9dab-0afe4e9c288a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Enumerations">
+      <UniqueIdentifier>{68e7b9c3-f3bf-4e1f-b13b-8ba8ed819455}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -67,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionEnum.h">
+      <Filter>Header Files\Enumerations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

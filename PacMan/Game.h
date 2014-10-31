@@ -4,6 +4,7 @@
 #include "TextureManager.h"
 #include "TileMap.h"
 #include "Player.h"
+#include "DirectionEnum.h"
 
 enum GameStateEnum
 {

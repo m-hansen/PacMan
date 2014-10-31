@@ -94,6 +94,7 @@
     <ClCompile Include="TileMap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DirectionEnum.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="MovingEntity.h" />
     <ClInclude Include="Player.h" />
