@@ -39,12 +39,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\dev\SDL2_image-2.0.0\include;E:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
+    <IncludePath>E:\dev\boost_1_56_0;E:\dev\SDL2_image-2.0.0\include;E:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\dev\SDL2_image-2.0.0\lib\x86;E:\dev\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>E:\dev\SDL2_image-2.0.0\include;E:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
+    <IncludePath>E:\dev\boost_1_56_0;E:\dev\SDL2_image-2.0.0\include;E:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\dev\SDL2_image-2.0.0\lib\x86;E:\dev\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

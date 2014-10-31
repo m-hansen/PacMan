@@ -1,27 +1,15 @@
 #include "TextureManager.h"
 
-TextureManager::TextureManager()
-{
-}
-
-TextureManager::~TextureManager()
-{
-	for (std::map<std::string,SDL_Texture*>::iterator iter = textureMap.begin(); iter != textureMap.end(); ++iter)
-	{
-		if (iter->second != NULL) 
-		{
-			// Destroy each texture in the map
-			SDL_DestroyTexture(iter->second);
-		}
-	}
-}
+std::map<std::string, SDL_Texture*> TextureManager::textureMap;
 
 bool TextureManager::LoadTexture(SDL_Renderer* renderer, std::string referenceName, std::string location)
 {
 	SDL_Surface* surface = NULL;
 
+	
 	if (location.substr(location.length()-3, location.length()) == "bmp")
 	{
+		// Load bitmaps
 		surface = SDL_LoadBMP(location.c_str());
 		if (!surface)
 		{
@@ -31,6 +19,7 @@ bool TextureManager::LoadTexture(SDL_Renderer* renderer, std::string referenceNa
 	}
 	else
 	{
+		// Load other image types
 		surface = IMG_Load(location.c_str());
 		if (!surface)
 		{
@@ -48,8 +37,28 @@ bool TextureManager::LoadTexture(SDL_Renderer* renderer, std::string referenceNa
 	return true;
 }
 
+void TextureManager::UnloadTexture(std::string referenceName)
+{
+	// Free the memory for an individual resource
+	std::map<std::string, SDL_Texture*>::iterator iter = textureMap.find(referenceName);
+	SDL_DestroyTexture(iter->second);
+	textureMap.erase(iter);
+}
+
+void TextureManager::ClearAll()
+{
+	for (std::map<std::string,SDL_Texture*>::iterator iter = textureMap.begin(); iter != textureMap.end(); ++iter)
+	{
+		if (iter->second != NULL) 
+		{
+			// Destroy each texture in the map
+			SDL_DestroyTexture(iter->second);
+		}
+	}
+	textureMap.clear();
+}
+
 SDL_Texture* TextureManager::GetTexture(std::string key)
 {
 	return textureMap.find(key)->second;
 }
-

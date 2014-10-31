@@ -2,18 +2,17 @@
 
 const static int TILE_SIZE = 8;
 
-Tile::Tile(int x, int y, SDL_Texture* texture)
+Tile::Tile(int x, int y)
 {
 	position.x = x;
 	position.y = y;
-	tileTexture = texture;
+	
 	Initialize();
 }
 
-Tile::Tile(Vector2 pos, SDL_Texture* texture)
+Tile::Tile(Vector2 pos)
 {
 	position = pos;
-	tileTexture = texture;
 	Initialize();
 }
 
@@ -23,6 +22,10 @@ Tile::~Tile()
 
 void Tile::Initialize()
 {
+	// Get the texture
+	tileTexture = TextureManager::GetTexture("tile");
+
+	// Set the bounds for a tile
 	int offset = (int)(TILE_SIZE / 2);
 	boundingRect.x = position.x - offset;
 	boundingRect.y = position.y - offset;
@@ -32,9 +35,11 @@ void Tile::Initialize()
 
 void Tile::Render(SDL_Renderer* renderer)
 {
-	SDL_Surface* sur = IMG_Load("tile.png");
-	SDL_Texture* text = SDL_CreateTextureFromSurface(renderer, sur);
-	SDL_RenderCopy(renderer, text, NULL, &boundingRect);
-	//SDL_RenderDrawRect(renderer, boundingRect);
+	SDL_RenderCopy(renderer, tileTexture, NULL, &boundingRect);
+}
+
+Vector2 Tile::GetPosition()
+{
+	return position;
 }
 

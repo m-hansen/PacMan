@@ -28,7 +28,6 @@ private:
 	SDL_Surface* screenSurface;
 	SDL_Renderer* renderer;
 	SDL_Event e;
-	TextureManager textureManager;
 	bool isRunning;
 	bool isDebugging;
 	TileMap* tileMap;

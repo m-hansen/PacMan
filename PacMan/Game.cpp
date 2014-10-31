@@ -1,7 +1,7 @@
 #include "Game.h"
 
-const int SCREEN_WIDTH = 448;
-const int SCREEN_HEIGHT = 576;
+const int SCREEN_WIDTH = 224;
+const int SCREEN_HEIGHT = 288;
 
 SDL_Rect pacmanSprite[4];
 
@@ -54,8 +54,8 @@ bool Game::Initialize()
 
 void Game::LoadContent()
 {
-	textureManager.LoadTexture(renderer, "tile", "tile.png");
-	textureManager.LoadTexture(renderer, "pacman", "pac-man.png");
+	TextureManager::LoadTexture(renderer, "tile", "tile.png");
+	TextureManager::LoadTexture(renderer, "pacman", "pac-man.png");
 
 	//if (textureManager.LoadTexture(renderer, "sprite sheet", "pac-man-sprite-sheet.png"))
 	//{
@@ -75,7 +75,7 @@ void Game::LoadContent()
 void Game::Run()
 {
 	// Allocate the tile map on the heap
-	tileMap = new TileMap(&textureManager);
+	tileMap = new TileMap();
 	tileMap->GenerateMap();
 
 	while (isRunning)
@@ -144,7 +144,7 @@ void Game::Render()
 	}*/
 
     //Render to screen
-	SDL_RenderCopy(renderer, textureManager.GetTexture("pacman"), NULL, NULL);
+	SDL_RenderCopy(renderer, TextureManager::GetTexture("pacman"), NULL, NULL);
 
 	//SDL_RenderCopy(renderer, textureManager.GetTexture("sprite sheet"), NULL, NULL);
 

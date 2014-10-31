@@ -1,7 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include "TextureManager.h"
-#include "Sprite.h"
+//#include "Sprite.h"
 
 enum TileTypeEnum
 {
@@ -20,12 +20,14 @@ struct Vector2
 class Tile
 {
 public:
-	Tile(int x, int y, SDL_Texture* texture);
-	Tile(Vector2 pos, SDL_Texture* texture);
+	Tile(int x, int y);
+	Tile(Vector2 pos);
 	~Tile();
 	void Tile::Initialize();
 	void Render(SDL_Renderer* renderer);
+	Vector2 GetPosition();
 private:
+	friend class TextureManager;
 	int tileSize;
 	Vector2 position;
 	SDL_Rect boundingRect;

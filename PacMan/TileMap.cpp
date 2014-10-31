@@ -1,8 +1,7 @@
 #include "TileMap.h"
 
-TileMap::TileMap(TextureManager* manager)
+TileMap::TileMap()
 {
-	textureManager = manager;
 }
 
 TileMap::~TileMap()
@@ -17,8 +16,12 @@ void TileMap::GenerateMap()
 	{
 		for (int j = 0; j < MAP_WIDTH; j++)
 		{
-			Tile tile(j, i, textureManager->GetTexture("tile"));
-			tileMap[j][i] = &tile;
+			// Allocate on the heap so we can access throughout the life of our program
+			tileMap[j][i] = new Tile(j * TILE_SIZE, i * TILE_SIZE);
+
+			// Write out the position of each tile as it's being created
+			printf("New tile position: (%d,%d)\n", tileMap[j][i]->GetPosition().x, 
+				tileMap[j][i]->GetPosition().y);
 		}
 	}
 }
@@ -29,6 +32,7 @@ void TileMap::Render(SDL_Renderer* renderer)
 	{
 		for (int j = 0; j < MAP_WIDTH; j++)
 		{
+			// FIX-ME 0xCCCCCC lost ref to texture :(
 			tileMap[j][i]->Render(renderer);
 		}
 	}
@@ -36,5 +40,6 @@ void TileMap::Render(SDL_Renderer* renderer)
 
 Tile** TileMap::GetTileMap()
 {
-	return NULL;//tileMap;
+	printf("Hey, you! Implement the Tile** TileMap::GetTileMap() function before calling it!\n");
+	return NULL;
 }
