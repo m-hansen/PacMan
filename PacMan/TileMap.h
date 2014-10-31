@@ -11,6 +11,7 @@ public:
 	TileMap();
 	~TileMap();
 	void GenerateMap();
+	void DestroyMap();
 	void Render(SDL_Renderer* renderer);
 	Tile** GetTileMap();
 private:

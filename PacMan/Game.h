@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include "TextureManager.h"
 #include "TileMap.h"
+#include "Player.h"
 
 enum GameStateEnum
 {
@@ -31,4 +32,5 @@ private:
 	bool isRunning;
 	bool isDebugging;
 	TileMap* tileMap;
+	Player* player;
 };

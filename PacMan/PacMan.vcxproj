@@ -86,6 +86,8 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MovingEntity.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Tile.cpp" />
@@ -93,6 +95,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="MovingEntity.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Tile.h" />

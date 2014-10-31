@@ -27,7 +27,6 @@ public:
 	void Render(SDL_Renderer* renderer);
 	Vector2 GetPosition();
 private:
-	friend class TextureManager;
 	int tileSize;
 	Vector2 position;
 	SDL_Rect boundingRect;

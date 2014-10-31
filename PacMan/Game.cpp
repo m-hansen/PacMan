@@ -15,6 +15,9 @@ Game::Game()
 
 Game::~Game()
 {
+	delete (player);
+	player = NULL;
+
 	delete (tileMap);
 	tileMap = NULL;
 }
@@ -78,6 +81,9 @@ void Game::Run()
 	tileMap = new TileMap();
 	tileMap->GenerateMap();
 
+	player = new Player();
+	player->Initialize();
+
 	while (isRunning)
 	{
 		// Handle events on queue
@@ -98,6 +104,8 @@ void Game::Run()
 
 void Game::Update()
 {
+	// Update the player
+	player->Update();
 }
 
 void Game::Render()
@@ -106,26 +114,28 @@ void Game::Render()
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white
 	SDL_RenderClear(renderer);
 
-	if (isDebugging) 
-	{
-		int tileSize = 16;
-		SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
-		for (int i = 0; i < SCREEN_HEIGHT; i += tileSize)
-		{
-			for (int j = 0; j < SCREEN_WIDTH; j += tileSize)
-			{
-				// Draw vertical lines
-				SDL_RenderDrawLine(renderer, j, i, j, SCREEN_HEIGHT);
+	//if (isDebugging) 
+	//{
+	//	int tileSize = 16;
+	//	SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
+	//	for (int i = 0; i < SCREEN_HEIGHT; i += tileSize)
+	//	{
+	//		for (int j = 0; j < SCREEN_WIDTH; j += tileSize)
+	//		{
+	//			// Draw vertical lines
+	//			SDL_RenderDrawLine(renderer, j, i, j, SCREEN_HEIGHT);
 
-				// Draw horizontal lines
-				SDL_RenderDrawLine(renderer, j, i, SCREEN_WIDTH, i);
-			}
-		}
-		
-	}
+	//			// Draw horizontal lines
+	//			SDL_RenderDrawLine(renderer, j, i, SCREEN_WIDTH, i);
+	//		}
+	//	}
+	//	
+	//}
 
 	// Render the tile map
 	tileMap->Render(renderer);
+
+	player->Render(renderer);
 
 	//Set rendering space and render to screen
     /*SDL_Rect renderQuad = { x, y, mWidth, mHeight };*/
@@ -144,7 +154,7 @@ void Game::Render()
 	}*/
 
     //Render to screen
-	SDL_RenderCopy(renderer, TextureManager::GetTexture("pacman"), NULL, NULL);
+	//SDL_RenderCopy(renderer, TextureManager::GetTexture("pacman"), NULL, NULL);
 
 	//SDL_RenderCopy(renderer, textureManager.GetTexture("sprite sheet"), NULL, NULL);
 
