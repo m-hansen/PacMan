@@ -38,8 +38,22 @@ void Tile::Render(SDL_Renderer* renderer)
 	SDL_RenderCopy(renderer, tileTexture, NULL, &boundingRect);
 }
 
+TileTypeEnum* Tile::GetContents()
+{
+	return &contents;
+}
+
+void Tile::SetContents(TileTypeEnum type)
+{
+	contents = type;
+}
+
+void Tile::SetTexture(SDL_Texture* texture)
+{
+	tileTexture = texture;
+}
+
 Vector2 Tile::GetPosition()
 {
 	return position;
 }
-

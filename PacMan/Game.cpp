@@ -59,6 +59,7 @@ void Game::LoadContent()
 {
 	TextureManager::LoadTexture(renderer, "tile", "tile.png");
 	TextureManager::LoadTexture(renderer, "pacman", "pac-man.png");
+	TextureManager::LoadTexture(renderer, "wall", "wall.png");
 
 	//if (textureManager.LoadTexture(renderer, "sprite sheet", "pac-man-sprite-sheet.png"))
 	//{
@@ -81,23 +82,26 @@ void Game::Run()
 	tileMap = new TileMap();
 	tileMap->GenerateMap();
 
+	// Load level test
+	tileMap->LoadLevel("pac-man-board.txt");
+
 	player = new Player();
 	player->Initialize();
-
+	
 	while (isRunning)
 	{
 		// Handle events on queue
-		while (SDL_PollEvent(&e) != 0)
+		while (SDL_PollEvent(&currentEvent) != 0)
 		{
 			// User requests quit
-			if (e.type == SDL_QUIT)
+			if (currentEvent.type == SDL_QUIT)
 			{
 				isRunning = false;
 			}
 			// User presses a key
-			else if (e.type == SDL_KEYDOWN)
+			else if (currentEvent.type == SDL_KEYDOWN)
 			{
-				switch (e.key.keysym.sym)
+				switch (currentEvent.key.keysym.sym)
 				{
 					case SDLK_UP:
 						player->SetDirection(Up);
@@ -113,6 +117,24 @@ void Game::Run()
 						break;
 				}
 			}
+			// User clicks the mouse
+			else if (currentEvent.type == SDL_MOUSEBUTTONDOWN)
+			{
+				switch (currentEvent.button.clicks)
+				{
+					case SDL_BUTTON_LEFT:
+						printf("Left mouse button clicked at\tx=%d\ty=%d\n", currentEvent.button.x, currentEvent.button.y);
+						//Wall* a_wall = NULL;
+						//w = new Wall(currentEvent.type.x, currentEvent.type.y);
+						break;
+					case SDL_BUTTON_RIGHT:
+						break;
+					case SDL_BUTTON_MIDDLE:
+						break;
+				}
+			}
+
+			previousEvent = currentEvent;
 		}
 
 		Update();

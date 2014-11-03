@@ -22,6 +22,9 @@
     <Filter Include="Header Files\Enumerations">
       <UniqueIdentifier>{68e7b9c3-f3bf-4e1f-b13b-8ba8ed819455}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\LevelData">
+      <UniqueIdentifier>{da2d7109-99c3-4207-9726-c76e5c31ca31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -46,6 +49,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MovingEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,6 +80,15 @@
     <ClInclude Include="DirectionEnum.h">
       <Filter>Header Files\Enumerations</Filter>
     </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TileTypeEnum.h">
+      <Filter>Header Files\Enumerations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="pacman.bmp">
@@ -90,6 +105,12 @@
     </None>
     <None Include="tile.png">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="wall.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pac-man-board.txt">
+      <Filter>Resource Files\LevelData</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -1,10 +1,12 @@
 #pragma once
 #include <stdio.h>
+#include <string>
 #include <SDL.h>
 #include "TextureManager.h"
 #include "TileMap.h"
 #include "Player.h"
 #include "DirectionEnum.h"
+#include "Wall.h"
 
 enum GameStateEnum
 {
@@ -29,7 +31,8 @@ private:
 	SDL_Window* window;
 	SDL_Surface* screenSurface;
 	SDL_Renderer* renderer;
-	SDL_Event e;
+	SDL_Event previousEvent;
+	SDL_Event currentEvent;
 	bool isRunning;
 	bool isDebugging;
 	TileMap* tileMap;

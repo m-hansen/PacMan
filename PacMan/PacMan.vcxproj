@@ -92,6 +92,7 @@
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectionEnum.h" />
@@ -102,13 +103,18 @@
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileMap.h" />
+    <ClInclude Include="TileTypeEnum.h" />
+    <ClInclude Include="Utils.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="large_pellet.bmp" />
+    <None Include="pac-man-board.txt" />
     <None Include="pac-man-sprite-sheet.png" />
     <None Include="pac-man.png" />
     <None Include="pacman.bmp" />
     <None Include="tile.png" />
+    <None Include="wall.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
