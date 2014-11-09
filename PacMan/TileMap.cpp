@@ -20,7 +20,7 @@ void TileMap::LoadLevel(std::string levelData)
 	int lineNumber = 0;
 	
 	// Read each line in the level data file
-	while (getline(inputStream, line) != NULL)
+	while (getline(inputStream, line))
 	{
 		// Get each tile in a line
 		for (int i = 0; i < line.length(); i++)
