@@ -16,6 +16,7 @@ public:
 	void SetContents(TileTypeEnum type);
 	void SetTexture(SDL_Texture* texture);
 	Vector2 GetPosition();
+	SDL_Rect* GetBoundingRect();
 private:
 	int tileSize;
 	Vector2 position;

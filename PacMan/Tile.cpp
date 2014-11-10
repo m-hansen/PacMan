@@ -57,3 +57,8 @@ Vector2 Tile::GetPosition()
 {
 	return position;
 }
+
+SDL_Rect* Tile::GetBoundingRect()
+{
+	return &boundingRect;
+}

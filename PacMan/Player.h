@@ -13,6 +13,7 @@ public:
 	void Update();
 	void Render(SDL_Renderer* renderer);
 	void SetDirection(DirectionEnum dirEnum);
+	SDL_Rect* GetBoundingRect();
 private:
 	int livesLeft;
 	SDL_Rect boundingRect;

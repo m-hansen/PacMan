@@ -26,8 +26,8 @@ void TileMap::LoadLevel(std::string levelData)
 		for (int i = 0; i < line.length(); i++)
 		{
 			// Create on the heap
-			tileMap[i][lineNumber] = new Tile(i * TILE_SIZE, lineNumber * TILE_SIZE);
-			Tile* tile = tileMap[i][lineNumber];
+			map[i][lineNumber] = new Tile(i * TILE_SIZE, lineNumber * TILE_SIZE);
+			Tile* tile = map[i][lineNumber];
 
 			// string::at returns a char so we will subtract the ascii offset value
 			// and store it as an integer
@@ -50,6 +50,7 @@ void TileMap::LoadLevel(std::string levelData)
 				case TileTypeEnum::Wall:
 					tile->SetContents(TileTypeEnum::Wall);
 					tile->SetTexture(TextureManager::GetTexture("wall"));
+					wallList.push_back(tile);
 					break;
 			}
 
@@ -73,11 +74,11 @@ void TileMap::GenerateMap()
 		for (int j = 0; j < MAP_WIDTH; j++)
 		{
 			// Allocate on the heap so we can access throughout the life of our program
-			tileMap[j][i] = new Tile(OFFSET + j * TILE_SIZE, OFFSET + i * TILE_SIZE);
+			map[j][i] = new Tile(OFFSET + j * TILE_SIZE, OFFSET + i * TILE_SIZE);
 
 			// Write out the position of each tile as it's being created
-			printf("New tile position: (%d,%d)\n", tileMap[j][i]->GetPosition().x, 
-				tileMap[j][i]->GetPosition().y);
+			printf("New tile position: (%d,%d)\n", map[j][i]->GetPosition().x, 
+				map[j][i]->GetPosition().y);
 		}
 	}
 }
@@ -88,7 +89,7 @@ void TileMap::DestroyMap()
 	{
 		for (int j = 0; j < MAP_WIDTH; j++)
 		{
-			delete (tileMap[j][i]);
+			delete (map[j][i]);
 		}
 	}
 }
@@ -99,13 +100,12 @@ void TileMap::Render(SDL_Renderer* renderer)
 	{
 		for (int j = 0; j < MAP_WIDTH; j++)
 		{
-			tileMap[j][i]->Render(renderer);
+			map[j][i]->Render(renderer);
 		}
 	}
 }
 
-Tile** TileMap::GetTileMap()
+std::vector<Tile*> TileMap::GetWalls()
 {
-	printf("Hey, you! Implement the Tile** TileMap::GetTileMap() function before calling it!\n");
-	return NULL;
+	return wallList;
 }

@@ -53,3 +53,8 @@ void Player::SetDirection(DirectionEnum dirEnum)
 {
 	direction = dirEnum;
 }
+
+SDL_Rect* Player::GetBoundingRect()
+{
+	return &boundingRect;
+}

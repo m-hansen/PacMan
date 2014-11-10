@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #include "Tile.h"
 
 const int MAP_WIDTH = 28;
@@ -17,9 +18,10 @@ public:
 	void GenerateMap();
 	void DestroyMap();
 	void Render(SDL_Renderer* renderer);
-	Tile** GetTileMap();
+	std::vector<Tile*> GetWalls();
 private:
 	float mapWidth;
 	float mapHeight;
-	Tile* tileMap[MAP_WIDTH][MAP_HEIGHT];
+	Tile* map[MAP_WIDTH][MAP_HEIGHT];
+	std::vector<Tile*> wallList;
 };

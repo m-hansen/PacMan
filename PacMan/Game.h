@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <string>
+#include <vector>
 #include <SDL.h>
 #include "TextureManager.h"
 #include "TileMap.h"
@@ -27,6 +28,7 @@ public:
 	void Update();
 	void Render();
 	void Run();
+	bool CollisionChecker(SDL_Rect* a, SDL_Rect* b);
 private:
 	SDL_Window* window;
 	SDL_Surface* screenSurface;
