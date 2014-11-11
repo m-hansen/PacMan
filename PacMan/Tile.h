@@ -17,7 +17,9 @@ public:
 	void SetTexture(SDL_Texture* texture);
 	Vector2 GetPosition();
 	SDL_Rect* GetBoundingRect();
+	int GetId();
 private:
+	int uniqueId;
 	int tileSize;
 	Vector2 position;
 	SDL_Rect boundingRect;

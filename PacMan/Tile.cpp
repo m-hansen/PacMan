@@ -1,6 +1,7 @@
 #include "Tile.h"
 
 const static int TILE_SIZE = 8;
+static int nextId = -1;
 
 Tile::Tile(int x, int y)
 {
@@ -22,6 +23,10 @@ Tile::~Tile()
 
 void Tile::Initialize()
 {
+	// Generate a unique ID
+	nextId++;
+	uniqueId = nextId;
+
 	// Get the texture
 	tileTexture = TextureManager::GetTexture("tile");
 
@@ -61,4 +66,9 @@ Vector2 Tile::GetPosition()
 SDL_Rect* Tile::GetBoundingRect()
 {
 	return &boundingRect;
+}
+
+int Tile::GetId()
+{
+	return uniqueId;
 }

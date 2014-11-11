@@ -118,6 +118,9 @@
     <None Include="tile.png" />
     <None Include="wall.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="pellet.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -113,4 +113,9 @@
       <Filter>Resource Files\LevelData</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="pellet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
