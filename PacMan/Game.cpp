@@ -2,13 +2,13 @@
 
 const int SCREEN_WIDTH = 224;
 const int SCREEN_HEIGHT = 288;
-
-SDL_Rect pacmanSprite[4];
+const int TILE_SIZE = 8;
 
 Game::Game()
 {
 	window = NULL;
 	screenSurface = NULL;
+	level = NULL;
 	isRunning = true;
 	isDebugging = false;
 }
@@ -18,8 +18,11 @@ Game::~Game()
 	delete (player);
 	player = NULL;
 
-	delete (tileMap);
-	tileMap = NULL;
+	delete (level);
+	level = NULL;
+
+	//delete (tileMap);
+	//tileMap = NULL;
 }
 
 bool Game::Initialize()
@@ -60,30 +63,18 @@ void Game::LoadContent()
 	TextureManager::LoadTexture(renderer, "tile", "tile.png");
 	TextureManager::LoadTexture(renderer, "pacman", "pac-man.png");
 	TextureManager::LoadTexture(renderer, "wall", "wall.png");
-
-	//if (textureManager.LoadTexture(renderer, "sprite sheet", "pac-man-sprite-sheet.png"))
-	//{
-	//	// Split apart the sprite sheet
-	//	int size = 15;
-	//	for (int i = 0; i < 4; i++)
-	//	{
-	//		pacmanSprite[i].x = size * i;
-	//		pacmanSprite[i].y = 0;
-	//		pacmanSprite[i].w = size;
-	//		pacmanSprite[i].h = size;
-	//	}
-
-	//}
 }
 
 void Game::Run()
 {
 	// Allocate the tile map on the heap
-	tileMap = new TileMap();
-	tileMap->GenerateMap();
+	//tileMap = new TileMap();
+	//tileMap->GenerateMap();
 
 	// Load level test
-	tileMap->LoadLevel("pac-man-board.txt");
+	//tileMap->LoadLevel("pac-man-board.txt");
+	level = new Graph();
+	level->GenerateGraph(SCREEN_WIDTH / TILE_SIZE, SCREEN_HEIGHT / TILE_SIZE);
 
 	player = new Player();
 	player->Initialize();
@@ -115,6 +106,14 @@ void Game::Run()
 					case SDLK_RIGHT:
 						player->SetDirection(Right);
 						break;
+					case SDLK_F3:
+						// Toggle debugging information
+						isDebugging = !isDebugging;
+						break;
+					case SDLK_ESCAPE:
+						// User requests quit
+						isRunning = false;
+						break;
 				}
 			}
 			// User clicks the mouse
@@ -124,8 +123,6 @@ void Game::Run()
 				{
 					case SDL_BUTTON_LEFT:
 						printf("Left mouse button clicked at\tx=%d\ty=%d\n", currentEvent.button.x, currentEvent.button.y);
-						//Wall* a_wall = NULL;
-						//w = new Wall(currentEvent.type.x, currentEvent.type.y);
 						break;
 					case SDL_BUTTON_RIGHT:
 						break;
@@ -140,15 +137,15 @@ void Game::Run()
 		Update();
 
 		// Check for collisions
-		std::vector<Tile*> walls = tileMap->GetWalls();
-		for (std::vector<Tile*>::iterator iter = walls.begin(); iter != walls.end(); ++iter)
-		{
-			// Check if the player collides with a wall
-			if (CollisionChecker(player->GetBoundingRect(), (*iter)->GetBoundingRect()))
-			{
-				printf("A collision has occured between the player and a wall!\n");
-			}
-		}
+		//std::vector<Tile*> walls = tileMap->GetWalls();
+		//for (std::vector<Tile*>::iterator iter = walls.begin(); iter != walls.end(); ++iter)
+		//{
+		//	// Check if the player collides with a wall
+		//	if (CollisionChecker(player->GetBoundingRect(), (*iter)->GetBoundingRect()))
+		//	{
+		//		printf("A collision has occured between the player and a wall!\n");
+		//	}
+		//}
 
 		Render();
 	}
@@ -156,59 +153,43 @@ void Game::Run()
 
 void Game::Update()
 {
+	// Calculate delta time
+	Uint32 currentTime = SDL_GetTicks();
+	if (currentTime > previousTime)
+	{
+		deltaT = currentTime - previousTime;
+		previousTime = currentTime;
+	}
+
 	// Update the player
-	player->Update();
+	player->Update(deltaT);
 }
 
 void Game::Render()
 {
 	// Clear color
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
 	SDL_RenderClear(renderer);
 
-	//if (isDebugging) 
-	//{
-	//	int tileSize = 16;
-	//	SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
-	//	for (int i = 0; i < SCREEN_HEIGHT; i += tileSize)
-	//	{
-	//		for (int j = 0; j < SCREEN_WIDTH; j += tileSize)
-	//		{
-	//			// Draw vertical lines
-	//			SDL_RenderDrawLine(renderer, j, i, j, SCREEN_HEIGHT);
-
-	//			// Draw horizontal lines
-	//			SDL_RenderDrawLine(renderer, j, i, SCREEN_WIDTH, i);
-	//		}
-	//	}
-	//	
-	//}
-
 	// Render the tile map
-	tileMap->Render(renderer);
+	//tileMap->Render(renderer);
+
+	// Render each node in the level
+	if (isDebugging)
+	{
+		// Iterate over each node in the level graph
+		for (std::vector<Node*>::iterator iter = level->GetAllNodes()->begin(); iter != level->GetAllNodes()->end(); ++iter)
+		{
+			Vector2f loc = (*iter)->GetLocation();
+
+			// Temporarily set the rendering color to white for the nodes
+			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white
+			SDL_RenderDrawPoint(renderer, loc.x * TILE_SIZE, loc.y * TILE_SIZE);
+			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
+		}
+	}
 
 	player->Render(renderer);
-
-	//Set rendering space and render to screen
-    /*SDL_Rect renderQuad = { x, y, mWidth, mHeight };*/
-
-    //Set clip rendering dimensions
-    /*if( clip != NULL )
-    {
-        renderQuad.w = clip->w;
-        renderQuad.h = clip->h;
-    }*/
-
-	/*SDL_Texture* pacmanTexture = textureManager.GetTexture("sprite sheet");
-	for (int i = 0; i < 4; i++)
-	{
-		pacmanTexture.render(0, 0, &pacmanSprite[i]);
-	}*/
-
-    //Render to screen
-	//SDL_RenderCopy(renderer, TextureManager::GetTexture("pacman"), NULL, NULL);
-
-	//SDL_RenderCopy(renderer, textureManager.GetTexture("sprite sheet"), NULL, NULL);
 
 	// Update the screen
     SDL_RenderPresent(renderer);

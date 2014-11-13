@@ -10,7 +10,7 @@ public:
 	Player();
 	~Player();
 	void Initialize();
-	void Update();
+	void Update(Uint32 deltaT);
 	void Render(SDL_Renderer* renderer);
 	void SetDirection(DirectionEnum dirEnum);
 	SDL_Rect* GetBoundingRect();

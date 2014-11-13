@@ -25,6 +25,12 @@
     <Filter Include="Resource Files\LevelData">
       <UniqueIdentifier>{da2d7109-99c3-4207-9726-c76e5c31ca31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graph">
+      <UniqueIdentifier>{7698977c-1a98-43a9-91d6-252aa4a9dc0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graph">
+      <UniqueIdentifier>{45a32f7d-a336-459c-a24a-c03a56f34ad3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -52,6 +58,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Wall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graph.cpp">
+      <Filter>Source Files\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Source Files\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Edge.cpp">
+      <Filter>Source Files\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -88,6 +106,18 @@
     </ClInclude>
     <ClInclude Include="TileTypeEnum.h">
       <Filter>Header Files\Enumerations</Filter>
+    </ClInclude>
+    <ClInclude Include="Graph.h">
+      <Filter>Header Files\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Header Files\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Edge.h">
+      <Filter>Header Files\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "DirectionEnum.h"
 #include "Wall.h"
+#include "Graph.h"
 
 enum GameStateEnum
 {
@@ -39,4 +40,7 @@ private:
 	bool isDebugging;
 	TileMap* tileMap;
 	Player* player;
+	Graph* level;
+	Uint32 deltaT = 0;
+	Uint32 previousTime = 0;
 };

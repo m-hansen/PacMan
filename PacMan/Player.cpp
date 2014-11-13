@@ -20,22 +20,22 @@ void Player::Initialize()
 	position.y = 20.0f;
 }
 
-void Player::Update()
+void Player::Update(Uint32 deltaT)
 {
 	// Update the position
 	switch (direction)
 	{
 		case Up:
-			position.y -= speed;
+			position.y -= speed * deltaT;
 			break;
 		case Down:
-			position.y += speed;
+			position.y += speed * deltaT;
 			break;
 		case Left:
-			position.x -= speed;
+			position.x -= speed * deltaT;
 			break;
 		case Right:
-			position.x += speed;
+			position.x += speed * deltaT;
 			break;
 	}
 

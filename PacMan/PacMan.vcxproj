@@ -86,9 +86,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Edge.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MovingEntity.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -98,8 +102,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectionEnum.h" />
+    <ClInclude Include="Edge.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="LevelManager.h" />
     <ClInclude Include="MovingEntity.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureManager.h" />
