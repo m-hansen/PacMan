@@ -1,6 +1,6 @@
 #pragma once
 
-enum TileTypeEnum
+enum NodeType
 {
 	Wall = 0,
 	Pellet = 1,

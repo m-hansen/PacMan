@@ -3,6 +3,7 @@
 #include "TextureManager.h"
 #include "MovingEntity.h"
 #include "DirectionEnum.h"
+#include "Node.h"
 
 class Player : public MovingEntity
 {
@@ -16,6 +17,8 @@ public:
 	SDL_Rect* GetBoundingRect();
 private:
 	int livesLeft;
+	SDL_Rect spriteRect;
 	SDL_Rect boundingRect;
 	DirectionEnum direction;
+	Node* nodeLocation;
 };

@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Consumable.cpp" />
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graph.cpp" />
@@ -101,6 +102,8 @@
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Consumable.h" />
+    <ClInclude Include="ConsumableType.h" />
     <ClInclude Include="DirectionEnum.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Game.h" />
@@ -113,13 +116,13 @@
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileMap.h" />
-    <ClInclude Include="TileTypeEnum.h" />
+    <ClInclude Include="NodeType.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="large_pellet.bmp" />
-    <None Include="pac-man-board.txt" />
+    <None Include="Level1.txt" />
     <None Include="pac-man-sprite-sheet.png" />
     <None Include="pac-man.png" />
     <None Include="pacman.bmp" />

@@ -10,7 +10,7 @@ Game::Game()
 	screenSurface = NULL;
 	level = NULL;
 	isRunning = true;
-	isDebugging = false;
+	isDebugging = true;
 }
 
 Game::~Game()
@@ -63,10 +63,12 @@ void Game::LoadContent()
 	TextureManager::LoadTexture(renderer, "tile", "tile.png");
 	TextureManager::LoadTexture(renderer, "pacman", "pac-man.png");
 	TextureManager::LoadTexture(renderer, "wall", "wall.png");
+	TextureManager::LoadTexture(renderer, "pellet", "pellet.png");
 }
 
 void Game::Run()
 {
+	levelManager.LoadLevel("Level1.txt");
 	// Allocate the tile map on the heap
 	//tileMap = new TileMap();
 	//tileMap->GenerateMap();
@@ -147,6 +149,17 @@ void Game::Run()
 		//	}
 		//}
 
+		// Check which node the player occupies
+		for (std::vector<Node*>::iterator iter = levelManager.legalPlayingNodes.begin(); 
+			iter != levelManager.legalPlayingNodes.end(); ++iter)
+		{
+			// Check if player is insid a node
+			if (CollisionChecker(player->GetBoundingRect(), (*iter)->GetBoundingRect()))
+			{
+				printf("Player is in node ID : %d\n", (*iter)->GetNodeId());
+			}
+		}
+
 		Render();
 	}
 }
@@ -159,6 +172,15 @@ void Game::Update()
 	{
 		deltaT = currentTime - previousTime;
 		previousTime = currentTime;
+	}
+
+	// Check for collisions between player and consumable
+	for (std::vector<Consumable>::iterator iter = consumableList.begin(); iter != consumableList.end(); ++iter)
+	{
+		if (CollisionChecker(player->GetBoundingRect(), iter->GetBoundingRect()))
+		{
+			iter->HandleCollision();
+		}
 	}
 
 	// Update the player
@@ -178,13 +200,24 @@ void Game::Render()
 	if (isDebugging)
 	{
 		// Iterate over each node in the level graph
-		for (std::vector<Node*>::iterator iter = level->GetAllNodes()->begin(); iter != level->GetAllNodes()->end(); ++iter)
+		//for (std::vector<Node*>::iterator iter = level->GetAllNodes()->begin(); iter != level->GetAllNodes()->end(); ++iter)
+		for (std::vector<Node*>::iterator iter = levelManager.legalPlayingNodes.begin(); iter != levelManager.legalPlayingNodes.end(); ++iter)
 		{
-			Vector2f loc = (*iter)->GetLocation();
+			Node* node = (*iter);
+			Vector2f loc = node->GetLocation();
 
 			// Temporarily set the rendering color to white for the nodes
 			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white
+			switch (node->GetType())
+			{
+			//case NodeType::Empty:
+				//SDL_RenderCopy(renderer, TextureManager::GetTexture(, NULL, &boundingRect);
+			}
 			SDL_RenderDrawPoint(renderer, loc.x * TILE_SIZE, loc.y * TILE_SIZE);
+
+			// Draw each node's bounding rectangle
+			(*iter)->Render(renderer);
+
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
 		}
 	}

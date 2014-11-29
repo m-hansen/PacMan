@@ -72,6 +72,9 @@
     <ClCompile Include="LevelManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Consumable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -104,9 +107,6 @@
     <ClInclude Include="Wall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TileTypeEnum.h">
-      <Filter>Header Files\Enumerations</Filter>
-    </ClInclude>
     <ClInclude Include="Graph.h">
       <Filter>Header Files\Graph</Filter>
     </ClInclude>
@@ -118,6 +118,15 @@
     </ClInclude>
     <ClInclude Include="LevelManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeType.h">
+      <Filter>Header Files\Enumerations</Filter>
+    </ClInclude>
+    <ClInclude Include="Consumable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsumableType.h">
+      <Filter>Header Files\Enumerations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -139,7 +148,7 @@
     <None Include="wall.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pac-man-board.txt">
+    <None Include="Level1.txt">
       <Filter>Resource Files\LevelData</Filter>
     </None>
   </ItemGroup>

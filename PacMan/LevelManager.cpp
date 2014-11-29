@@ -16,39 +16,54 @@ void LevelManager::LoadLevel(std::string levelData)
 		// Get each tile in a line
 		for (int i = 0; i < line.length(); i++)
 		{
-			// Create on the heap
-			Node* node = new Node(i * TILE_SIZE, lineNumber * TILE_SIZE);
-			level.AddNode(node);
 
 			// string::at returns a char so we will subtract the ascii offset value
 			// and store it as an integer
-			int tileType = line.at(i) - ASCII_NUM_OFFSET;
+			int nodeType = line.at(i) - ASCII_NUM_OFFSET;
 
-			switch (tileType)
+			Node* node = NULL;
+			Consumable* c = NULL;
+
+			switch (nodeType)
 			{
-			case TileTypeEnum::Empty:
+			case NodeType::Empty:
 				//node->SetContents(TileTypeEnum::Empty);
 				//node->SetTexture(TextureManager::GetTexture("tile"));
+
+				// Create on the heap
+				node = new Node(i * 1, lineNumber * 1, NodeType::Empty);
+				level.AddNode(node);
 				legalPlayingNodes.push_back(node);
 				break;
-			case TileTypeEnum::Pellet:
+			case NodeType::Pellet:
+				// Create on the heap
+				node = new Node(i * 1, lineNumber * 1, NodeType::Pellet);
+				level.AddNode(node);
+				c = new Consumable(ConsumableType::CPellet, lineNumber, i);
 				//tile->SetContents(TileTypeEnum::Pellet);
 				legalPlayingNodes.push_back(node);
 				//tile->SetTexture(TextureManager::GetTexture("pellet"));
 				break;
-			case TileTypeEnum::PowerPellet:
+			case NodeType::PowerPellet:
+				// Create on the heap
+				node = new Node(i * 1, lineNumber * 1, NodeType::PowerPellet);
+				level.AddNode(node);
 				//tile->SetContents(TileTypeEnum::PowerPellet);
 				legalPlayingNodes.push_back(node);
 				//tile->SetTexture(TextureManager::GetTexture("power pellet"));
 				break;
-			case TileTypeEnum::Wall:
+			case NodeType::Wall:
+				// Create on the heap
+				node = new Node(i * 1, lineNumber * 1, NodeType::Wall);
+				level.AddNode(node);
 				//tile->SetContents(TileTypeEnum::Wall);
 				//tile->SetTexture(TextureManager::GetTexture("wall"));
 				//wallList.push_back(tile);
 				break;
 			}
 
-			node = NULL;
+			// TODO mem will eventually need to be freed=
+			//node = NULL;
 			printf("%c ", line.at(i));
 		}
 		printf("\n");

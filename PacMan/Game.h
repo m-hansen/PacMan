@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "DirectionEnum.h"
 #include "Wall.h"
+#include "LevelManager.h"
 #include "Graph.h"
 
 enum GameStateEnum
@@ -38,9 +39,11 @@ private:
 	SDL_Event currentEvent;
 	bool isRunning;
 	bool isDebugging;
-	TileMap* tileMap;
+	//TileMap* tileMap;
 	Player* player;
 	Graph* level;
 	Uint32 deltaT = 0;
 	Uint32 previousTime = 0;
+	LevelManager levelManager;
+	std::vector<Consumable> consumableList;
 };
