@@ -75,6 +75,9 @@
     <ClCompile Include="Consumable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Pellet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="ConsumableType.h">
       <Filter>Header Files\Enumerations</Filter>
+    </ClInclude>
+    <ClInclude Include="Pellet.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

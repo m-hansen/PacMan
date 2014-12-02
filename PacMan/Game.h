@@ -44,6 +44,7 @@ private:
 	Graph* level;
 	Uint32 deltaT = 0;
 	Uint32 previousTime = 0;
+	int score;
 	LevelManager levelManager;
 	std::vector<Consumable> consumableList;
 };

@@ -26,35 +26,38 @@ void LevelManager::LoadLevel(std::string levelData)
 
 			switch (nodeType)
 			{
-			case NodeType::Empty:
+			case NodeType::EmptyNode:
 				//node->SetContents(TileTypeEnum::Empty);
 				//node->SetTexture(TextureManager::GetTexture("tile"));
 
 				// Create on the heap
-				node = new Node(i * 1, lineNumber * 1, NodeType::Empty);
+				node = new Node(i * 1, lineNumber * 1, NodeType::EmptyNode);
 				level.AddNode(node);
 				legalPlayingNodes.push_back(node);
 				break;
-			case NodeType::Pellet:
+			case NodeType::PelletNode:
 				// Create on the heap
-				node = new Node(i * 1, lineNumber * 1, NodeType::Pellet);
+				node = new Node(i * 1, lineNumber * 1, NodeType::PelletNode);
 				level.AddNode(node);
-				c = new Consumable(ConsumableType::CPellet, lineNumber, i);
+
+				//c = new Consumable(ConsumableType::CPellet, lineNumber, i);
+				pelletList.push_back(new Pellet(node));
+
 				//tile->SetContents(TileTypeEnum::Pellet);
 				legalPlayingNodes.push_back(node);
 				//tile->SetTexture(TextureManager::GetTexture("pellet"));
 				break;
-			case NodeType::PowerPellet:
+			case NodeType::PowerPelletNode:
 				// Create on the heap
-				node = new Node(i * 1, lineNumber * 1, NodeType::PowerPellet);
+				node = new Node(i * 1, lineNumber * 1, NodeType::PowerPelletNode);
 				level.AddNode(node);
 				//tile->SetContents(TileTypeEnum::PowerPellet);
 				legalPlayingNodes.push_back(node);
 				//tile->SetTexture(TextureManager::GetTexture("power pellet"));
 				break;
-			case NodeType::Wall:
+			case NodeType::WallNode:
 				// Create on the heap
-				node = new Node(i * 1, lineNumber * 1, NodeType::Wall);
+				node = new Node(i * 1, lineNumber * 1, NodeType::WallNode);
 				level.AddNode(node);
 				//tile->SetContents(TileTypeEnum::Wall);
 				//tile->SetTexture(TextureManager::GetTexture("wall"));

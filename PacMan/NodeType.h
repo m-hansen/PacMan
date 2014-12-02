@@ -2,8 +2,8 @@
 
 enum NodeType
 {
-	Wall = 0,
-	Pellet = 1,
-	PowerPellet = 2,
-	Empty = 3
+	WallNode = 0,
+	PelletNode = 1,
+	PowerPelletNode = 2,
+	EmptyNode = 3
 };

@@ -11,6 +11,7 @@ Game::Game()
 	level = NULL;
 	isRunning = true;
 	isDebugging = true;
+	score = 0;
 }
 
 Game::~Game()
@@ -77,6 +78,7 @@ void Game::Run()
 	//tileMap->LoadLevel("pac-man-board.txt");
 	level = new Graph();
 	level->GenerateGraph(SCREEN_WIDTH / TILE_SIZE, SCREEN_HEIGHT / TILE_SIZE);
+	score = 0;
 
 	player = new Player();
 	player->Initialize();
@@ -175,11 +177,20 @@ void Game::Update()
 	}
 
 	// Check for collisions between player and consumable
-	for (std::vector<Consumable>::iterator iter = consumableList.begin(); iter != consumableList.end(); ++iter)
+	// NOTE: we must use iter++ instead of ++iter
+	for (std::vector<Pellet*>::iterator iter = levelManager.pelletList.begin(); iter != levelManager.pelletList.end(); iter++)
 	{
-		if (CollisionChecker(player->GetBoundingRect(), iter->GetBoundingRect()))
+		if (CollisionChecker(player->GetBoundingRect(), (*iter)->GetBoundingRect()))
 		{
-			iter->HandleCollision();
+			// Free memory, clear list, and increment score
+			delete (*iter);
+			levelManager.pelletList.erase(iter);
+			score += 100;
+			printf("Score: %d\n", score);
+			// The break is necessary for two reasons
+			// 1) we stop checking for nodes once we found we collided with one
+			// 2) if we allow iter to increment we will crash because we are erasing elements
+			break;
 		}
 	}
 
@@ -201,7 +212,8 @@ void Game::Render()
 	{
 		// Iterate over each node in the level graph
 		//for (std::vector<Node*>::iterator iter = level->GetAllNodes()->begin(); iter != level->GetAllNodes()->end(); ++iter)
-		for (std::vector<Node*>::iterator iter = levelManager.legalPlayingNodes.begin(); iter != levelManager.legalPlayingNodes.end(); ++iter)
+		for (std::vector<Node*>::iterator iter = levelManager.legalPlayingNodes.begin(); 
+			iter != levelManager.legalPlayingNodes.end(); ++iter)
 		{
 			Node* node = (*iter);
 			Vector2f loc = node->GetLocation();
@@ -222,6 +234,14 @@ void Game::Render()
 		}
 	}
 
+	// Render each remaining pellet on the board
+	for (std::vector<Pellet*>::iterator iter = levelManager.pelletList.begin();
+		iter != levelManager.pelletList.end(); ++iter)
+	{
+		(*iter)->Render(renderer);
+	}
+
+	// Render the player
 	player->Render(renderer);
 
 	// Update the screen
