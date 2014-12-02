@@ -13,6 +13,5 @@ public:
 private:
 	Node* location;
 	SDL_Rect boundingRect;
-	SDL_Texture* texture;
 	int size;
 };

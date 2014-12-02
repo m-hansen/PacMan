@@ -28,6 +28,7 @@ public:
 	bool Initialize();
 	void LoadContent();
 	void Update();
+	void HandleCollisions();
 	void Render();
 	void Run();
 	bool CollisionChecker(SDL_Rect* a, SDL_Rect* b);
@@ -47,4 +48,6 @@ private:
 	int score;
 	LevelManager levelManager;
 	std::vector<Consumable> consumableList;
+	Node* currentNode;
+	Node* previousNode;
 };

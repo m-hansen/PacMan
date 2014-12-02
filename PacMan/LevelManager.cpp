@@ -61,7 +61,7 @@ void LevelManager::LoadLevel(std::string levelData)
 				level.AddNode(node);
 				//tile->SetContents(TileTypeEnum::Wall);
 				//tile->SetTexture(TextureManager::GetTexture("wall"));
-				//wallList.push_back(tile);
+				wallList.push_back(new Wall(node));
 				break;
 			}
 

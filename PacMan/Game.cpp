@@ -82,6 +82,8 @@ void Game::Run()
 
 	player = new Player();
 	player->Initialize();
+	currentNode = NULL;
+	previousNode = NULL;
 	
 	while (isRunning)
 	{
@@ -139,28 +141,8 @@ void Game::Run()
 		}
 
 		Update();
-
-		// Check for collisions
-		//std::vector<Tile*> walls = tileMap->GetWalls();
-		//for (std::vector<Tile*>::iterator iter = walls.begin(); iter != walls.end(); ++iter)
-		//{
-		//	// Check if the player collides with a wall
-		//	if (CollisionChecker(player->GetBoundingRect(), (*iter)->GetBoundingRect()))
-		//	{
-		//		printf("A collision has occured between the player and a wall!\n");
-		//	}
-		//}
-
-		// Check which node the player occupies
-		for (std::vector<Node*>::iterator iter = levelManager.legalPlayingNodes.begin(); 
-			iter != levelManager.legalPlayingNodes.end(); ++iter)
-		{
-			// Check if player is insid a node
-			if (CollisionChecker(player->GetBoundingRect(), (*iter)->GetBoundingRect()))
-			{
-				printf("Player is in node ID : %d\n", (*iter)->GetNodeId());
-			}
-		}
+		
+		HandleCollisions();
 
 		Render();
 	}
@@ -174,6 +156,39 @@ void Game::Update()
 	{
 		deltaT = currentTime - previousTime;
 		previousTime = currentTime;
+	}
+
+	// Update the player
+	player->Update(deltaT);
+}
+
+void Game::HandleCollisions()
+{
+	// Check which node the player occupies
+	for (std::vector<Node*>::iterator iter = levelManager.legalPlayingNodes.begin();
+		iter != levelManager.legalPlayingNodes.end(); ++iter)
+	{
+		// Check if player is insid a node
+		if (CollisionChecker(player->GetBoundingRect(), (*iter)->GetBoundingRect()))
+		{
+			player->UpdateNodes(*iter);
+			if (player->GetCurrentNode() != player->GetPreviousNode())
+			{
+				// Print the node ID that the player enters
+				printf("Player is in node ID : %d\n", (*iter)->GetNodeId());
+			}
+
+		}
+	}
+
+	// Check for collisions between the player and the wall
+	for (std::vector<Wall*>::iterator iter = levelManager.wallList.begin(); iter != levelManager.wallList.end(); ++iter)
+	{
+		// Check if the player collides with a wall
+		if (CollisionChecker(player->GetSpriteRect(), (*iter)->GetBoundingRect()))
+		{
+			printf("A collision has occured between the player and a wall!\n");
+		}
 	}
 
 	// Check for collisions between player and consumable
@@ -194,8 +209,6 @@ void Game::Update()
 		}
 	}
 
-	// Update the player
-	player->Update(deltaT);
 }
 
 void Game::Render()
@@ -232,6 +245,13 @@ void Game::Render()
 
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
 		}
+	}
+
+	// Render the walls
+	for (std::vector<Wall*>::iterator iter = levelManager.wallList.begin();
+		iter != levelManager.wallList.end(); ++iter)
+	{
+		(*iter)->Render(renderer);
 	}
 
 	// Render each remaining pellet on the board

@@ -12,13 +12,18 @@ public:
 	~Player();
 	void Initialize();
 	void Update(Uint32 deltaT);
+	void UpdateNodes(Node* newNode);
 	void Render(SDL_Renderer* renderer);
 	void SetDirection(DirectionEnum dirEnum);
 	SDL_Rect* GetBoundingRect();
+	SDL_Rect* GetSpriteRect();
+	Node* GetCurrentNode();
+	Node* GetPreviousNode();
 private:
 	int livesLeft;
 	SDL_Rect spriteRect;
 	SDL_Rect boundingRect;
 	DirectionEnum direction;
-	Node* nodeLocation;
+	Node* currentNode;
+	Node* previousNode;
 };

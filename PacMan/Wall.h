@@ -2,15 +2,17 @@
 #include <SDL.h>
 #include "Utils.h"
 #include "TextureManager.h"
+#include "Node.h"
 
 class Wall 
 {
 public:
-	Wall(float x, float y);
+	Wall(Node* node);
 	~Wall();
 	void Render(SDL_Renderer* renderer);
+	SDL_Rect* GetBoundingRect();
 private:
-	Vector2f location;
+	Node* location;
 	SDL_Texture* texture;
 	SDL_Rect boundingRect;
 };

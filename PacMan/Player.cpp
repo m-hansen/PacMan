@@ -4,6 +4,8 @@ const int SIZE = 8;
 
 Player::Player()
 {
+	currentNode = NULL;
+	previousNode = NULL;
 }
 
 Player::~Player()
@@ -49,6 +51,12 @@ void Player::Update(Uint32 deltaT)
 	spriteRect.y = position.y - (SIZE / 2);
 }
 
+void Player::UpdateNodes(Node* newNode)
+{
+	previousNode = currentNode;
+	currentNode = newNode;
+}
+
 void Player::Render(SDL_Renderer* renderer)
 {
 	SDL_RenderCopy(renderer, TextureManager::GetTexture("pacman"), NULL, &spriteRect);
@@ -62,4 +70,19 @@ void Player::SetDirection(DirectionEnum dirEnum)
 SDL_Rect* Player::GetBoundingRect()
 {
 	return &boundingRect;
+}
+
+SDL_Rect* Player::GetSpriteRect()
+{
+	return &spriteRect;
+}
+
+Node* Player::GetCurrentNode()
+{
+	return currentNode;
+}
+
+Node* Player::GetPreviousNode()
+{
+	return previousNode;
 }
