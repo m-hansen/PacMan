@@ -1,7 +1,5 @@
 #include "Player.h"
 
-const int SIZE = 8;
-
 Player::Player()
 {
 	currentNode = NULL;
@@ -14,15 +12,15 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	spriteRect.w = SIZE;
-	spriteRect.h = SIZE;
+	spriteRect.w = G_SIZE;
+	spriteRect.h = G_SIZE;
 	boundingRect.w = 1;
 	boundingRect.h = 1;
 
 	livesLeft = 3;
-	speed = 0.1f;
-	position.x = 100.0f;
-	position.y = 20.0f;
+	speed = 0.05f * (G_SIZE / 8); // adjust speed based on grid size
+	position.x = 112.0f * (G_SIZE / 8);
+	position.y = 188.0f * (G_SIZE / 8);
 }
 
 void Player::Update(Uint32 deltaT)
@@ -47,8 +45,8 @@ void Player::Update(Uint32 deltaT)
 	// Update the bounding rectangle
 	boundingRect.x = position.x;
 	boundingRect.y = position.y;
-	spriteRect.x = position.x - (SIZE / 2);
-	spriteRect.y = position.y - (SIZE / 2);
+	spriteRect.x = position.x - (G_SIZE / 2);
+	spriteRect.y = position.y - (G_SIZE / 2);
 }
 
 void Player::UpdateNodes(Node* newNode)

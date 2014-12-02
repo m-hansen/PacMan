@@ -2,15 +2,14 @@
 
 Pellet::Pellet(Node* node)
 {
-	size = 2;
+	size = G_SIZE / 4;
 	location = node;
 
 	// Set the bounding rectangle
-	const int GRID_SIZE = 8;
 	boundingRect.w = size;
 	boundingRect.h = size;
-	boundingRect.x = (GRID_SIZE * location->GetLocation().x) + (GRID_SIZE / 2 - size / 2);
-	boundingRect.y = (GRID_SIZE * location->GetLocation().y) + (GRID_SIZE / 2 - size / 2);
+	boundingRect.x = (G_SIZE * location->GetLocation().x) + (G_SIZE / 2 - size / 2);
+	boundingRect.y = (G_SIZE * location->GetLocation().y) + (G_SIZE / 2 - size / 2);
 }
 
 Pellet::~Pellet()

@@ -108,6 +108,7 @@
     <ClInclude Include="DirectionEnum.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Global.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="MovingEntity.h" />

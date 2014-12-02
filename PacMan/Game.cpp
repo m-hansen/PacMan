@@ -1,8 +1,7 @@
 #include "Game.h"
 
-const int SCREEN_WIDTH = 224;
-const int SCREEN_HEIGHT = 288;
-const int TILE_SIZE = 8;
+const int SCREEN_WIDTH = 28 * G_SIZE; // 224 width with 8x8 tiles
+const int SCREEN_HEIGHT = 36 * G_SIZE; // 288 height with 8x8 tiles
 
 Game::Game()
 {
@@ -77,7 +76,7 @@ void Game::Run()
 	// Load level test
 	//tileMap->LoadLevel("pac-man-board.txt");
 	level = new Graph();
-	level->GenerateGraph(SCREEN_WIDTH / TILE_SIZE, SCREEN_HEIGHT / TILE_SIZE);
+	level->GenerateGraph(SCREEN_WIDTH / G_SIZE, SCREEN_HEIGHT / G_SIZE);
 	score = 0;
 
 	player = new Player();
@@ -238,7 +237,7 @@ void Game::Render()
 			//case NodeType::Empty:
 				//SDL_RenderCopy(renderer, TextureManager::GetTexture(, NULL, &boundingRect);
 			}
-			SDL_RenderDrawPoint(renderer, loc.x * TILE_SIZE, loc.y * TILE_SIZE);
+			SDL_RenderDrawPoint(renderer, loc.x * G_SIZE, loc.y * G_SIZE);
 
 			// Draw each node's bounding rectangle
 			(*iter)->Render(renderer);

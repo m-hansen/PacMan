@@ -10,21 +10,20 @@ Node::Node(float x, float y, NodeType nodeType)
 	location.y = y;
 	type = nodeType;
 
-	const int SIZE = 8;
-	boundingRect.w = SIZE;
-	boundingRect.h = SIZE;
-	boundingRect.x = location.x * SIZE;
-	boundingRect.y = location.y* SIZE;
+	boundingRect.w = G_SIZE;
+	boundingRect.h = G_SIZE;
+	boundingRect.x = location.x * G_SIZE;
+	boundingRect.y = location.y* G_SIZE;
 }
 
 Node::~Node()
 {
-	// Free any memory that holds the edges for this node
-	for (std::vector<Edge*>::iterator iter = edgeList.begin(); iter != edgeList.end(); ++iter)
+	// Free all memory from neighboring nodes
+	/*for (std::vector<Node*>::iterator iter = neighborNodes.begin(); iter != neighborNodes.end(); ++iter)
 	{
 		delete (*iter);
 		(*iter) = NULL;
-	}
+	}*/
 }
 
 void Node::Render(SDL_Renderer* renderer)
@@ -32,14 +31,14 @@ void Node::Render(SDL_Renderer* renderer)
 	SDL_RenderDrawRect(renderer, &boundingRect);
 }
 
-void Node::AddEdge(Edge* edge)
+void Node::AddNeighborNode(Node* neighbor)
 {
-	edgeList.push_back(edge);
+	neighborNodes.push_back(neighbor);
 }
 
-std::vector<Edge*> Node::GetEdges()
+std::vector<Node*> Node::GetNeighborNodes()
 {
-	return edgeList;
+	return neighborNodes;
 }
 
 Vector2f Node::GetLocation()

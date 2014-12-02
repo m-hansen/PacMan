@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include "Global.h"
 #include "Utils.h"
 #include "TextureManager.h"
 #include "Node.h"

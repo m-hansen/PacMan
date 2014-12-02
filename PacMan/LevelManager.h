@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include "Global.h"
 #include "TextureManager.h"
 #include "NodeType.h"
 #include "Consumable.h"

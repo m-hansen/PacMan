@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <SDL.h>
+#include "Global.h"
 #include "TextureManager.h"
 #include "TileMap.h"
 #include "Player.h"

@@ -3,7 +3,7 @@
 void LevelManager::LoadLevel(std::string levelData)
 {
 	const int ASCII_NUM_OFFSET = 48;
-	const int TILE_SIZE = 8;
+	const int TILE_SIZE = G_SIZE;
 
 	std::ifstream inputStream;
 	inputStream.open(levelData);
