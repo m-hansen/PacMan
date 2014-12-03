@@ -8,6 +8,8 @@ Game::Game()
 	window = NULL;
 	screenSurface = NULL;
 	level = NULL;
+	sansFont = NULL;
+	scoreTexture = NULL;
 	isRunning = true;
 	isDebugging = true;
 	score = 0;
@@ -15,6 +17,10 @@ Game::Game()
 
 Game::~Game()
 {
+	// TODO free font texture
+	//TTF_CloseFont(sansFont);
+	sansFont = NULL;
+
 	delete (player);
 	player = NULL;
 
@@ -23,6 +29,12 @@ Game::~Game()
 
 	//delete (tileMap);
 	//tileMap = NULL;
+
+	// Destroy the renderer and window    
+	SDL_DestroyRenderer(renderer);
+	renderer = NULL;
+	SDL_DestroyWindow(window);
+	window = NULL;
 }
 
 bool Game::Initialize()
@@ -60,6 +72,13 @@ bool Game::Initialize()
 
 void Game::LoadContent()
 {
+	// Create the font
+	//sansFont = TTF_OpenFont("Fonts\\ARIAL.TTF", 24);
+	/*SDL_Surface* scoreSurface = TTF_RenderText_Solid(sansFont, "Score: " + score, SDL_Color{255, 255, 255});
+	scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreSurface);
+	SDL_FreeSurface(scoreSurface);*/
+
+	// Load textures
 	TextureManager::LoadTexture(renderer, "tile", "tile.png");
 	TextureManager::LoadTexture(renderer, "pacman", "pac-man.png");
 	TextureManager::LoadTexture(renderer, "wall", "wall.png");
@@ -78,6 +97,8 @@ void Game::Run()
 	level = new Graph();
 	level->GenerateGraph(SCREEN_WIDTH / G_SIZE, SCREEN_HEIGHT / G_SIZE);
 	score = 0;
+
+	levelManager.FindEdges();
 
 	player = new Player();
 	player->Initialize();
@@ -262,6 +283,9 @@ void Game::Render()
 
 	// Render the player
 	player->Render(renderer);
+
+	// Display the score
+	//SDL_Draw
 
 	// Update the screen
     SDL_RenderPresent(renderer);

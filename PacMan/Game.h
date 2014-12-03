@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include "Global.h"
 #include "TextureManager.h"
 #include "TileMap.h"
@@ -51,4 +52,6 @@ private:
 	std::vector<Consumable> consumableList;
 	Node* currentNode;
 	Node* previousNode;
+	TTF_Font* sansFont;
+	SDL_Texture* scoreTexture;
 };

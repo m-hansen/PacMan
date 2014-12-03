@@ -17,6 +17,7 @@ class LevelManager
 {
 public:
 	void LoadLevel(std::string levelData);
+	void FindEdges();
 	std::vector<Node*> legalPlayingNodes;
 	std::vector<Pellet*> pelletList;
 	std::vector<Wall*> wallList;

@@ -3,7 +3,6 @@
 void LevelManager::LoadLevel(std::string levelData)
 {
 	const int ASCII_NUM_OFFSET = 48;
-	const int TILE_SIZE = G_SIZE;
 
 	std::ifstream inputStream;
 	inputStream.open(levelData);
@@ -22,7 +21,6 @@ void LevelManager::LoadLevel(std::string levelData)
 			int nodeType = line.at(i) - ASCII_NUM_OFFSET;
 
 			Node* node = NULL;
-			Consumable* c = NULL;
 
 			switch (nodeType)
 			{
@@ -40,7 +38,6 @@ void LevelManager::LoadLevel(std::string levelData)
 				node = new Node(i * 1, lineNumber * 1, NodeType::PelletNode);
 				level.AddNode(node);
 
-				//c = new Consumable(ConsumableType::CPellet, lineNumber, i);
 				pelletList.push_back(new Pellet(node));
 
 				//tile->SetContents(TileTypeEnum::Pellet);
@@ -71,5 +68,35 @@ void LevelManager::LoadLevel(std::string levelData)
 		}
 		printf("\n");
 		lineNumber++;
+	}
+}
+
+void LevelManager::FindEdges()
+{
+	for (std::vector<Node*>::iterator iter = legalPlayingNodes.begin(); iter != legalPlayingNodes.end(); ++iter)
+	{
+		for (std::vector<Node*>::iterator iter2 = legalPlayingNodes.begin(); iter2 != legalPlayingNodes.end(); ++iter2)
+		{
+			if (iter != iter2)
+			{
+				// Get the distance between nodes
+				float deltaX = (*iter)->GetLocation().x - (*iter2)->GetLocation().x;
+				float deltaY = (*iter)->GetLocation().y - (*iter2)->GetLocation().y;
+
+				// Get the absolute value if needed
+				if (deltaX < 0) deltaX *= -1;
+				if (deltaY < 0) deltaY *= -1;
+
+				// Adjust based on scale
+				/*deltaX /= G_SIZE;
+				deltaY /= G_SIZE;*/
+
+				if ((deltaX <= (1)) && (deltaY <= (1)))
+				{
+					// We are within the range to be considered an edge
+					(*iter)->AddNeighborNode((*iter2));
+				}
+			}
+		}
 	}
 }

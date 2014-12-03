@@ -31,6 +31,9 @@
     <Filter Include="Header Files\Graph">
       <UniqueIdentifier>{45a32f7d-a336-459c-a24a-c03a56f34ad3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Fonts">
+      <UniqueIdentifier>{73a32654-b87d-4c28-b10b-181376951da6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -165,5 +168,10 @@
     <Image Include="pellet.png">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="ARIAL.TTF">
+      <Filter>Resource Files\Fonts</Filter>
+    </Font>
   </ItemGroup>
 </Project>
