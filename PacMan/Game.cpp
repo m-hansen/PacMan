@@ -121,16 +121,32 @@ void Game::Run()
 				switch (currentEvent.key.keysym.sym)
 				{
 					case SDLK_UP:
-						player->SetDirection(Up);
+						if (player->isCenteredOnTile && player->GetDirection() != DirectionEnum::Up)
+						{
+							player->SetPosition(player->GetCurrentNode());
+							player->SetDirection(Up);
+						}
 						break;
 					case SDLK_DOWN:
-						player->SetDirection(Down);
+						if (player->isCenteredOnTile && player->GetDirection() != DirectionEnum::Down)
+						{
+							player->SetPosition(player->GetCurrentNode());
+							player->SetDirection(Down);
+						}
 						break;
 					case SDLK_LEFT:
-						player->SetDirection(Left);
+						if (player->isCenteredOnTile && player->GetDirection() != DirectionEnum::Left)
+						{
+							player->SetPosition(player->GetCurrentNode());
+							player->SetDirection(Left);
+						}
 						break;
 					case SDLK_RIGHT:
-						player->SetDirection(Right);
+						if (player->isCenteredOnTile && player->GetDirection() != DirectionEnum::Right)
+						{
+							player->SetPosition(player->GetCurrentNode());
+							player->SetDirection(Right);
+						}
 						break;
 					case SDLK_F3:
 						// Toggle debugging information
@@ -196,6 +212,7 @@ void Game::HandleCollisions()
 			{
 				// Print the node ID that the player enters
 				printf("Player is in node ID : %d\n", (*iter)->GetNodeId());
+				player->SetPreviousDirection(player->GetDirection());
 			}
 
 		}
@@ -208,6 +225,15 @@ void Game::HandleCollisions()
 		if (CollisionChecker(player->GetSpriteRect(), (*iter)->GetBoundingRect()))
 		{
 			printf("A collision has occured between the player and a wall!\n");
+			//if (player->GetDirection() != player->GetPreviousDirection())
+			{
+				//player->SetDirection(player->GetPreviousDirection());
+			}
+			//else
+			{
+				player->SetDirection(DirectionEnum::None);
+			}
+			player->SetPosition(player->GetCurrentNode());
 		}
 	}
 

@@ -19,11 +19,17 @@ public:
 	SDL_Rect* GetSpriteRect();
 	Node* GetCurrentNode();
 	Node* GetPreviousNode();
+	void SetPosition(Node* node);
+	DirectionEnum GetDirection();
+	DirectionEnum GetPreviousDirection();
+	void SetPreviousDirection(DirectionEnum dir);
+	bool isCenteredOnTile;
 private:
 	int livesLeft;
 	SDL_Rect spriteRect;
 	SDL_Rect boundingRect;
 	DirectionEnum direction;
+	DirectionEnum previousDirection;
 	Node* currentNode;
 	Node* previousNode;
 };
