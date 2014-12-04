@@ -1,36 +1,34 @@
 #pragma once
 #include <SDL.h>
+#include "Global.h"
+#include "Utils.h"
 #include "TextureManager.h"
-#include "MovingEntity.h"
-#include "DirectionEnum.h"
 #include "Node.h"
+#include "DirectionEnum.h"
 
-class Player : public MovingEntity
+class Ghost
 {
 public:
-	Player();
-	~Player();
-	void Initialize();
+	Ghost(std::string textureName);
+	~Ghost();
 	void Update(Uint32 deltaT);
 	void UpdateNodes(Node* newNode);
 	void Render(SDL_Renderer* renderer);
-	void SetDirection(DirectionEnum dirEnum);
 	SDL_Rect* GetBoundingRect();
-	SDL_Rect* GetSpriteRect();
+	DirectionEnum GetDirection();
+	void SetDirection(DirectionEnum dirEnum);
 	Node* GetCurrentNode();
 	Node* GetPreviousNode();
 	void SetPosition(Node* node);
-	DirectionEnum GetDirection();
-	DirectionEnum GetPreviousDirection();
 	void SetPreviousDirection(DirectionEnum dir);
-	bool isCenteredOnTile;
 private:
-	int livesLeft;
-	SDL_Rect spriteRect;
 	SDL_Rect boundingRect;
+	SDL_Texture* texture;
+	Vector2f position;
+	Node* location;
 	DirectionEnum direction;
 	DirectionEnum previousDirection;
+	float speed;
 	Node* currentNode;
 	Node* previousNode;
-	SDL_Texture* texture;
 };

@@ -5,10 +5,14 @@ Player::Player()
 	currentNode = NULL;
 	previousNode = NULL;
 	isCenteredOnTile = false;
+	texture = TextureManager::GetTexture("pacman");
 }
 
 Player::~Player()
 {
+	// Do not free the texture here!
+	// The TextureManager will handle this
+	texture = NULL;
 }
 
 void Player::Initialize()
@@ -38,9 +42,6 @@ void Player::Update(Uint32 deltaT)
 		float posY = position.y - (currentNode->GetLocation().y * G_SIZE);
 		if (posX < 0) posX *= -1;
 		if (posY < 0) posY *= -1;
-		if (direction == DirectionEnum::None) {
-			printf("fdsF");
-		}
 
 		if (posX < (G_SIZE / 2) + G_SIZE - 1 && posY < (G_SIZE / 2) + G_SIZE - 1)
 		{
@@ -86,7 +87,7 @@ void Player::UpdateNodes(Node* newNode)
 
 void Player::Render(SDL_Renderer* renderer)
 {
-	SDL_RenderCopy(renderer, TextureManager::GetTexture("pacman"), NULL, &spriteRect);
+	SDL_RenderCopy(renderer, texture, NULL, &spriteRect);
 }
 
 void Player::SetDirection(DirectionEnum dirEnum)

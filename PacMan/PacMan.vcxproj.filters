@@ -81,6 +81,9 @@
     <ClCompile Include="Pellet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Ghost.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -140,6 +143,9 @@
     <ClInclude Include="Global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Ghost.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="pacman.bmp">
@@ -166,6 +172,18 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="pellet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="blinky.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="pinky.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="clyde.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="inky.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

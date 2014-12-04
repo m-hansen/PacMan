@@ -2,16 +2,17 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <cstdlib>
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include "Global.h"
 #include "TextureManager.h"
-#include "TileMap.h"
 #include "Player.h"
 #include "DirectionEnum.h"
 #include "Wall.h"
 #include "LevelManager.h"
 #include "Graph.h"
+#include "Ghost.h"
 
 enum GameStateEnum
 {
@@ -33,6 +34,7 @@ public:
 	void HandleCollisions();
 	void Render();
 	void Run();
+	void InitializeLevel(std::string lvlName);
 	bool CollisionChecker(SDL_Rect* a, SDL_Rect* b);
 private:
 	SDL_Window* window;
@@ -42,16 +44,18 @@ private:
 	SDL_Event currentEvent;
 	bool isRunning;
 	bool isDebugging;
-	//TileMap* tileMap;
 	Player* player;
+	Ghost* blinky;
+	Ghost* pinky;
+	Ghost* inky;
+	Ghost* clyde;
+	std::vector<Ghost*> ghostList;
 	Graph* level;
 	Uint32 deltaT = 0;
 	Uint32 previousTime = 0;
 	int score;
 	LevelManager levelManager;
 	std::vector<Consumable> consumableList;
-	Node* currentNode;
-	Node* previousNode;
 	TTF_Font* sansFont;
 	SDL_Texture* scoreTexture;
 };

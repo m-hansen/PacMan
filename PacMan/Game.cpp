@@ -83,27 +83,41 @@ void Game::LoadContent()
 	TextureManager::LoadTexture(renderer, "pacman", "pac-man.png");
 	TextureManager::LoadTexture(renderer, "wall", "wall.png");
 	TextureManager::LoadTexture(renderer, "pellet", "pellet.png");
+	TextureManager::LoadTexture(renderer, "blinky", "blinky.png");
+	TextureManager::LoadTexture(renderer, "pinky", "pinky.png");
+	TextureManager::LoadTexture(renderer, "inky", "inky.png");
+	TextureManager::LoadTexture(renderer, "clyde", "clyde.png");
+}
+
+void Game::InitializeLevel(std::string lvlName)
+{
+	// Load the level, create the nodes, and determine the edges
+	levelManager.LoadLevel(lvlName.c_str());
+	level = new Graph();
+	level->GenerateGraph(SCREEN_WIDTH / G_SIZE, SCREEN_HEIGHT / G_SIZE);
+	levelManager.FindEdges();
+
+	// Initialize the player
+	player = new Player();
+	player->Initialize();
+
+	// Load the AI
+	blinky = new Ghost("blinky");
+	pinky = new Ghost("pinky");
+	inky = new Ghost("inky");
+	clyde = new Ghost("clyde");
+
+	ghostList.push_back(blinky);
+	ghostList.push_back(pinky);
+	ghostList.push_back(inky);
+	ghostList.push_back(clyde);
+
+	score = 0;
 }
 
 void Game::Run()
 {
-	levelManager.LoadLevel("Level1.txt");
-	// Allocate the tile map on the heap
-	//tileMap = new TileMap();
-	//tileMap->GenerateMap();
-
-	// Load level test
-	//tileMap->LoadLevel("pac-man-board.txt");
-	level = new Graph();
-	level->GenerateGraph(SCREEN_WIDTH / G_SIZE, SCREEN_HEIGHT / G_SIZE);
-	score = 0;
-
-	levelManager.FindEdges();
-
-	player = new Player();
-	player->Initialize();
-	currentNode = NULL;
-	previousNode = NULL;
+	InitializeLevel("Level1.txt");
 	
 	while (isRunning)
 	{
@@ -196,15 +210,21 @@ void Game::Update()
 
 	// Update the player
 	player->Update(deltaT);
+
+	// Update the AI
+	for (std::vector<Ghost*>::iterator iter = ghostList.begin(); iter != ghostList.end(); ++iter)
+	{
+		(*iter)->Update(deltaT);
+	}
 }
 
 void Game::HandleCollisions()
 {
-	// Check which node the player occupies
+	// Check which node the player/AI occupies
 	for (std::vector<Node*>::iterator iter = levelManager.legalPlayingNodes.begin();
 		iter != levelManager.legalPlayingNodes.end(); ++iter)
 	{
-		// Check if player is insid a node
+		// Check if player is inside a node
 		if (CollisionChecker(player->GetBoundingRect(), (*iter)->GetBoundingRect()))
 		{
 			player->UpdateNodes(*iter);
@@ -216,14 +236,45 @@ void Game::HandleCollisions()
 			}
 
 		}
+
+		// Iterate over each ghost
+		for (std::vector<Ghost*>::iterator aiIter = ghostList.begin(); aiIter != ghostList.end(); ++aiIter)
+		{
+			// Check if a ghost is inside a node
+			if (CollisionChecker((*aiIter)->GetBoundingRect(), (*iter)->GetBoundingRect()))
+			{
+				(*aiIter)->UpdateNodes(*iter);
+				if ((*aiIter)->GetCurrentNode() != (*aiIter)->GetPreviousNode())
+				{
+					// Print the node ID that the player enters
+					//printf("blinky is in node ID : %d\n", (*iter)->GetNodeId());
+					(*aiIter)->SetPreviousDirection((*aiIter)->GetDirection());
+				}
+			}
+		}
 	}
 
-	// Check for collisions between the player and the wall
+	// Check for collisions between the player/AI and the wall
 	for (std::vector<Wall*>::iterator iter = levelManager.wallList.begin(); iter != levelManager.wallList.end(); ++iter)
 	{
 		// Check if the player collides with a wall
 		if (CollisionChecker(player->GetSpriteRect(), (*iter)->GetBoundingRect()))
 		{
+			if (((player->GetDirection() == DirectionEnum::Up) || (player->GetDirection() == DirectionEnum::Down))
+				&& ((player->GetPreviousDirection() == DirectionEnum::Left) || (player->GetPreviousDirection() == DirectionEnum::Right)))
+			{
+				player->SetDirection(player->GetPreviousDirection());
+			}
+			else if (((player->GetDirection() == DirectionEnum::Left) || (player->GetDirection() == DirectionEnum::Right))
+				&& ((player->GetPreviousDirection() == DirectionEnum::Up) || (player->GetPreviousDirection() == DirectionEnum::Down)))
+			{
+				player->SetDirection(player->GetPreviousDirection());
+			}
+			else
+			{
+				player->SetDirection(DirectionEnum::None);
+				
+			}
 			printf("A collision has occured between the player and a wall!\n");
 			//if (player->GetDirection() != player->GetPreviousDirection())
 			{
@@ -231,9 +282,21 @@ void Game::HandleCollisions()
 			}
 			//else
 			{
-				player->SetDirection(DirectionEnum::None);
+				//player->SetDirection(DirectionEnum::None);
 			}
 			player->SetPosition(player->GetCurrentNode());
+		}
+
+		// Check if each ghost collides with a wall
+		for (std::vector<Ghost*>::iterator aiIter = ghostList.begin(); aiIter != ghostList.end(); ++aiIter)
+		{
+			if (CollisionChecker((*aiIter)->GetBoundingRect(), (*iter)->GetBoundingRect()))
+			{
+				//printf("A collision has occured between the AI and a wall!\n");
+				int randVal = std::rand() % 4; // 4 is the number of moving states
+				(*aiIter)->SetPosition((*aiIter)->GetCurrentNode());
+				(*aiIter)->SetDirection((DirectionEnum)randVal);
+			}
 		}
 	}
 
@@ -309,6 +372,12 @@ void Game::Render()
 
 	// Render the player
 	player->Render(renderer);
+
+	// Render the AI
+	for (std::vector<Ghost*>::iterator iter = ghostList.begin(); iter != ghostList.end(); ++iter)
+	{
+		(*iter)->Render(renderer);
+	}
 
 	// Display the score
 	//SDL_Draw

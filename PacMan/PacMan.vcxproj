@@ -90,6 +90,7 @@
     <ClCompile Include="Consumable.cpp" />
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="DirectionEnum.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Ghost.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="LevelManager.h" />
@@ -134,7 +136,11 @@
     <None Include="wall.png" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="blinky.png" />
+    <Image Include="clyde.png" />
+    <Image Include="inky.png" />
     <Image Include="pellet.png" />
+    <Image Include="pinky.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="ARIAL.TTF" />
