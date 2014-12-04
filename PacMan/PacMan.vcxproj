@@ -130,7 +130,6 @@
     <None Include="large_pellet.bmp" />
     <None Include="Level1.txt" />
     <None Include="pac-man-sprite-sheet.png" />
-    <None Include="pac-man.png" />
     <None Include="pacman.bmp" />
     <None Include="tile.png" />
     <None Include="wall.png" />
@@ -139,6 +138,11 @@
     <Image Include="blinky.png" />
     <Image Include="clyde.png" />
     <Image Include="inky.png" />
+    <Image Include="pac-man_closed.png" />
+    <Image Include="pac-man_D.png" />
+    <Image Include="pac-man_L.png" />
+    <Image Include="pac-man_R.png" />
+    <Image Include="pac-man_U.png" />
     <Image Include="pellet.png" />
     <Image Include="pinky.png" />
   </ItemGroup>

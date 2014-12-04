@@ -89,7 +89,11 @@ void Game::LoadContent()
 
 	// Load textures
 	TextureManager::LoadTexture(renderer, "tile", "tile.png");
-	TextureManager::LoadTexture(renderer, "pacman", "pac-man.png");
+	TextureManager::LoadTexture(renderer, "pacmanRight", "pac-man_R.png");
+	TextureManager::LoadTexture(renderer, "pacmanLeft", "pac-man_L.png");
+	TextureManager::LoadTexture(renderer, "pacmanUp", "pac-man_U.png");
+	TextureManager::LoadTexture(renderer, "pacmanDown", "pac-man_D.png");
+	TextureManager::LoadTexture(renderer, "pacmanClosed", "pac-man_closed.png");
 	TextureManager::LoadTexture(renderer, "wall", "wall.png");
 	TextureManager::LoadTexture(renderer, "pellet", "pellet.png");
 	TextureManager::LoadTexture(renderer, "blinky", "blinky.png");

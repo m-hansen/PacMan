@@ -36,4 +36,6 @@ private:
 	Node* currentNode;
 	Node* previousNode;
 	SDL_Texture* texture;
+	SDL_Texture* livesTexture;
+	bool isMoving;
 };

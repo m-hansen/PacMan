@@ -5,9 +5,11 @@ Player::Player()
 	currentNode = NULL;
 	previousNode = NULL;
 	isCenteredOnTile = false;
-	texture = TextureManager::GetTexture("pacman");
+	texture = TextureManager::GetTexture("pacmanRight");
+	livesTexture = TextureManager::GetTexture("pacmanRight");
 	livesLeft = 3;
 	isAlive = true;
+	isMoving = true;
 	livesLeftRect.w = G_SIZE;
 	livesLeftRect.h = G_SIZE;
 }
@@ -82,15 +84,19 @@ void Player::Update(Uint32 deltaT)
 	{
 		case Up:
 			position.y -= speed * deltaT;
+			texture = TextureManager::GetTexture("pacmanUp");
 			break;
 		case Down:
 			position.y += speed * deltaT;
+			texture = TextureManager::GetTexture("pacmanDown");
 			break;
 		case Left:
 			position.x -= speed * deltaT;
+			texture = TextureManager::GetTexture("pacmanLeft");
 			break;
 		case Right:
 			position.x += speed * deltaT;
+			texture = TextureManager::GetTexture("pacmanRight");
 			break;
 		case None:
 			break;
@@ -121,7 +127,7 @@ void Player::Render(SDL_Renderer* renderer)
 	{
 		livesLeftRect.x = G_SIZE * i;
 		livesLeftRect.y = G_SIZE * 32;
-		SDL_RenderCopy(renderer, texture, NULL, &livesLeftRect);
+		SDL_RenderCopy(renderer, livesTexture, NULL, &livesLeftRect);
 	}
 	
 }

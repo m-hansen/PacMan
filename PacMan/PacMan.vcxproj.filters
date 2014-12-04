@@ -154,9 +154,6 @@
     <None Include="large_pellet.bmp">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pac-man.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="pac-man-sprite-sheet.png">
       <Filter>Resource Files</Filter>
     </None>
@@ -184,6 +181,21 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="inky.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="pac-man_D.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="pac-man_L.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="pac-man_R.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="pac-man_U.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="pac-man_closed.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
