@@ -8,27 +8,29 @@ Game::Game()
 	window = NULL;
 	screenSurface = NULL;
 	level = NULL;
-	sansFont = NULL;
+	arialFont = NULL;
 	scoreTexture = NULL;
 	isRunning = true;
-	isDebugging = true;
+	isDebugging = false;
 	score = 0;
+	scoreTextRect.w = G_SIZE * 6;
+	scoreTextRect.h = G_SIZE * 1.5;
+	scoreTextRect.x = 4 * G_SIZE;
+	scoreTextRect.y = 32 * G_SIZE;
+	endGameMessage = "Game Over!";
+	isLevelOver = false;
 }
 
 Game::~Game()
 {
-	// TODO free font texture
-	//TTF_CloseFont(sansFont);
-	sansFont = NULL;
+	TTF_CloseFont(arialFont);
+	arialFont = NULL;
 
 	delete (player);
 	player = NULL;
 
 	delete (level);
 	level = NULL;
-
-	//delete (tileMap);
-	//tileMap = NULL;
 
 	// Destroy the renderer and window    
 	SDL_DestroyRenderer(renderer);
@@ -39,6 +41,13 @@ Game::~Game()
 
 bool Game::Initialize()
 {
+	// Initialize fonts
+	if (TTF_Init() != 0)
+	{
+		printf("Failed to initialize SDL_ttf\n");
+		return false;
+	}
+
 	// Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -118,7 +127,10 @@ void Game::InitializeLevel(std::string lvlName)
 void Game::Run()
 {
 	InitializeLevel("Level1.txt");
-	
+
+	// Load the default font
+	arialFont = TTF_OpenFont("arial.ttf", G_SIZE);
+
 	while (isRunning)
 	{
 		// Handle events on queue
@@ -206,6 +218,14 @@ void Game::Update()
 	{
 		deltaT = currentTime - previousTime;
 		previousTime = currentTime;
+	}
+
+	// Check for victory condition
+	if (levelManager.pelletList.empty())
+	{
+		endGameMessage = "Congratulations!";
+		isLevelOver = true;
+		return;
 	}
 
 	// Update the player
@@ -309,7 +329,7 @@ void Game::HandleCollisions()
 			// Free memory, clear list, and increment score
 			delete (*iter);
 			levelManager.pelletList.erase(iter);
-			score += 100;
+			score += 10;
 			printf("Score: %d\n", score);
 			// The break is necessary for two reasons
 			// 1) we stop checking for nodes once we found we collided with one
@@ -317,6 +337,17 @@ void Game::HandleCollisions()
 			break;
 		}
 	}
+
+	// Check player collision against the AI
+	for (std::vector<Ghost*>::iterator iter = ghostList.begin(); iter != ghostList.end(); ++iter)
+	{
+		if (CollisionChecker(player->GetBoundingRect(), (*iter)->GetBoundingRect()))
+		{
+			
+			if (player->Kill()) isLevelOver = true;
+		}
+	}
+
 
 }
 
@@ -380,7 +411,30 @@ void Game::Render()
 	}
 
 	// Display the score
-	//SDL_Draw
+	if (arialFont != NULL)
+	{
+		std::string scoreString = "Score: " + std::to_string(score);
+		scoreFontSurface = TTF_RenderText_Solid(arialFont, scoreString.c_str(), SDL_Color{ 255, 255, 255 });
+		scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreFontSurface);
+		SDL_FreeSurface(scoreFontSurface);
+		scoreFontSurface = NULL;
+		SDL_RenderCopy(renderer, scoreTexture, NULL, &scoreTextRect);
+	}
+
+	if (isLevelOver)
+	{
+		SDL_Rect endGameRect;
+		endGameRect.w = G_SIZE * 10;
+		endGameRect.h = G_SIZE * 2;
+		endGameRect.x = SCREEN_WIDTH / 2 - endGameRect.w / 2;
+		endGameRect.y = SCREEN_HEIGHT / 2 - endGameRect.h / 2;
+
+		scoreFontSurface = TTF_RenderText_Solid(arialFont, endGameMessage.c_str(), SDL_Color{ 255, 255, 255 });
+		scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreFontSurface);
+		SDL_FreeSurface(scoreFontSurface);
+		scoreFontSurface = NULL;
+		SDL_RenderCopy(renderer, scoreTexture, NULL, &endGameRect);
+	}
 
 	// Update the screen
     SDL_RenderPresent(renderer);

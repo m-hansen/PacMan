@@ -15,6 +15,7 @@ public:
 	void UpdateNodes(Node* newNode);
 	void Render(SDL_Renderer* renderer);
 	void SetDirection(DirectionEnum dirEnum);
+	bool Kill();
 	SDL_Rect* GetBoundingRect();
 	SDL_Rect* GetSpriteRect();
 	Node* GetCurrentNode();
@@ -25,8 +26,10 @@ public:
 	void SetPreviousDirection(DirectionEnum dir);
 	bool isCenteredOnTile;
 private:
+	bool isAlive;
 	int livesLeft;
 	SDL_Rect spriteRect;
+	SDL_Rect livesLeftRect;
 	SDL_Rect boundingRect;
 	DirectionEnum direction;
 	DirectionEnum previousDirection;

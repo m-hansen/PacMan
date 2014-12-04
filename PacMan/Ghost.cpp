@@ -9,7 +9,8 @@ Ghost::Ghost(std::string textureName)
 	boundingRect.w = G_SIZE;
 	boundingRect.h = G_SIZE;
 	speed = 0.05f * (G_SIZE / 8);
-	direction = DirectionEnum::Left;
+	int rand = std::rand() % 4;
+	direction = (DirectionEnum)rand;
 	previousDirection = direction;
 
 	currentNode = NULL;

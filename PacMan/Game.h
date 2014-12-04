@@ -56,6 +56,10 @@ private:
 	int score;
 	LevelManager levelManager;
 	std::vector<Consumable> consumableList;
-	TTF_Font* sansFont;
+	TTF_Font* arialFont;
 	SDL_Texture* scoreTexture;
+	SDL_Rect scoreTextRect;
+	SDL_Surface* scoreFontSurface;
+	std::string endGameMessage;
+	bool isLevelOver;
 };

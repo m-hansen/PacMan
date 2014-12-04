@@ -6,6 +6,10 @@ Player::Player()
 	previousNode = NULL;
 	isCenteredOnTile = false;
 	texture = TextureManager::GetTexture("pacman");
+	livesLeft = 3;
+	isAlive = true;
+	livesLeftRect.w = G_SIZE;
+	livesLeftRect.h = G_SIZE;
 }
 
 Player::~Player()
@@ -23,7 +27,6 @@ void Player::Initialize()
 	boundingRect.w = 1;
 	boundingRect.h = 1;
 
-	livesLeft = 3;
 	speed = 0.05f * (G_SIZE / 8); // adjust speed based on grid size
 	position.x = 112.0f * (G_SIZE / 8);
 	position.y = 188.0f * (G_SIZE / 8);
@@ -32,8 +35,29 @@ void Player::Initialize()
 	previousDirection = direction;
 }
 
+bool Player::Kill()
+{
+	livesLeft--;
+	if (isAlive && livesLeft <= 0)
+	{
+		printf("Game Over!\n");
+		isAlive = false;
+		position.x = -1;
+		position.y = -1;
+		return true;
+	}
+	else
+	{
+		Initialize();
+		return false;
+	}
+}
+
 void Player::Update(Uint32 deltaT)
 {
+	// Do not update is player has run out of lives
+	if (!isAlive) return;
+
 	// Check to see if we are centered at a node
 	if (currentNode != NULL)
 	{
@@ -87,7 +111,19 @@ void Player::UpdateNodes(Node* newNode)
 
 void Player::Render(SDL_Renderer* renderer)
 {
+	// Do not render if player has run out of lives
+	if (!isAlive)return;
+
 	SDL_RenderCopy(renderer, texture, NULL, &spriteRect);
+
+	// Display the lives left
+	for (int i = 0; i < livesLeft - 1; i++)
+	{
+		livesLeftRect.x = G_SIZE * i;
+		livesLeftRect.y = G_SIZE * 32;
+		SDL_RenderCopy(renderer, texture, NULL, &livesLeftRect);
+	}
+	
 }
 
 void Player::SetDirection(DirectionEnum dirEnum)
