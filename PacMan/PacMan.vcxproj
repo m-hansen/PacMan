@@ -87,53 +87,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-<<<<<<< HEAD
-    <ClCompile Include="Consumable.cpp" />
-    <ClCompile Include="Edge.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Ghost.cpp" />
-    <ClCompile Include="Graph.cpp" />
-    <ClCompile Include="LevelManager.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MovingEntity.cpp" />
-    <ClCompile Include="Node.cpp" />
-    <ClCompile Include="Pellet.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="TextureManager.cpp" />
-    <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="TileMap.cpp" />
-    <ClCompile Include="Wall.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Consumable.h" />
-    <ClInclude Include="ConsumableType.h" />
-    <ClInclude Include="DirectionEnum.h" />
-    <ClInclude Include="Edge.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="Ghost.h" />
-    <ClInclude Include="Global.h" />
-    <ClInclude Include="Graph.h" />
-    <ClInclude Include="LevelManager.h" />
-    <ClInclude Include="MovingEntity.h" />
-    <ClInclude Include="Node.h" />
-    <ClInclude Include="Pellet.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="Tile.h" />
-    <ClInclude Include="TileMap.h" />
-    <ClInclude Include="NodeType.h" />
-    <ClInclude Include="Utils.h" />
-    <ClInclude Include="Wall.h" />
-=======
     <None Include="large_pellet.bmp" />
     <None Include="Level1.txt" />
     <None Include="pacman.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="ARIAL.TTF" />
->>>>>>> 4e45556... Restructured source and header files on disk
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\blinky.png" />
+    <Image Include="Resources\clyde.png" />
+    <Image Include="Resources\inky.png" />
+    <Image Include="Resources\pac-man-sprite-sheet.png" />
+    <Image Include="Resources\pac-man_closed.png" />
+    <Image Include="Resources\pac-man_D.png" />
+    <Image Include="Resources\pac-man_L.png" />
+    <Image Include="Resources\pac-man_R.png" />
+    <Image Include="Resources\pac-man_U.png" />
+    <Image Include="Resources\pellet.png" />
+    <Image Include="Resources\pinky.png" />
+    <Image Include="Resources\tile.png" />
+    <Image Include="Resources\wall.png" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Consumable.cpp" />
@@ -175,21 +149,6 @@
     <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\Utils.h" />
     <ClInclude Include="include\Wall.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resources\blinky.png" />
-    <Image Include="Resources\clyde.png" />
-    <Image Include="Resources\inky.png" />
-    <Image Include="Resources\pac-man-sprite-sheet.png" />
-    <Image Include="Resources\pac-man_closed.png" />
-    <Image Include="Resources\pac-man_D.png" />
-    <Image Include="Resources\pac-man_L.png" />
-    <Image Include="Resources\pac-man_R.png" />
-    <Image Include="Resources\pac-man_U.png" />
-    <Image Include="Resources\pellet.png" />
-    <Image Include="Resources\pinky.png" />
-    <Image Include="Resources\tile.png" />
-    <Image Include="Resources\wall.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
