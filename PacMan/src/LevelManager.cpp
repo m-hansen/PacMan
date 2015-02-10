@@ -73,8 +73,13 @@ void LevelManager::LoadLevel(std::string levelData)
 
 void LevelManager::FindEdges()
 {
+	std::ofstream outputFile("graph_edges.txt");
+
 	for (std::vector<Node*>::iterator iter = legalPlayingNodes.begin(); iter != legalPlayingNodes.end(); ++iter)
 	{
+		// Write the graph node to file
+		outputFile << (*iter)->GetNodeId() << " -> ";
+
 		for (std::vector<Node*>::iterator iter2 = legalPlayingNodes.begin(); iter2 != legalPlayingNodes.end(); ++iter2)
 		{
 			if (iter != iter2)
@@ -91,12 +96,19 @@ void LevelManager::FindEdges()
 				/*deltaX /= G_SIZE;
 				deltaY /= G_SIZE;*/
 
-				if ((deltaX <= (1)) && (deltaY <= (1)))
+				//if ((deltaX <= (1)) && (deltaY <= (1)))
+				if ((deltaX == 1 && deltaY == 0) || 
+					(deltaX == 0 && deltaY == 1))
 				{
 					// We are within the range to be considered an edge
 					(*iter)->AddNeighborNode((*iter2));
+
+					// Write the graph edges (neighbor nodes) to file
+					outputFile << (*iter2)->GetNodeId() << " ";
 				}
 			}
 		}
+
+		outputFile << "\n";
 	}
 }
