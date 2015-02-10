@@ -80,8 +80,10 @@ void Player::Update(Uint32 deltaT)
 	}
 
 	// Update the position
-	switch (direction)
+	if (isCenteredOnTile)
 	{
+		switch (direction)
+		{
 		case Up:
 			position.y -= speed * deltaT;
 			texture = TextureManager::GetTexture("pacmanUp");
@@ -100,6 +102,7 @@ void Player::Update(Uint32 deltaT)
 			break;
 		case None:
 			break;
+		}
 	}
 
 	// Update the bounding rectangle

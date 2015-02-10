@@ -10,6 +10,17 @@ Node::Node(float x, float y, NodeType nodeType)
 	location.y = y;
 	type = nodeType;
 
+	if ((nodeType == NodeType::EmptyNode) || 
+		(nodeType == NodeType::PelletNode) || 
+		(nodeType == NodeType::PowerPelletNode))
+	{
+		isLegalPlayingNode = true;
+	}
+	else
+	{
+		isLegalPlayingNode = false;
+	}
+
 	boundingRect.w = G_SIZE;
 	boundingRect.h = G_SIZE;
 	boundingRect.x = location.x * G_SIZE;
@@ -55,6 +66,7 @@ SDL_Rect* Node::GetBoundingRect()
 {
 	return &boundingRect;
 }
+
 int Node::GetNodeId()
 {
 	return currentId;

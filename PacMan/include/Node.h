@@ -7,6 +7,11 @@
 #include "Utils.h"
 #include "NodeType.h"
 
+enum NodeDirection
+{
+	North, South, East, West
+};
+
 class Node
 {
 public:
@@ -18,6 +23,7 @@ public:
 	Vector2f GetLocation();
 	NodeType Node::GetType();
 	SDL_Rect* GetBoundingRect();
+	Node* GetNeighbor(std::string direction);
 	int GetNodeId();
 private:
 	Vector2f location;
@@ -26,4 +32,5 @@ private:
 	SDL_Rect boundingRect;
 	static int id;
 	int currentId;
+	bool isLegalPlayingNode;
 };
