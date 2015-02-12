@@ -56,7 +56,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;C:\dev\SDL2-2.0.3\include;C:\dev\SDL2_ttf-2.0.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\Screens;C:\dev\SDL2-2.0.3\include;C:\dev\SDL2_ttf-2.0.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -75,7 +75,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;C:\dev\SDL2-2.0.3\include;C:\dev\SDL2_ttf-2.0.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\Screens;C:\dev\SDL2-2.0.3\include;C:\dev\SDL2_ttf-2.0.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="ARIAL.TTF" />
+    <Font Include="Resources\Fonts\PAC-FONT.TTF" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\blinky.png" />
@@ -121,10 +122,13 @@
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\Pellet.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Screens\AttractScreen.cpp" />
+    <ClCompile Include="src\Screens\GameplayScreen.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
+    <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="src\Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -136,13 +140,15 @@
     <ClInclude Include="include\Ghost.h" />
     <ClInclude Include="include\Global.h" />
     <ClInclude Include="include\graph.h" />
-    <ClInclude Include="include\IScreen.h" />
     <ClInclude Include="include\LevelManager.h" />
     <ClInclude Include="include\MovingEntity.h" />
     <ClInclude Include="include\Node.h" />
     <ClInclude Include="include\NodeType.h" />
     <ClInclude Include="include\Pellet.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\Screens\AttractScreen.h" />
+    <ClInclude Include="include\Screens\GameplayScreen.h" />
+    <ClInclude Include="include\Screens\IScreen.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\Tile.h" />

@@ -13,6 +13,9 @@
 #include "LevelManager.h"
 #include "Graph.h"
 #include "Ghost.h"
+#include "IScreen.h"
+#include "AttractScreen.h"
+#include "GameplayScreen.h"
 
 enum GameStateEnum
 {
@@ -30,36 +33,10 @@ public:
 	~Game();
 	bool Initialize();
 	void LoadContent();
-	void Update();
-	void HandleCollisions();
-	void Render();
 	void Run();
-	void InitializeLevel(std::string lvlName);
-	bool CollisionChecker(SDL_Rect* a, SDL_Rect* b);
 private:
 	SDL_Window* window;
 	SDL_Surface* screenSurface;
 	SDL_Renderer* renderer;
-	SDL_Event previousEvent;
-	SDL_Event currentEvent;
-	bool isRunning;
-	bool isDebugging;
-	Player* player;
-	Ghost* blinky;
-	Ghost* pinky;
-	Ghost* inky;
-	Ghost* clyde;
-	std::vector<Ghost*> ghostList;
-	Graph* level;
-	Uint32 deltaT = 0;
-	Uint32 previousTime = 0;
-	int score;
-	LevelManager levelManager;
-	std::vector<Consumable> consumableList;
-	TTF_Font* arialFont;
-	SDL_Texture* scoreTexture;
-	SDL_Rect scoreTextRect;
-	SDL_Surface* scoreFontSurface;
-	std::string endGameMessage;
-	bool isLevelOver;
+	bool isGameRunning;
 };

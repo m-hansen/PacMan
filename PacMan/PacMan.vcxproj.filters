@@ -34,6 +34,12 @@
     <Filter Include="Resource Files\Fonts">
       <UniqueIdentifier>{73a32654-b87d-4c28-b10b-181376951da6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Screens">
+      <UniqueIdentifier>{3c151d64-f934-4e6c-9cc4-ddf5de019594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Screens">
+      <UniqueIdentifier>{9568a64d-0369-4431-b81e-d7ec6caccd64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="pacman.bmp">
@@ -48,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="ARIAL.TTF">
+      <Filter>Resource Files\Fonts</Filter>
+    </Font>
+    <Font Include="Resources\Fonts\PAC-FONT.TTF">
       <Filter>Resource Files\Fonts</Filter>
     </Font>
   </ItemGroup>
@@ -141,6 +150,15 @@
     <ClCompile Include="src\Wall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Screens\AttractScreen.cpp">
+      <Filter>Source Files\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Screens\GameplayScreen.cpp">
+      <Filter>Source Files\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Consumable.h">
@@ -165,9 +183,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graph.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\IScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\LevelManager.h">
@@ -205,6 +220,15 @@
     </ClInclude>
     <ClInclude Include="include\Wall.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Screens\AttractScreen.h">
+      <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Screens\IScreen.h">
+      <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Screens\GameplayScreen.h">
+      <Filter>Header Files\Screens</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
