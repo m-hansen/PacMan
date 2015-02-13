@@ -38,5 +38,6 @@ private:
 	SDL_Texture* scoreTexture;
 	SDL_Rect scoreTextRect;
 	SDL_Surface* scoreFontSurface;
+	SDL_Renderer* renderer;
 	int score;
 };

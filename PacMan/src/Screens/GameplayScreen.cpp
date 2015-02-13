@@ -3,8 +3,9 @@
 const int SCREEN_WIDTH = 28 * G_SIZE; // 224 width with 8x8 tiles
 const int SCREEN_HEIGHT = 36 * G_SIZE; // 288 height with 8x8 tiles
 
-GameplayScreen::GameplayScreen(SDL_Renderer* renderer) : IScreen(renderer)
+GameplayScreen::GameplayScreen(SDL_Renderer* renderer) : IScreen()
 {
+	this->renderer = renderer;
 	level = NULL;
 	score = 0;
 	arialFont = TTF_OpenFont("Resources\\Fonts\\ARIAL.TTF", G_SIZE);
@@ -15,7 +16,6 @@ GameplayScreen::GameplayScreen(SDL_Renderer* renderer) : IScreen(renderer)
 	endGameMessage = "Game Over!";
 	isLevelOver = false;
 	isDebugging = false;
-
 }
 
 GameplayScreen::~GameplayScreen()

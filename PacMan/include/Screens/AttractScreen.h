@@ -21,4 +21,5 @@ private:
 	SDL_Texture* instructionTexture;
 	SDL_Rect titleTextRect;
 	SDL_Rect instrTextRect;
+	SDL_Renderer* renderer;
 };

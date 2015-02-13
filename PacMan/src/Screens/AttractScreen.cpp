@@ -3,8 +3,10 @@
 const int SCREEN_WIDTH = 28 * G_SIZE; // 224 width with 8x8 tiles
 const int SCREEN_HEIGHT = 36 * G_SIZE; // 288 height with 8x8 tiles
 
-AttractScreen::AttractScreen(SDL_Renderer* renderer) : IScreen(renderer)
+AttractScreen::AttractScreen(SDL_Renderer* renderer) : IScreen()
 {
+	this->renderer = renderer;
+
 	SDL_Surface* fontSurface = NULL;
 
 	// Open the fonts
