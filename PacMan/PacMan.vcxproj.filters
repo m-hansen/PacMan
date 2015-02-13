@@ -42,64 +42,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="pacman.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="large_pellet.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Level1.txt">
       <Filter>Resource Files\LevelData</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="ARIAL.TTF">
-      <Filter>Resource Files\Fonts</Filter>
-    </Font>
-    <Font Include="Resources\Fonts\PAC-FONT.TTF">
-      <Filter>Resource Files\Fonts</Filter>
-    </Font>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resources\blinky.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\clyde.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\inky.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\pac-man_closed.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\pac-man_D.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\pac-man_L.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\pac-man_R.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\pac-man_U.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\pac-man-sprite-sheet.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\pellet.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\pinky.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\tile.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\wall.png">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Consumable.cpp">
@@ -230,5 +175,51 @@
     <ClInclude Include="include\Screens\GameplayScreen.h">
       <Filter>Header Files\Screens</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\blinky.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\clyde.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\inky.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\pac-man_closed.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\pac-man_D.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\pac-man_L.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\pac-man_R.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\pac-man_U.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\pellet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\pinky.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\tile.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\wall.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Resources\Fonts\ARIAL.TTF">
+      <Filter>Resource Files\Fonts</Filter>
+    </Font>
+    <Font Include="Resources\Fonts\PAC-FONT.TTF">
+      <Filter>Resource Files\Fonts</Filter>
+    </Font>
   </ItemGroup>
 </Project>

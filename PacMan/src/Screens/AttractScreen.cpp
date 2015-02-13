@@ -8,8 +8,8 @@ AttractScreen::AttractScreen(SDL_Renderer* renderer) : IScreen(renderer)
 	SDL_Surface* fontSurface = NULL;
 
 	// Open the fonts
-	titleFont = TTF_OpenFont("PAC-FONT.TTF", SCREEN_WIDTH);
-	instructionFont = TTF_OpenFont("ARIAL.TTF", SCREEN_WIDTH / 2);
+	titleFont = TTF_OpenFont("Resources\\Fonts\\PAC-FONT.TTF", SCREEN_WIDTH);
+	instructionFont = TTF_OpenFont("Resources\\Fonts\\ARIAL.TTF", SCREEN_WIDTH / 2);
 
 	// Adjust the title font bounding rectangle
 	titleTextRect.w = SCREEN_WIDTH;

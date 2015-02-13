@@ -7,7 +7,7 @@ GameplayScreen::GameplayScreen(SDL_Renderer* renderer) : IScreen(renderer)
 {
 	level = NULL;
 	score = 0;
-	arialFont = TTF_OpenFont("ARIAL.TTF", G_SIZE);
+	arialFont = TTF_OpenFont("Resources\\Fonts\\ARIAL.TTF", G_SIZE);
 	scoreTextRect.w = G_SIZE * 6;
 	scoreTextRect.h = G_SIZE * 1.5;
 	scoreTextRect.x = 4 * G_SIZE;

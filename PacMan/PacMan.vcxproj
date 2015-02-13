@@ -87,28 +87,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="large_pellet.bmp" />
     <None Include="Level1.txt" />
-    <None Include="pacman.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="ARIAL.TTF" />
-    <Font Include="Resources\Fonts\PAC-FONT.TTF" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resources\blinky.png" />
-    <Image Include="Resources\clyde.png" />
-    <Image Include="Resources\inky.png" />
-    <Image Include="Resources\pac-man-sprite-sheet.png" />
-    <Image Include="Resources\pac-man_closed.png" />
-    <Image Include="Resources\pac-man_D.png" />
-    <Image Include="Resources\pac-man_L.png" />
-    <Image Include="Resources\pac-man_R.png" />
-    <Image Include="Resources\pac-man_U.png" />
-    <Image Include="Resources\pellet.png" />
-    <Image Include="Resources\pinky.png" />
-    <Image Include="Resources\tile.png" />
-    <Image Include="Resources\wall.png" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Consumable.cpp" />
@@ -155,6 +134,24 @@
     <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\Utils.h" />
     <ClInclude Include="include\Wall.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\blinky.png" />
+    <Image Include="Resources\clyde.png" />
+    <Image Include="Resources\inky.png" />
+    <Image Include="Resources\pac-man_closed.png" />
+    <Image Include="Resources\pac-man_D.png" />
+    <Image Include="Resources\pac-man_L.png" />
+    <Image Include="Resources\pac-man_R.png" />
+    <Image Include="Resources\pac-man_U.png" />
+    <Image Include="Resources\pellet.png" />
+    <Image Include="Resources\pinky.png" />
+    <Image Include="Resources\tile.png" />
+    <Image Include="Resources\wall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Resources\Fonts\ARIAL.TTF" />
+    <Font Include="Resources\Fonts\PAC-FONT.TTF" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
