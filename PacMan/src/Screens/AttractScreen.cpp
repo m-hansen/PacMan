@@ -1,12 +1,10 @@
 #include "AttractScreen.h"
+#include "GameplayScreen.h"
 
-const int SCREEN_WIDTH = 28 * G_SIZE; // 224 width with 8x8 tiles
-const int SCREEN_HEIGHT = 36 * G_SIZE; // 288 height with 8x8 tiles
+AttractScreen AttractScreen::attractScreen;
 
-AttractScreen::AttractScreen(SDL_Renderer* renderer) : IScreen()
+void AttractScreen::Initialize(Game* game)
 {
-	this->renderer = renderer;
-
 	SDL_Surface* fontSurface = NULL;
 
 	// Open the fonts
@@ -21,7 +19,7 @@ AttractScreen::AttractScreen(SDL_Renderer* renderer) : IScreen()
 
 	// Create the title font surface and texture
 	fontSurface = TTF_RenderText_Solid(titleFont, "Pac-Man", SDL_Color{ 0, 255, 255 });
-	titleTexture = SDL_CreateTextureFromSurface(renderer, fontSurface);
+	titleTexture = SDL_CreateTextureFromSurface(game->renderer, fontSurface);
 	SDL_FreeSurface(fontSurface);
 	fontSurface = NULL;
 
@@ -33,9 +31,14 @@ AttractScreen::AttractScreen(SDL_Renderer* renderer) : IScreen()
 
 	// Create the instruction font surface and texture
 	fontSurface = TTF_RenderText_Solid(instructionFont, "Press ENTER to play!", SDL_Color{ 255, 255, 255 });
-	instructionTexture = SDL_CreateTextureFromSurface(renderer, fontSurface);
+	instructionTexture = SDL_CreateTextureFromSurface(game->renderer, fontSurface);
 	SDL_FreeSurface(fontSurface);
 	fontSurface = NULL;
+}
+
+void AttractScreen::Cleanup(Game* game)
+{
+
 }
 
 AttractScreen::~AttractScreen()
@@ -43,7 +46,7 @@ AttractScreen::~AttractScreen()
 
 }
 
-void AttractScreen::HandleEvents()
+void AttractScreen::HandleEvents(Game* game)
 {
 	// Handle events on queue
 	while (SDL_PollEvent(&currentEvent) != 0)
@@ -51,7 +54,7 @@ void AttractScreen::HandleEvents()
 		// User requests quit
 		if (currentEvent.type == SDL_QUIT)
 		{
-			isRunning = false;
+			game->Quit();
 		}
 		// User presses a key
 		else if (currentEvent.type == SDL_KEYDOWN)
@@ -60,11 +63,12 @@ void AttractScreen::HandleEvents()
 			{
 			case SDLK_SPACE:
 			case SDLK_RETURN:
+				game->ChangeScreen(GameplayScreen::Instance());
 				printf("Starting game!\n");
 				break;
 			case SDLK_ESCAPE:
 				// User requests quit
-				isRunning = false;
+				game->Quit();
 				break;
 			}
 		}
@@ -83,23 +87,28 @@ void AttractScreen::HandleEvents()
 	}
 }
 
-void AttractScreen::Update()
+void AttractScreen::Update(Game* game)
 {
 
 }
 
-void AttractScreen::Render()
+void AttractScreen::Render(Game* game)
 {
 	// Clear color
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
-	SDL_RenderClear(renderer);
+	SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255); // black
+	SDL_RenderClear(game->renderer);
 
 	// Display the title text
-	SDL_RenderCopy(renderer, titleTexture, NULL, &titleTextRect);
+	SDL_RenderCopy(game->renderer, titleTexture, NULL, &titleTextRect);
 
 	// Display the title text
-	SDL_RenderCopy(renderer, instructionTexture, NULL, &instrTextRect);
+	SDL_RenderCopy(game->renderer, instructionTexture, NULL, &instrTextRect);
 
 	// Update the screen
-	SDL_RenderPresent(renderer);
+	SDL_RenderPresent(game->renderer);
+}
+
+AttractScreen* AttractScreen::Instance()
+{
+	return &attractScreen;
 }

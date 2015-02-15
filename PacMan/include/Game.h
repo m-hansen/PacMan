@@ -13,18 +13,8 @@
 #include "LevelManager.h"
 #include "Graph.h"
 #include "Ghost.h"
-#include "IScreen.h"
-#include "AttractScreen.h"
-#include "GameplayScreen.h"
-
-enum GameStateEnum
-{
-	Attract,
-	Options,
-	Gameplay,
-	Gameover,
-	Pause
-};
+//#include "IScreen.h"
+class IScreen;
 
 class Game
 {
@@ -33,10 +23,18 @@ public:
 	~Game();
 	bool Initialize();
 	void LoadContent();
-	void Run();
+	void HandleEvents();
+	void Update();
+	void Render();
+	void ChangeScreen(IScreen* screen);
+	void PushScreen(IScreen* screen);
+	void PopScreen();
+	bool Running();
+	void Quit();
+	SDL_Renderer* renderer;
 private:
 	SDL_Window* window;
 	SDL_Surface* screenSurface;
-	SDL_Renderer* renderer;
 	bool isGameRunning;
+	std::vector<IScreen*> screens;
 };

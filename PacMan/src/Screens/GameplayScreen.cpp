@@ -1,11 +1,9 @@
 #include "GameplayScreen.h"
 
-const int SCREEN_WIDTH = 28 * G_SIZE; // 224 width with 8x8 tiles
-const int SCREEN_HEIGHT = 36 * G_SIZE; // 288 height with 8x8 tiles
+GameplayScreen GameplayScreen::gameplayScreen;
 
-GameplayScreen::GameplayScreen(SDL_Renderer* renderer) : IScreen()
+void GameplayScreen::Initialize(Game* game)
 {
-	this->renderer = renderer;
 	level = NULL;
 	score = 0;
 	arialFont = TTF_OpenFont("Resources\\Fonts\\ARIAL.TTF", G_SIZE);
@@ -16,21 +14,35 @@ GameplayScreen::GameplayScreen(SDL_Renderer* renderer) : IScreen()
 	endGameMessage = "Game Over!";
 	isLevelOver = false;
 	isDebugging = false;
+	InitializeLevel("Level1.txt");
 }
 
-GameplayScreen::~GameplayScreen()
+void GameplayScreen::Cleanup(Game* game)
 {
-	TTF_CloseFont(arialFont);
-	arialFont = NULL;
+	delete (blinky);
+	blinky = NULL;
+	delete (pinky);
+	pinky = NULL;
+	delete (inky);
+	inky = NULL;
+	delete (clyde);
+	clyde = NULL;
+
+	delete (player);
+	player = NULL;
 
 	delete (level);
 	level = NULL;
 
-	delete (player);
-	player = NULL;
+	TTF_CloseFont(arialFont);
+	arialFont = NULL;
 }
 
-void GameplayScreen::HandleEvents()
+GameplayScreen::~GameplayScreen()
+{
+}
+
+void GameplayScreen::HandleEvents(Game* game)
 {
 	// Handle events on queue
 	while (SDL_PollEvent(&currentEvent) != 0)
@@ -38,7 +50,7 @@ void GameplayScreen::HandleEvents()
 		// User requests quit
 		if (currentEvent.type == SDL_QUIT)
 		{
-			isRunning = false;
+			game->Quit();
 		}
 		// User presses a key
 		else if (currentEvent.type == SDL_KEYDOWN)
@@ -79,21 +91,7 @@ void GameplayScreen::HandleEvents()
 				break;
 			case SDLK_ESCAPE:
 				// User requests quit
-				isRunning = false;
-				break;
-			}
-		}
-		// User clicks the mouse
-		else if (currentEvent.type == SDL_MOUSEBUTTONDOWN)
-		{
-			switch (currentEvent.button.clicks)
-			{
-			case SDL_BUTTON_LEFT:
-				printf("Left mouse button clicked at\tx=%d\ty=%d\n", currentEvent.button.x, currentEvent.button.y);
-				break;
-			case SDL_BUTTON_RIGHT:
-				break;
-			case SDL_BUTTON_MIDDLE:
+				game->Quit();
 				break;
 			}
 		}
@@ -128,13 +126,8 @@ void GameplayScreen::InitializeLevel(std::string lvlName)
 	score = 0;
 }
 
-void GameplayScreen::Update()
+void GameplayScreen::Update(Game* game)
 {
-	if (level == NULL)
-	{
-		InitializeLevel("Level1.txt");
-	}
-
 	// Calculate delta time
 	Uint32 currentTime = SDL_GetTicks();
 	if (currentTime > previousTime)
@@ -163,11 +156,11 @@ void GameplayScreen::Update()
 	HandleCollisions();
 }
 
-void GameplayScreen::Render()
+void GameplayScreen::Render(Game* game)
 {
 	// Clear color
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
-	SDL_RenderClear(renderer);
+	SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255); // black
+	SDL_RenderClear(game->renderer);
 
 	// Render the tile map
 	//tileMap->Render(renderer);
@@ -184,18 +177,18 @@ void GameplayScreen::Render()
 			Vector2f loc = node->GetLocation();
 
 			// Temporarily set the rendering color to white for the nodes
-			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white
+			SDL_SetRenderDrawColor(game->renderer, 255, 255, 255, 255); // white
 			switch (node->GetType())
 			{
 				//case NodeType::Empty:
 				//SDL_RenderCopy(renderer, TextureManager::GetTexture(, NULL, &boundingRect);
 			}
-			SDL_RenderDrawPoint(renderer, loc.x * G_SIZE, loc.y * G_SIZE);
+			SDL_RenderDrawPoint(game->renderer, loc.x * G_SIZE, loc.y * G_SIZE);
 
 			// Draw each node's bounding rectangle
-			(*iter)->Render(renderer);
+			(*iter)->Render(game->renderer);
 
-			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
+			SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255); // black
 		}
 	}
 
@@ -203,23 +196,23 @@ void GameplayScreen::Render()
 	for (std::vector<Wall*>::iterator iter = levelManager.wallList.begin();
 		iter != levelManager.wallList.end(); ++iter)
 	{
-		(*iter)->Render(renderer);
+		(*iter)->Render(game->renderer);
 	}
 
 	// Render each remaining pellet on the board
 	for (std::vector<Pellet*>::iterator iter = levelManager.pelletList.begin();
 		iter != levelManager.pelletList.end(); ++iter)
 	{
-		(*iter)->Render(renderer);
+		(*iter)->Render(game->renderer);
 	}
 
 	// Render the player
-	player->Render(renderer);
+	player->Render(game->renderer);
 
 	// Render the AI
 	for (std::vector<Ghost*>::iterator iter = ghostList.begin(); iter != ghostList.end(); ++iter)
 	{
-		(*iter)->Render(renderer);
+		(*iter)->Render(game->renderer);
 	}
 
 	// Display the score
@@ -227,10 +220,10 @@ void GameplayScreen::Render()
 	{
 		std::string scoreString = "Score: " + std::to_string(score);
 		scoreFontSurface = TTF_RenderText_Solid(arialFont, scoreString.c_str(), SDL_Color{ 255, 255, 255 });
-		scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreFontSurface);
+		scoreTexture = SDL_CreateTextureFromSurface(game->renderer, scoreFontSurface);
 		SDL_FreeSurface(scoreFontSurface);
 		scoreFontSurface = NULL;
-		SDL_RenderCopy(renderer, scoreTexture, NULL, &scoreTextRect);
+		SDL_RenderCopy(game->renderer, scoreTexture, NULL, &scoreTextRect);
 	}
 
 	if (isLevelOver)
@@ -242,14 +235,14 @@ void GameplayScreen::Render()
 		endGameRect.y = SCREEN_HEIGHT / 2 - endGameRect.h / 2;
 
 		scoreFontSurface = TTF_RenderText_Solid(arialFont, endGameMessage.c_str(), SDL_Color{ 255, 255, 255 });
-		scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreFontSurface);
+		scoreTexture = SDL_CreateTextureFromSurface(game->renderer, scoreFontSurface);
 		SDL_FreeSurface(scoreFontSurface);
 		scoreFontSurface = NULL;
-		SDL_RenderCopy(renderer, scoreTexture, NULL, &endGameRect);
+		SDL_RenderCopy(game->renderer, scoreTexture, NULL, &endGameRect);
 	}
 
 	// Update the screen
-	SDL_RenderPresent(renderer);
+	SDL_RenderPresent(game->renderer);
 }
 
 void GameplayScreen::HandleCollisions()

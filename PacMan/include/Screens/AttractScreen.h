@@ -6,12 +6,15 @@
 class AttractScreen : public IScreen
 {
 public:
-	AttractScreen(SDL_Renderer* renderer);
 	~AttractScreen();
-	void HandleEvents();
-	void Update();
-	void Render();
+	void Initialize(Game* game);
+	void Cleanup(Game* game);
+	void HandleEvents(Game* game);
+	void Update(Game* game);
+	void Render(Game* game);
+	static AttractScreen* Instance();
 private:
+	static AttractScreen attractScreen;
 	SDL_Event previousEvent;
 	SDL_Event currentEvent;
 	bool isRunning;
@@ -21,5 +24,4 @@ private:
 	SDL_Texture* instructionTexture;
 	SDL_Rect titleTextRect;
 	SDL_Rect instrTextRect;
-	SDL_Renderer* renderer;
 };

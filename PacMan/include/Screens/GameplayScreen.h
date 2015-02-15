@@ -8,15 +8,21 @@
 class GameplayScreen : public IScreen
 {
 public:
-	GameplayScreen(SDL_Renderer* rend);
 	~GameplayScreen();
+	void Initialize(Game* game);
+	void Cleanup(Game* game);
 	void InitializeLevel(std::string lvlName);
-	void HandleEvents();
-	void Update();
+	void HandleEvents(Game* game);
+	void Update(Game* game);
+	void Render(Game* game);
 	void HandleCollisions();
-	void Render();
 	bool CollisionChecker(SDL_Rect* a, SDL_Rect* b);
+	static GameplayScreen* Instance()
+	{
+		return &gameplayScreen;
+	}
 private:
+	static GameplayScreen gameplayScreen;
 	Graph* level;
 	Player* player;
 	Uint32 deltaT = 0;
@@ -38,6 +44,5 @@ private:
 	SDL_Texture* scoreTexture;
 	SDL_Rect scoreTextRect;
 	SDL_Surface* scoreFontSurface;
-	SDL_Renderer* renderer;
 	int score;
 };

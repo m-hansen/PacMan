@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "IScreen.h"
 
 const int SCREEN_WIDTH = 28 * G_SIZE; // 224 width with 8x8 tiles
 const int SCREEN_HEIGHT = 36 * G_SIZE; // 288 height with 8x8 tiles
@@ -47,7 +48,7 @@ bool Game::Initialize()
 	screenSurface = SDL_GetWindowSurface(window);
 
 	// Create the renderer
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (renderer == NULL)
 	{
 		printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -82,14 +83,55 @@ void Game::LoadContent()
 	TextureManager::LoadTexture(renderer, "clyde", "Resources\\clyde.png");
 }
 
-void Game::Run()
+void Game::HandleEvents()
 {
-	IScreen* currentScreen = new GameplayScreen(renderer);
+	screens.back()->HandleEvents(this);
+}
 
-	while (isGameRunning)
+void Game::Update()
+{
+	screens.back()->Update(this);
+}
+
+void Game::Render()
+{
+	screens.back()->Render(this);
+}
+
+void Game::ChangeScreen(IScreen* screen)
+{
+	// Cleanup the current screen
+	if (!screens.empty())
 	{
-		currentScreen->HandleEvents();
-		currentScreen->Update();
-		currentScreen->Render();
+		screens.back()->Cleanup(this);
+		screens.pop_back();
 	}
+
+	screens.push_back(screen);
+	screens.back()->Initialize(this);
+}
+
+void Game::PushScreen(IScreen* screen)
+{
+	screens.push_back(screen);
+	screens.back()->Initialize(this);
+}
+
+void Game::PopScreen()
+{
+	if (!screens.empty())
+	{
+		screens.back()->Cleanup(this);
+		screens.pop_back();
+	}
+}
+
+bool Game::Running()
+{
+	return isGameRunning;
+}
+
+void Game::Quit()
+{
+	isGameRunning = false;
 }
