@@ -12,7 +12,6 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum 
 	boundingRect.y = position.y;
 
 	speed = 0.05f * (G_SIZE / 8);
-	//int rand = std::rand() % 4;
 	direction = dir;
 	newDirection = DirectionEnum::None;
 	previousDirection = direction;
@@ -132,10 +131,6 @@ void Ghost::Update(Uint32 deltaT)
 	{
 	case Up:
 		position.y -= speed * deltaT;
-		if ((int)(position.x) % G_SIZE != 0)
-		{
-
-		}
 		break;
 	case Down:
 		position.y += speed * deltaT;

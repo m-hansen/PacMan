@@ -3,7 +3,6 @@
 #include <SDL.h>
 #include <vector>
 #include "Global.h"
-#include "Edge.h"
 #include "Utils.h"
 #include "NodeType.h"
 

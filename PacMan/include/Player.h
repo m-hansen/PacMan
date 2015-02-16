@@ -1,11 +1,11 @@
 #pragma once
-#include <SDL.h>
+#include "SDL.h"
 #include "TextureManager.h"
-#include "MovingEntity.h"
+#include "Renderable.h"
 #include "DirectionEnum.h"
 #include "Node.h"
 
-class Player : public MovingEntity
+class Player : public Renderable
 {
 public:
 	Player();
@@ -29,7 +29,10 @@ public:
 private:
 	void ConsumeQueuedMovement();
 	bool isAlive;
+	bool isVisible;
 	int livesLeft;
+	Vector2f position;
+	float speed;
 	SDL_Rect spriteRect;
 	SDL_Rect livesLeftRect;
 	SDL_Rect boundingRect;

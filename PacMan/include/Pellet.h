@@ -1,9 +1,10 @@
 #pragma once
 #include <SDL.h>
+#include "Renderable.h"
 #include "TextureManager.h"
 #include "Node.h"
 
-class Pellet
+class Pellet : public Renderable
 {
 public:
 	Pellet(Node* node);

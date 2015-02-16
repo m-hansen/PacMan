@@ -10,6 +10,7 @@ Player::Player()
 	livesLeft = 3;
 	isAlive = true;
 	isMoving = true;
+	isVisible = true;
 	livesLeftRect.w = G_SIZE;
 	livesLeftRect.h = G_SIZE;
 	newDirection = DirectionEnum::None;
@@ -47,6 +48,7 @@ bool Player::Kill()
 	{
 		printf("Game Over!\n");
 		isAlive = false;
+		isVisible = false;
 		position.x = -1;
 		position.y = -1;
 		return true;
@@ -139,8 +141,8 @@ void Player::UpdateNodes(Node* newNode)
 
 void Player::Render(SDL_Renderer* renderer)
 {
-	// Do not render if player has run out of lives
-	if (!isAlive)return;
+	// Don't render if object is not visible
+	if (!isVisible) return;
 
 	SDL_RenderCopy(renderer, texture, NULL, &spriteRect);
 

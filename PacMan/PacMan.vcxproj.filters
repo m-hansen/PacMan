@@ -2,13 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\Consumable.cpp" />
-    <ClCompile Include="src\Edge.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Ghost.cpp" />
     <ClCompile Include="src\Graph.cpp" />
     <ClCompile Include="src\LevelManager.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MovingEntity.cpp" />
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\Pellet.cpp" />
     <ClCompile Include="src\Player.cpp" />
@@ -25,13 +23,10 @@
     <ClInclude Include="include\Consumable.h" />
     <ClInclude Include="include\ConsumableType.h" />
     <ClInclude Include="include\DirectionEnum.h" />
-    <ClInclude Include="include\Edge.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Ghost.h" />
     <ClInclude Include="include\Global.h" />
-    <ClInclude Include="include\graph.h" />
     <ClInclude Include="include\LevelManager.h" />
-    <ClInclude Include="include\MovingEntity.h" />
     <ClInclude Include="include\Node.h" />
     <ClInclude Include="include\NodeType.h" />
     <ClInclude Include="include\Pellet.h" />
@@ -45,6 +40,8 @@
     <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\Utils.h" />
     <ClInclude Include="include\Wall.h" />
+    <ClInclude Include="include\Renderable.h" />
+    <ClInclude Include="include\graph.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\blinky.png" />

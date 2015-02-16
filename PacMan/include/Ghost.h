@@ -1,12 +1,13 @@
 #pragma once
-#include <SDL.h>
+#include "SDL.h"
 #include "Global.h"
 #include "Utils.h"
 #include "TextureManager.h"
+#include "Renderable.h"
 #include "Node.h"
 #include "DirectionEnum.h"
 
-class Ghost
+class Ghost : public Renderable
 {
 public:
 	Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum dir);
