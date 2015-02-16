@@ -26,7 +26,7 @@ void GameplayScreen::Initialize(Game* game)
 	endGameMessage = "Game Over!";
 	isLevelOver = false;
 	isDebugging = false;
-	InitializeLevel("Level1.txt");
+	InitializeLevel("Resources\\LevelData\\Level1.txt");
 	isPaused = false;
 }
 
