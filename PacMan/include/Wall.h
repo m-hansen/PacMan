@@ -16,4 +16,5 @@ private:
 	Node* location;
 	SDL_Texture* texture;
 	SDL_Rect boundingRect;
+	SDL_Rect renderRect;
 };
