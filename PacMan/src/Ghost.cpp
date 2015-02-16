@@ -3,8 +3,8 @@
 Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum dir)
 {
 	texture = TextureManager::GetTexture(textureName.c_str());
-	position.x = (spawnX * G_SIZE) - (G_SIZE / 2);
-	position.y = (spawnY * G_SIZE) - (G_SIZE / 2);
+	position.x = (spawnX * G_SIZE);
+	position.y = (spawnY * G_SIZE);
 
 	boundingRect.w = G_SIZE;
 	boundingRect.h = G_SIZE;
@@ -34,8 +34,8 @@ void Ghost::Update(Uint32 deltaT)
 	if (currentNode != NULL)
 	{
 		// Account for rounding errors
-		float posX = (position.x - (currentNode->GetLocation().x * G_SIZE)) - G_SIZE / 2;
-		float posY = (position.y - (currentNode->GetLocation().y * G_SIZE)) - G_SIZE / 2;
+		float posX = (position.x - (currentNode->GetLocation().x * G_SIZE));
+		float posY = (position.y - (currentNode->GetLocation().y * G_SIZE));
 		if (posX < 0) posX *= -1;
 		if (posY < 0) posY *= -1;
 
@@ -120,8 +120,8 @@ void Ghost::Update(Uint32 deltaT)
 	// Update the AI direction when we are centered in a tile
 	if ((isCenteredOnTile) && (newDirection != DirectionEnum::None))
 	{
-		position.x = (currentNode->GetLocation().x * G_SIZE) + (G_SIZE / 2);
-		position.y = (currentNode->GetLocation().y * G_SIZE) + (G_SIZE / 2);
+		position.x = (currentNode->GetLocation().x * G_SIZE);
+		position.y = (currentNode->GetLocation().y * G_SIZE);
 		direction = newDirection;
 		newDirection = DirectionEnum::None;
 	}
@@ -145,8 +145,8 @@ void Ghost::Update(Uint32 deltaT)
 		break;
 	}
 
-	boundingRect.x = position.x - (G_SIZE / 2);
-	boundingRect.y = position.y - (G_SIZE / 2);
+	boundingRect.x = position.x;
+	boundingRect.y = position.y;
 
 	previousFrameNode = currentNode;
 }
@@ -160,6 +160,11 @@ void Ghost::UpdateNodes(Node* newNode)
 void Ghost::Render(SDL_Renderer* renderer)
 {
 	SDL_RenderCopy(renderer, texture, NULL, &boundingRect);
+
+	// draw the bounding rectangle for degubbing
+	//SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white
+	//SDL_RenderDrawRect(renderer, &boundingRect);
+	//SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
 }
 
 void Ghost::SetDirection(DirectionEnum dirEnum)

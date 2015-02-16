@@ -26,8 +26,8 @@ void GameplayScreen::Initialize(Game* game)
 	endGameMessage = "Game Over!";
 	isLevelOver = false;
 	isDebugging = false;
+	isPaused = true;
 	InitializeLevel("Resources\\LevelData\\Level1.txt");
-	isPaused = false;
 }
 
 void GameplayScreen::Cleanup(Game* game)
@@ -145,7 +145,7 @@ void GameplayScreen::InitializeLevel(std::string lvlName)
 	// Load the AI
 	blinky = new Ghost("blinky", 12.0f, 5.0f, DirectionEnum::Left);
 	pinky = new Ghost("pinky", 15.0f, 5.0f, DirectionEnum::Right);
-	inky = new Ghost("inky", 10.0f, 5.0f, DirectionEnum::Down);
+	inky = new Ghost("inky", 9.0f, 5.0f, DirectionEnum::Down);
 	clyde = new Ghost("clyde", 18.0f, 5.0f, DirectionEnum::Down);
 
 	ghostList.push_back(blinky);
@@ -158,15 +158,16 @@ void GameplayScreen::InitializeLevel(std::string lvlName)
 
 void GameplayScreen::Update(Game* game)
 {
-	//if (isPaused) return;
-
 	// Calculate delta time
 	Uint32 currentTime = SDL_GetTicks();
 	if (currentTime > previousTime)
 	{
 		deltaT = currentTime - previousTime;
 		previousTime = currentTime;
-	}if (isPaused) return;
+	}
+	
+	// Immediately return after calculating delta time if paused
+	if (isPaused) return;
 
 	// Check for victory condition
 	if (levelManager.pelletList.empty())
