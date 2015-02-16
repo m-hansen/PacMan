@@ -60,29 +60,42 @@ void GameplayScreen::HandleEvents(Game* game)
 			case SDLK_UP:
 				if (player->isAlignedWithTile && player->GetDirection() != DirectionEnum::Up)
 				{
-					player->SetPosition(player->GetCurrentNode());
-					player->SetDirection(Up);
+					//player->SetPosition(player->GetCurrentNode());
+
+					// Quick movement if we are moving along the same axis
+					// queued movement otherwise
+					(player->GetDirection() == DirectionEnum::Down) ?
+						player->SetDirection(DirectionEnum::Up) : player->QueueDirection(DirectionEnum::Up);
 				}
 				break;
 			case SDLK_DOWN:
 				if (player->isAlignedWithTile && player->GetDirection() != DirectionEnum::Down)
 				{
-					player->SetPosition(player->GetCurrentNode());
-					player->SetDirection(Down);
+					//player->SetPosition(player->GetCurrentNode());
+					// Quick movement if we are moving along the same axis
+					// queued movement otherwise
+					(player->GetDirection() == DirectionEnum::Up) ?
+						player->SetDirection(DirectionEnum::Down) : player->QueueDirection(DirectionEnum::Down);
 				}
 				break;
 			case SDLK_LEFT:
 				if (player->isAlignedWithTile && player->GetDirection() != DirectionEnum::Left)
 				{
-					player->SetPosition(player->GetCurrentNode());
-					player->SetDirection(Left);
+					//player->SetPosition(player->GetCurrentNode());
+					// Quick movement if we are moving along the same axis
+					// queued movement otherwise
+					(player->GetDirection() == DirectionEnum::Right) ?
+						player->SetDirection(DirectionEnum::Left) : player->QueueDirection(DirectionEnum::Left);
 				}
 				break;
 			case SDLK_RIGHT:
 				if (player->isAlignedWithTile && player->GetDirection() != DirectionEnum::Right)
 				{
-					player->SetPosition(player->GetCurrentNode());
-					player->SetDirection(Right);
+					//player->SetPosition(player->GetCurrentNode());
+					// Quick movement if we are moving along the same axis
+					// queued movement otherwise
+					(player->GetDirection() == DirectionEnum::Left) ?
+						player->SetDirection(DirectionEnum::Right) : player->QueueDirection(DirectionEnum::Right);
 				}
 				break;
 			case SDLK_F3:
@@ -113,10 +126,10 @@ void GameplayScreen::InitializeLevel(std::string lvlName)
 	player->Initialize();
 
 	// Load the AI
-	blinky = new Ghost("blinky", 12, 15);
-	pinky = new Ghost("pinky", 15, 15);
-	inky = new Ghost("inky", 12, 15);
-	clyde = new Ghost("clyde", 12, 15);
+	blinky = new Ghost("blinky", 12.0f, 5.0f, DirectionEnum::Left);
+	pinky = new Ghost("pinky", 15.0f, 5.0f, DirectionEnum::Right);
+	inky = new Ghost("inky", 10.0f, 5.0f, DirectionEnum::Down);
+	clyde = new Ghost("clyde", 18.0f, 5.0f, DirectionEnum::Down);
 
 	ghostList.push_back(blinky);
 	ghostList.push_back(pinky);
@@ -302,20 +315,11 @@ void GameplayScreen::HandleCollisions()
 				player->SetDirection(DirectionEnum::None);
 
 			}
-			printf("A collision has occured between the player and a wall!\n");
-			//if (player->GetDirection() != player->GetPreviousDirection())
-			{
-				//player->SetDirection(player->GetPreviousDirection());
-			}
-			//else
-			{
-				//player->SetDirection(DirectionEnum::None);
-			}
 			player->SetPosition(player->GetCurrentNode());
 		}
 
 		// Check if each ghost collides with a wall
-		for (std::vector<Ghost*>::iterator aiIter = ghostList.begin(); aiIter != ghostList.end(); ++aiIter)
+		/*for (std::vector<Ghost*>::iterator aiIter = ghostList.begin(); aiIter != ghostList.end(); ++aiIter)
 		{
 			if (Utils::CollisionChecker((*aiIter)->GetBoundingRect(), (*iter)->GetBoundingRect()))
 			{
@@ -324,7 +328,7 @@ void GameplayScreen::HandleCollisions()
 				(*aiIter)->SetPosition((*aiIter)->GetCurrentNode());
 				(*aiIter)->SetDirection((DirectionEnum)randVal);
 			}
-		}
+		}*/
 	}
 
 	// Check for collisions between player and consumable
@@ -337,7 +341,6 @@ void GameplayScreen::HandleCollisions()
 			delete (*iter);
 			levelManager.pelletList.erase(iter);
 			score += 10;
-			printf("Score: %d\n", score);
 			// The break is necessary for two reasons
 			// 1) we stop checking for nodes once we found we collided with one
 			// 2) if we allow iter to increment we will crash because we are erasing elements

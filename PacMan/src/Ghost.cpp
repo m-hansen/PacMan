@@ -1,6 +1,6 @@
 #include "Ghost.h"
 
-Ghost::Ghost(std::string textureName, float spawnX, float spawnY)
+Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum dir)
 {
 	texture = TextureManager::GetTexture(textureName.c_str());
 	position.x = (spawnX * G_SIZE) - (G_SIZE / 2);
@@ -12,8 +12,8 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY)
 	boundingRect.y = position.y;
 
 	speed = 0.05f * (G_SIZE / 8);
-	int rand = std::rand() % 4;
-	direction = (DirectionEnum)rand;
+	//int rand = std::rand() % 4;
+	direction = dir;
 	newDirection = DirectionEnum::None;
 	previousDirection = direction;
 
@@ -121,6 +121,8 @@ void Ghost::Update(Uint32 deltaT)
 	// Update the AI direction when we are centered in a tile
 	if ((isCenteredOnTile) && (newDirection != DirectionEnum::None))
 	{
+		position.x = (currentNode->GetLocation().x * G_SIZE) + (G_SIZE / 2);
+		position.y = (currentNode->GetLocation().y * G_SIZE) + (G_SIZE / 2);
 		direction = newDirection;
 		newDirection = DirectionEnum::None;
 	}

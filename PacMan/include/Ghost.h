@@ -9,7 +9,7 @@
 class Ghost
 {
 public:
-	Ghost(std::string textureName, float spawnX, float spawnY);
+	Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum dir);
 	~Ghost();
 	void Update(Uint32 deltaT);
 	void UpdateNodes(Node* newNode);
