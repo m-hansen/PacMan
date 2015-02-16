@@ -14,11 +14,32 @@ void GameplayScreen::Resume()
 	fprintf(stdout, "GameplayScreen resumed\n");
 }
 
+void GameplayScreen::LoadContent(SDL_Renderer* renderer)
+{
+	// Load textures
+	TextureManager::LoadTexture(renderer, "tile", "Resources\\tile.png");
+	TextureManager::LoadTexture(renderer, "pacmanRight", "Resources\\pac-man_R.png");
+	TextureManager::LoadTexture(renderer, "pacmanLeft", "Resources\\pac-man_L.png");
+	TextureManager::LoadTexture(renderer, "pacmanUp", "Resources\\pac-man_U.png");
+	TextureManager::LoadTexture(renderer, "pacmanDown", "Resources\\pac-man_D.png");
+	TextureManager::LoadTexture(renderer, "pacmanClosed", "Resources\\pac-man_closed.png");
+	TextureManager::LoadTexture(renderer, "wall", "Resources\\wall.png");
+	TextureManager::LoadTexture(renderer, "pellet", "Resources\\pellet.png");
+	TextureManager::LoadTexture(renderer, "blinky", "Resources\\blinky.png");
+	TextureManager::LoadTexture(renderer, "pinky", "Resources\\pinky.png");
+	TextureManager::LoadTexture(renderer, "inky", "Resources\\inky.png");
+	TextureManager::LoadTexture(renderer, "clyde", "Resources\\clyde.png");
+}
+
 void GameplayScreen::Initialize(Game* game)
 {
+	// Load all content first
+	LoadContent(game->renderer);
+	arialFont = TTF_OpenFont("Resources\\Fonts\\ARIAL.TTF", G_SIZE);
+
+	// Initialize variables
 	level = NULL;
 	score = 0;
-	arialFont = TTF_OpenFont("Resources\\Fonts\\ARIAL.TTF", G_SIZE);
 	scoreTextRect.w = G_SIZE * 6;
 	scoreTextRect.h = G_SIZE * 1.5;
 	scoreTextRect.x = 4 * G_SIZE;
@@ -26,7 +47,9 @@ void GameplayScreen::Initialize(Game* game)
 	endGameMessage = "Game Over!";
 	isLevelOver = false;
 	isDebugging = false;
-	isPaused = true;
+	isPaused = false;
+
+	// Finally, initialize the level
 	InitializeLevel("Resources\\LevelData\\Level1.txt");
 }
 

@@ -24,6 +24,7 @@ public:
 		return &gameplayScreen;
 	}
 private:
+	void LoadContent(SDL_Renderer* renderer);
 	static GameplayScreen gameplayScreen;
 	Graph* level;
 	Player* player;
@@ -42,7 +43,6 @@ private:
 	bool isRunning;
 	bool isDebugging;
 	bool isPaused;
-	//SDL_Renderer* renderer;
 	TTF_Font* arialFont;
 	SDL_Texture* scoreTexture;
 	SDL_Rect scoreTextRect;
