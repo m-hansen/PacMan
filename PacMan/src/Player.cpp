@@ -12,6 +12,7 @@ Player::Player()
 	isMoving = true;
 	livesLeftRect.w = G_SIZE;
 	livesLeftRect.h = G_SIZE;
+	newDirection = DirectionEnum::None;
 }
 
 Player::~Player()
@@ -66,11 +67,12 @@ void Player::Update(Uint32 deltaT)
 	if (currentNode != NULL)
 	{
 		// Account for rounding errors
-		float posX = position.x - (currentNode->GetLocation().x * G_SIZE);
-		float posY = position.y - (currentNode->GetLocation().y * G_SIZE);
+		float posX = (position.x - (currentNode->GetLocation().x * G_SIZE)) - (G_SIZE / 2);
+		float posY = (position.y - (currentNode->GetLocation().y * G_SIZE)) - (G_SIZE / 2);
 		if (posX < 0) posX *= -1;
 		if (posY < 0) posY *= -1;
 
+		// Check if player is aligned within the grid
 		if (posX < (G_SIZE / 2) + G_SIZE - 1 && posY < (G_SIZE / 2) + G_SIZE - 1)
 		{
 			isAlignedWithTile = true;
@@ -80,22 +82,20 @@ void Player::Update(Uint32 deltaT)
 			isAlignedWithTile = false;
 		}
 
-		//// Calculate the x and y offset from a tile's origin
-		//float xOffset = position.x - (currentNode->GetLocation().x * G_SIZE) + G_SIZE / 2;
-		//float yOffset = position.y - (currentNode->GetLocation().y * G_SIZE) + G_SIZE / 2;
-		//if (xOffset < 0) xOffset *= -1;
-		//if (yOffset < 0) yOffset *= -1;
+		// Check if player is centered in a tile
+		if (posX < 1 && posY < 1)
+		{
+			isCenteredOnTile = true;
+		}
+		else
+		{
+			isCenteredOnTile = false;
+		}
+	}
 
-		//if ((int)xOffset == 0 && (int)yOffset == 0)
-		//{
-		//	isCenteredOnTile = true;
-		//	printf("CENTERED!\n");
-		//}
-		//else
-		//{
-		//	isCenteredOnTile = false;
-		//	printf("not!\n");
-		//}
+	if ((isCenteredOnTile) && (newDirection != DirectionEnum::None))
+	{
+		ConsumeQueuedMovement();
 	}
 
 	// Update the position
@@ -154,10 +154,58 @@ void Player::Render(SDL_Renderer* renderer)
 	
 }
 
+void Player::ConsumeQueuedMovement()
+{
+	bool readyToConsume = false;
+
+	// First check neighboring nodes
+	std::vector<Node*> neighbors = currentNode->GetNeighborNodes();
+	for (std::vector<Node*>::iterator iter = neighbors.begin();
+		iter != neighbors.end(); ++iter)
+	{
+		switch (newDirection)
+		{
+		case Up:
+			if ((*iter)->GetNodeId() < (currentNode->GetNodeId() - 1))
+				readyToConsume = true;
+			break;
+		case Down:
+			if ((*iter)->GetNodeId() > (currentNode->GetNodeId() + 1))
+				readyToConsume = true;
+			break;
+		case Left:
+			if ((*iter)->GetNodeId() == (currentNode->GetNodeId() - 1))
+				readyToConsume = true;
+			break;
+		case Right:
+			// break out if we cannot yet move in the queued direction
+			if ((*iter)->GetNodeId() == (currentNode->GetNodeId() + 1))
+				readyToConsume = true;
+			break;
+		case None:
+			break;
+		}
+	}
+
+	// break out early if we cannot yet move in the queued direction
+	if (!readyToConsume)
+		return;
+
+	position.x = (currentNode->GetLocation().x * G_SIZE) + (G_SIZE / 2);
+	position.y = (currentNode->GetLocation().y * G_SIZE) + (G_SIZE / 2);
+	direction = newDirection;
+	newDirection = DirectionEnum::None;
+}
+
 void Player::SetDirection(DirectionEnum dirEnum)
 {
 	previousDirection = direction;
 	direction = dirEnum;
+}
+
+void Player::QueueDirection(DirectionEnum dirEnum)
+{
+	newDirection = dirEnum;
 }
 
 SDL_Rect* Player::GetBoundingRect()

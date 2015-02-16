@@ -15,6 +15,7 @@ public:
 	void UpdateNodes(Node* newNode);
 	void Render(SDL_Renderer* renderer);
 	void SetDirection(DirectionEnum dirEnum);
+	void QueueDirection(DirectionEnum dirEnum);
 	bool Kill();
 	SDL_Rect* GetBoundingRect();
 	SDL_Rect* GetSpriteRect();
@@ -26,6 +27,7 @@ public:
 	void SetPreviousDirection(DirectionEnum dir);
 	bool isAlignedWithTile;
 private:
+	void ConsumeQueuedMovement();
 	bool isAlive;
 	int livesLeft;
 	SDL_Rect spriteRect;
@@ -33,9 +35,11 @@ private:
 	SDL_Rect boundingRect;
 	DirectionEnum direction;
 	DirectionEnum previousDirection;
+	DirectionEnum newDirection;
 	Node* currentNode;
 	Node* previousNode;
 	SDL_Texture* texture;
 	SDL_Texture* livesTexture;
 	bool isMoving;
+	bool isCenteredOnTile;
 };
