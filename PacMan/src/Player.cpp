@@ -25,17 +25,25 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	float initialPlayerPos[2] = { 112.0f, 188.0f };
+	Vector2f initialPlayerPos = { 112.0f, 188.0f };
 
 	isAlignedWithTile = false;
-	spriteRect.w = G_SIZE;
-	spriteRect.h = G_SIZE;
-	boundingRect.w = 1;
-	boundingRect.h = 1;
 
 	speed = 0.05f * (G_SIZE / 8); // adjust speed based on grid size
-	position.x = initialPlayerPos[0] * (G_SIZE / 8);
-	position.y = initialPlayerPos[1] * (G_SIZE / 8);
+	position.x = initialPlayerPos.x * (G_SIZE / 8);
+	position.y = initialPlayerPos.y * (G_SIZE / 8);
+
+	// Set the collision rectangle
+	boundingRect.w = 1;
+	boundingRect.h = 1;
+	boundingRect.x = position.x;
+	boundingRect.y = position.y;
+
+	// Set the rendering rectangle
+	spriteRect.w = G_SIZE;
+	spriteRect.h = G_SIZE;
+	spriteRect.x = position.x - (G_SIZE / 2);
+	spriteRect.y = position.y - (G_SIZE / 2);
 
 	direction = DirectionEnum::Right;
 	previousDirection = direction;

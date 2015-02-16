@@ -103,8 +103,6 @@
     <ClCompile Include="src\Screens\GameplayScreen.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
-    <ClCompile Include="src\Tile.cpp" />
-    <ClCompile Include="src\TileMap.cpp" />
     <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="src\Wall.cpp" />
   </ItemGroup>
