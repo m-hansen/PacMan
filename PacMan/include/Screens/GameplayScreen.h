@@ -9,6 +9,8 @@ class GameplayScreen : public IScreen
 {
 public:
 	~GameplayScreen();
+	void Pause();
+	void Resume();
 	void Initialize(Game* game);
 	void Cleanup(Game* game);
 	void InitializeLevel(std::string lvlName);
@@ -39,6 +41,7 @@ private:
 	SDL_Event currentEvent;
 	bool isRunning;
 	bool isDebugging;
+	bool isPaused;
 	//SDL_Renderer* renderer;
 	TTF_Font* arialFont;
 	SDL_Texture* scoreTexture;

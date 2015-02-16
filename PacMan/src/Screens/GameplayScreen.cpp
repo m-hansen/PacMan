@@ -2,6 +2,18 @@
 
 GameplayScreen GameplayScreen::gameplayScreen;
 
+void GameplayScreen::Pause()
+{
+	isPaused = true;
+	fprintf(stdout, "GameplayScreen paused\n");
+}
+
+void GameplayScreen::Resume()
+{
+	isPaused = false;
+	fprintf(stdout, "GameplayScreen resumed\n");
+}
+
 void GameplayScreen::Initialize(Game* game)
 {
 	level = NULL;
@@ -15,6 +27,7 @@ void GameplayScreen::Initialize(Game* game)
 	isLevelOver = false;
 	isDebugging = false;
 	InitializeLevel("Level1.txt");
+	isPaused = false;
 }
 
 void GameplayScreen::Cleanup(Game* game)
@@ -98,6 +111,10 @@ void GameplayScreen::HandleEvents(Game* game)
 						player->SetDirection(DirectionEnum::Right) : player->QueueDirection(DirectionEnum::Right);
 				}
 				break;
+			case SDLK_p:
+				// Pause or resume the game
+				(isPaused) ? Resume() : Pause();
+				break;
 			case SDLK_F3:
 				// Toggle debugging information
 				isDebugging = !isDebugging;
@@ -141,13 +158,15 @@ void GameplayScreen::InitializeLevel(std::string lvlName)
 
 void GameplayScreen::Update(Game* game)
 {
+	//if (isPaused) return;
+
 	// Calculate delta time
 	Uint32 currentTime = SDL_GetTicks();
 	if (currentTime > previousTime)
 	{
 		deltaT = currentTime - previousTime;
 		previousTime = currentTime;
-	}
+	}if (isPaused) return;
 
 	// Check for victory condition
 	if (levelManager.pelletList.empty())
