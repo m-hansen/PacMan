@@ -56,7 +56,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;C:\dev\SDL2-2.0.3\include;C:\dev\SDL2_ttf-2.0.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\Screens;C:\dev\SDL2-2.0.3\include;C:\dev\SDL2_ttf-2.0.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -75,7 +75,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;C:\dev\SDL2-2.0.3\include;C:\dev\SDL2_ttf-2.0.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\Screens;C:\dev\SDL2-2.0.3\include;C:\dev\SDL2_ttf-2.0.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -87,27 +87,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="large_pellet.bmp" />
     <None Include="Level1.txt" />
-    <None Include="pacman.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="ARIAL.TTF" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resources\blinky.png" />
-    <Image Include="Resources\clyde.png" />
-    <Image Include="Resources\inky.png" />
-    <Image Include="Resources\pac-man-sprite-sheet.png" />
-    <Image Include="Resources\pac-man_closed.png" />
-    <Image Include="Resources\pac-man_D.png" />
-    <Image Include="Resources\pac-man_L.png" />
-    <Image Include="Resources\pac-man_R.png" />
-    <Image Include="Resources\pac-man_U.png" />
-    <Image Include="Resources\pellet.png" />
-    <Image Include="Resources\pinky.png" />
-    <Image Include="Resources\tile.png" />
-    <Image Include="Resources\wall.png" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Consumable.cpp" />
@@ -121,12 +101,14 @@
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\Pellet.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Screens\AttractScreen.cpp" />
+    <ClCompile Include="src\Screens\GameplayScreen.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
+    <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="src\Wall.cpp" />
-    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Consumable.h" />
@@ -137,19 +119,39 @@
     <ClInclude Include="include\Ghost.h" />
     <ClInclude Include="include\Global.h" />
     <ClInclude Include="include\graph.h" />
-    <ClInclude Include="include\IScreen.h" />
     <ClInclude Include="include\LevelManager.h" />
     <ClInclude Include="include\MovingEntity.h" />
     <ClInclude Include="include\Node.h" />
     <ClInclude Include="include\NodeType.h" />
     <ClInclude Include="include\Pellet.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\Screens\AttractScreen.h" />
+    <ClInclude Include="include\Screens\GameplayScreen.h" />
+    <ClInclude Include="include\Screens\IScreen.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\Tile.h" />
     <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\Utils.h" />
     <ClInclude Include="include\Wall.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\blinky.png" />
+    <Image Include="Resources\clyde.png" />
+    <Image Include="Resources\inky.png" />
+    <Image Include="Resources\pac-man_closed.png" />
+    <Image Include="Resources\pac-man_D.png" />
+    <Image Include="Resources\pac-man_L.png" />
+    <Image Include="Resources\pac-man_R.png" />
+    <Image Include="Resources\pac-man_U.png" />
+    <Image Include="Resources\pellet.png" />
+    <Image Include="Resources\pinky.png" />
+    <Image Include="Resources\tile.png" />
+    <Image Include="Resources\wall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Resources\Fonts\ARIAL.TTF" />
+    <Font Include="Resources\Fonts\PAC-FONT.TTF" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

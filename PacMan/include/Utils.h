@@ -1,4 +1,5 @@
 #pragma once
+#include "SDL.h"
 
 struct Vector2
 {
@@ -15,5 +16,7 @@ struct Vector2f
 class Utils
 {
 public:
-	void CreateRenderableString();
+	static bool CollisionChecker(SDL_Rect* a, SDL_Rect* b);
+private:
+	Utils();
 };

@@ -13,15 +13,8 @@
 #include "LevelManager.h"
 #include "Graph.h"
 #include "Ghost.h"
-
-enum GameStateEnum
-{
-	Attract,
-	Options,
-	Gameplay,
-	Gameover,
-	Pause
-};
+//#include "IScreen.h"
+class IScreen;
 
 class Game
 {
@@ -30,36 +23,18 @@ public:
 	~Game();
 	bool Initialize();
 	void LoadContent();
+	void HandleEvents();
 	void Update();
-	void HandleCollisions();
 	void Render();
-	void Run();
-	void InitializeLevel(std::string lvlName);
-	bool CollisionChecker(SDL_Rect* a, SDL_Rect* b);
+	void ChangeScreen(IScreen* screen);
+	void PushScreen(IScreen* screen);
+	void PopScreen();
+	bool Running();
+	void Quit();
+	SDL_Renderer* renderer;
 private:
 	SDL_Window* window;
 	SDL_Surface* screenSurface;
-	SDL_Renderer* renderer;
-	SDL_Event previousEvent;
-	SDL_Event currentEvent;
-	bool isRunning;
-	bool isDebugging;
-	Player* player;
-	Ghost* blinky;
-	Ghost* pinky;
-	Ghost* inky;
-	Ghost* clyde;
-	std::vector<Ghost*> ghostList;
-	Graph* level;
-	Uint32 deltaT = 0;
-	Uint32 previousTime = 0;
-	int score;
-	LevelManager levelManager;
-	std::vector<Consumable> consumableList;
-	TTF_Font* arialFont;
-	SDL_Texture* scoreTexture;
-	SDL_Rect scoreTextRect;
-	SDL_Surface* scoreFontSurface;
-	std::string endGameMessage;
-	bool isLevelOver;
+	bool isGameRunning;
+	std::vector<IScreen*> screens;
 };
