@@ -11,3 +11,9 @@ struct Vector2f
 	float x;
 	float y;
 };
+
+class Utils
+{
+public:
+	void CreateRenderableString();
+};

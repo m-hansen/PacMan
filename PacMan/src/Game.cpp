@@ -115,10 +115,10 @@ void Game::InitializeLevel(std::string lvlName)
 	player->Initialize();
 
 	// Load the AI
-	blinky = new Ghost("blinky");
-	pinky = new Ghost("pinky");
-	inky = new Ghost("inky");
-	clyde = new Ghost("clyde");
+	blinky = new Ghost("blinky", 12, 15);//2.0f, 2.0f);
+	pinky = new Ghost("pinky", 14, 15); //21.0f, 2.0f);
+	inky = new Ghost("inky", 11, 15);//12.0f, 5.0f);
+	clyde = new Ghost("clyde", 12, 15);//16.0f, 6.0f);
 
 	ghostList.push_back(blinky);
 	ghostList.push_back(pinky);
@@ -151,28 +151,32 @@ void Game::Run()
 				switch (currentEvent.key.keysym.sym)
 				{
 					case SDLK_UP:
-						if (player->isCenteredOnTile && player->GetDirection() != DirectionEnum::Up)
+						if (player->isAlignedWithTile && player->GetDirection() != DirectionEnum::Up)
 						{
 							player->SetPosition(player->GetCurrentNode());
 							player->SetDirection(Up);
 						}
 						break;
 					case SDLK_DOWN:
-						if (player->isCenteredOnTile && player->GetDirection() != DirectionEnum::Down)
+						if (player->isAlignedWithTile && player->GetDirection() != DirectionEnum::Down)
 						{
 							player->SetPosition(player->GetCurrentNode());
 							player->SetDirection(Down);
 						}
 						break;
 					case SDLK_LEFT:
-						if (player->isCenteredOnTile && player->GetDirection() != DirectionEnum::Left)
+						if ((player->isAlignedWithTile) &&
+							(!player->GetCurrentNode()->SearchNeighborId(player->GetCurrentNode()->GetNodeId() - 1)) &&
+							(player->GetDirection() != DirectionEnum::Left))
 						{
 							player->SetPosition(player->GetCurrentNode());
 							player->SetDirection(Left);
 						}
 						break;
 					case SDLK_RIGHT:
-						if (player->isCenteredOnTile && player->GetDirection() != DirectionEnum::Right)
+						if ((player->isAlignedWithTile) &&
+							(!player->GetCurrentNode()->SearchNeighborId(player->GetCurrentNode()->GetNodeId() + 1)) && 
+							(player->GetDirection() != DirectionEnum::Right))
 						{
 							player->SetPosition(player->GetCurrentNode());
 							player->SetDirection(Right);
@@ -300,19 +304,11 @@ void Game::HandleCollisions()
 				
 			}
 			printf("A collision has occured between the player and a wall!\n");
-			//if (player->GetDirection() != player->GetPreviousDirection())
-			{
-				//player->SetDirection(player->GetPreviousDirection());
-			}
-			//else
-			{
-				//player->SetDirection(DirectionEnum::None);
-			}
 			player->SetPosition(player->GetCurrentNode());
 		}
 
 		// Check if each ghost collides with a wall
-		for (std::vector<Ghost*>::iterator aiIter = ghostList.begin(); aiIter != ghostList.end(); ++aiIter)
+		/*for (std::vector<Ghost*>::iterator aiIter = ghostList.begin(); aiIter != ghostList.end(); ++aiIter)
 		{
 			if (CollisionChecker((*aiIter)->GetBoundingRect(), (*iter)->GetBoundingRect()))
 			{
@@ -321,7 +317,7 @@ void Game::HandleCollisions()
 				(*aiIter)->SetPosition((*aiIter)->GetCurrentNode());
 				(*aiIter)->SetDirection((DirectionEnum)randVal);
 			}
-		}
+		}*/
 	}
 
 	// Check for collisions between player and consumable
@@ -389,6 +385,7 @@ void Game::Render()
 
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
 		}
+
 	}
 
 	// Render the walls

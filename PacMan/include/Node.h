@@ -23,7 +23,7 @@ public:
 	Vector2f GetLocation();
 	NodeType Node::GetType();
 	SDL_Rect* GetBoundingRect();
-	Node* GetNeighbor(std::string direction);
+	bool SearchNeighborId(int id);
 	int GetNodeId();
 private:
 	Vector2f location;

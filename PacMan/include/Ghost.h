@@ -9,7 +9,7 @@
 class Ghost
 {
 public:
-	Ghost(std::string textureName);
+	Ghost(std::string textureName, float spawnX, float spawnY);
 	~Ghost();
 	void Update(Uint32 deltaT);
 	void UpdateNodes(Node* newNode);
@@ -28,7 +28,10 @@ private:
 	Node* location;
 	DirectionEnum direction;
 	DirectionEnum previousDirection;
+	DirectionEnum newDirection;
 	float speed;
 	Node* currentNode;
 	Node* previousNode;
+	Node* previousFrameNode;
+	bool isCenteredOnTile;
 };

@@ -4,7 +4,7 @@ Player::Player()
 {
 	currentNode = NULL;
 	previousNode = NULL;
-	isCenteredOnTile = false;
+	isAlignedWithTile = false;
 	texture = TextureManager::GetTexture("pacmanRight");
 	livesTexture = TextureManager::GetTexture("pacmanRight");
 	livesLeft = 3;
@@ -23,15 +23,17 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	isCenteredOnTile = false;
+	float initialPlayerPos[2] = { 112.0f, 188.0f };
+
+	isAlignedWithTile = false;
 	spriteRect.w = G_SIZE;
 	spriteRect.h = G_SIZE;
 	boundingRect.w = 1;
 	boundingRect.h = 1;
 
 	speed = 0.05f * (G_SIZE / 8); // adjust speed based on grid size
-	position.x = 112.0f * (G_SIZE / 8);
-	position.y = 188.0f * (G_SIZE / 8);
+	position.x = initialPlayerPos[0] * (G_SIZE / 8);
+	position.y = initialPlayerPos[1] * (G_SIZE / 8);
 
 	direction = DirectionEnum::Right;
 	previousDirection = direction;
@@ -71,16 +73,33 @@ void Player::Update(Uint32 deltaT)
 
 		if (posX < (G_SIZE / 2) + G_SIZE - 1 && posY < (G_SIZE / 2) + G_SIZE - 1)
 		{
-			isCenteredOnTile = true;
+			isAlignedWithTile = true;
 		}
 		else
 		{
-			isCenteredOnTile = false;
+			isAlignedWithTile = false;
 		}
+
+		//// Calculate the x and y offset from a tile's origin
+		//float xOffset = position.x - (currentNode->GetLocation().x * G_SIZE) + G_SIZE / 2;
+		//float yOffset = position.y - (currentNode->GetLocation().y * G_SIZE) + G_SIZE / 2;
+		//if (xOffset < 0) xOffset *= -1;
+		//if (yOffset < 0) yOffset *= -1;
+
+		//if ((int)xOffset == 0 && (int)yOffset == 0)
+		//{
+		//	isCenteredOnTile = true;
+		//	printf("CENTERED!\n");
+		//}
+		//else
+		//{
+		//	isCenteredOnTile = false;
+		//	printf("not!\n");
+		//}
 	}
 
 	// Update the position
-	if (isCenteredOnTile)
+	if (isAlignedWithTile)
 	{
 		switch (direction)
 		{

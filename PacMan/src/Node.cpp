@@ -71,3 +71,17 @@ int Node::GetNodeId()
 {
 	return currentId;
 }
+
+// Returns true if the neighbor node id was found, false otherwise
+bool Node::SearchNeighborId(int id)
+{
+	if (neighborNodes.empty())
+		return false;
+
+	for (int i = 0; i < neighborNodes.size(); i++)
+	{
+		if (neighborNodes.at(i)->id == id)
+			return true;
+	}
+	return false;
+}

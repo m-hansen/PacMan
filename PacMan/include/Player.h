@@ -24,7 +24,7 @@ public:
 	DirectionEnum GetDirection();
 	DirectionEnum GetPreviousDirection();
 	void SetPreviousDirection(DirectionEnum dir);
-	bool isCenteredOnTile;
+	bool isAlignedWithTile;
 private:
 	bool isAlive;
 	int livesLeft;
