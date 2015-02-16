@@ -1,11 +1,11 @@
 #pragma once
 #include "SDL.h"
 #include "TextureManager.h"
-#include "Renderable.h"
+#include "IRenderable.h"
 #include "DirectionEnum.h"
 #include "Node.h"
 
-class Player : public Renderable
+class Player : public IRenderable
 {
 public:
 	Player();

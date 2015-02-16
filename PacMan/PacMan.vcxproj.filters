@@ -40,8 +40,8 @@
     <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\Utils.h" />
     <ClInclude Include="include\Wall.h" />
-    <ClInclude Include="include\Renderable.h" />
     <ClInclude Include="include\graph.h" />
+    <ClInclude Include="include\IRenderable.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\blinky.png" />

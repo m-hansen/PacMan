@@ -3,11 +3,11 @@
 #include "Global.h"
 #include "Utils.h"
 #include "TextureManager.h"
-#include "Renderable.h"
+#include "IRenderable.h"
 #include "Node.h"
 #include "DirectionEnum.h"
 
-class Ghost : public Renderable
+class Ghost : public IRenderable
 {
 public:
 	Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum dir);

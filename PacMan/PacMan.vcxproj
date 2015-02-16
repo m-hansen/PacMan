@@ -121,7 +121,7 @@
     <ClInclude Include="include\NodeType.h" />
     <ClInclude Include="include\Pellet.h" />
     <ClInclude Include="include\Player.h" />
-    <ClInclude Include="include\Renderable.h" />
+    <ClInclude Include="include\IRenderable.h" />
     <ClInclude Include="include\Screens\AttractScreen.h" />
     <ClInclude Include="include\Screens\GameplayScreen.h" />
     <ClInclude Include="include\Screens\IScreen.h" />
