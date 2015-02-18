@@ -32,7 +32,10 @@ public:
 	bool Running();
 	void Quit();
 	SDL_Renderer* renderer;
+	Uint32 GetDeltaTime() { return deltaT; }
 private:
+	Uint32 deltaT = 0;
+	Uint32 previousTime = 0;
 	SDL_Window* window;
 	SDL_Surface* screenSurface;
 	bool isGameRunning;

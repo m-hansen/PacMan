@@ -28,8 +28,6 @@ private:
 	static GameplayScreen gameplayScreen;
 	Graph* level;
 	Player* player;
-	Uint32 deltaT = 0;
-	Uint32 previousTime = 0;
 	LevelManager levelManager;
 	Ghost* blinky;
 	Ghost* pinky;

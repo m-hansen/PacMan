@@ -181,15 +181,7 @@ void GameplayScreen::InitializeLevel(std::string lvlName)
 
 void GameplayScreen::Update(Game* game)
 {
-	// Calculate delta time
-	Uint32 currentTime = SDL_GetTicks();
-	if (currentTime > previousTime)
-	{
-		deltaT = currentTime - previousTime;
-		previousTime = currentTime;
-	}
-	
-	// Immediately return after calculating delta time if paused
+	// Immediately return if paused
 	if (isPaused) return;
 
 	// Check for victory condition
@@ -201,12 +193,12 @@ void GameplayScreen::Update(Game* game)
 	}
 
 	// Update the player
-	player->Update(deltaT);
+	player->Update(game->GetDeltaTime());
 
 	// Update the AI
 	for (std::vector<Ghost*>::iterator iter = ghostList.begin(); iter != ghostList.end(); ++iter)
 	{
-		(*iter)->Update(deltaT);
+		(*iter)->Update(game->GetDeltaTime());
 	}
 
 	HandleCollisions();
@@ -217,9 +209,6 @@ void GameplayScreen::Render(Game* game)
 	// Clear color
 	SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255); // black
 	SDL_RenderClear(game->renderer);
-
-	// Render the tile map
-	//tileMap->Render(renderer);
 
 	// Render each node in the level
 	if (isDebugging)

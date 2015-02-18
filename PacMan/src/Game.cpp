@@ -76,6 +76,14 @@ void Game::HandleEvents()
 
 void Game::Update()
 {
+	// Calculate delta time
+	Uint32 currentTime = SDL_GetTicks();
+	if (currentTime > previousTime)
+	{
+		deltaT = currentTime - previousTime;
+		previousTime = currentTime;
+	}
+
 	screens.back()->Update(this);
 }
 

@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "GameplayScreen.h"
+#include "AttractScreen.h"
 
 int main( int argc, char* args[] )
 {
@@ -14,7 +14,7 @@ int main( int argc, char* args[] )
 	// Load common resources
 	game.LoadContent();
 
-	game.ChangeScreen(GameplayScreen::Instance());
+	game.ChangeScreen(AttractScreen::Instance());
 
 	while (game.Running())
 	{
