@@ -38,7 +38,6 @@ void GameplayScreen::Initialize(Game* game)
 	arialFont = TTF_OpenFont("Resources\\Fonts\\ARIAL.TTF", G_SIZE);
 
 	// Initialize variables
-	level = NULL;
 	score = 0;
 	scoreTextRect.w = G_SIZE * 6;
 	scoreTextRect.h = G_SIZE * 1.5;
@@ -49,26 +48,35 @@ void GameplayScreen::Initialize(Game* game)
 	isDebugging = false;
 	isPaused = false;
 
-	// Finally, initialize the level
-	InitializeLevel("Resources\\LevelData\\Level1.txt");
+	// Create an instance of a level manager
+	levelManager = LevelManager::Instance();
+	
+	// Construct the level list
+	std::vector<std::string> levelList;
+	levelList.push_back("Level1.txt");
+	levelList.push_back("Level0.txt");
+	levelManager->CreateLevelList("Resources\\LevelData", levelList);
+
+	// Initialize the level manager with the level list
+	levelManager->InitializeLevel();
 }
 
 void GameplayScreen::Cleanup(Game* game)
 {
-	delete (blinky);
+	/*delete (blinky);
 	blinky = NULL;
 	delete (pinky);
 	pinky = NULL;
 	delete (inky);
 	inky = NULL;
 	delete (clyde);
-	clyde = NULL;
+	clyde = NULL;*/
 
-	delete (player);
-	player = NULL;
+	/*delete (player);
+	player = NULL;*/
 
-	delete (level);
-	level = NULL;
+	/*delete (level);
+	level = NULL;*/
 
 	TTF_CloseFont(arialFont);
 	arialFont = NULL;
@@ -94,57 +102,57 @@ void GameplayScreen::HandleEvents(Game* game)
 			switch (currentEvent.key.keysym.sym)
 			{
 			case SDLK_UP:
-				if (player->isAlignedWithTile && player->GetDirection() != DirectionEnum::Up)
+				if (levelManager->GetPlayer()->isAlignedWithTile && levelManager->GetPlayer()->GetDirection() != DirectionEnum::Up)
 				{
-					//player->SetPosition(player->GetCurrentNode());
+					//levelManager->GetPlayer()->SetPosition(levelManager->GetPlayer()->GetCurrentNode());
 
 					// Quick movement if we are moving along the same axis
 					// queued movement otherwise
-					(player->GetDirection() == DirectionEnum::Down) ?
-						player->SetDirection(DirectionEnum::Up) : player->QueueDirection(DirectionEnum::Up);
+					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Down) ?
+						levelManager->GetPlayer()->SetDirection(DirectionEnum::Up) : levelManager->GetPlayer()->QueueDirection(DirectionEnum::Up);
 				}
 				break;
 			case SDLK_DOWN:
-				if (player->isAlignedWithTile && player->GetDirection() != DirectionEnum::Down)
+				if (levelManager->GetPlayer()->isAlignedWithTile && levelManager->GetPlayer()->GetDirection() != DirectionEnum::Down)
 				{
-					//player->SetPosition(player->GetCurrentNode());
+					//levelManager->GetPlayer()->SetPosition(levelManager->GetPlayer()->GetCurrentNode());
 					// Quick movement if we are moving along the same axis
 					// queued movement otherwise
-					(player->GetDirection() == DirectionEnum::Up) ?
-						player->SetDirection(DirectionEnum::Down) : player->QueueDirection(DirectionEnum::Down);
+					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Up) ?
+						levelManager->GetPlayer()->SetDirection(DirectionEnum::Down) : levelManager->GetPlayer()->QueueDirection(DirectionEnum::Down);
 				}
 				break;
 			case SDLK_LEFT:
-				if (player->isAlignedWithTile && player->GetDirection() != DirectionEnum::Left)
+				if (levelManager->GetPlayer()->isAlignedWithTile && levelManager->GetPlayer()->GetDirection() != DirectionEnum::Left)
 				{
-					//player->SetPosition(player->GetCurrentNode());
+					//levelManager->GetPlayer()->SetPosition(levelManager->GetPlayer()->GetCurrentNode());
 					// Quick movement if we are moving along the same axis
 					// queued movement otherwise
-					(player->GetDirection() == DirectionEnum::Right) ?
-						player->SetDirection(DirectionEnum::Left) : player->QueueDirection(DirectionEnum::Left);
+					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Right) ?
+						levelManager->GetPlayer()->SetDirection(DirectionEnum::Left) : levelManager->GetPlayer()->QueueDirection(DirectionEnum::Left);
 				}
 				break;
 			case SDLK_RIGHT:
-				if (player->isAlignedWithTile && player->GetDirection() != DirectionEnum::Right)
+				if (levelManager->GetPlayer()->isAlignedWithTile && levelManager->GetPlayer()->GetDirection() != DirectionEnum::Right)
 				{
-					//player->SetPosition(player->GetCurrentNode());
+					//levelManager->GetPlayer()->SetPosition(levelManager->GetPlayer()->GetCurrentNode());
 					// Quick movement if we are moving along the same axis
 					// queued movement otherwise
-					(player->GetDirection() == DirectionEnum::Left) ?
-						player->SetDirection(DirectionEnum::Right) : player->QueueDirection(DirectionEnum::Right);
+					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Left) ?
+						levelManager->GetPlayer()->SetDirection(DirectionEnum::Right) : levelManager->GetPlayer()->QueueDirection(DirectionEnum::Right);
 				}
 				break;
-			case SDLK_p:
-				// Pause or resume the game
-				(isPaused) ? Resume() : Pause();
+			case SDLK_n:
+				levelManager->NextLevel();
 				break;
 			case SDLK_F3:
 				// Toggle debugging information
 				isDebugging = !isDebugging;
 				break;
 			case SDLK_ESCAPE:
-				// User requests quit
-				game->Quit();
+			case SDLK_p:
+				// Pause or resume the game
+				(isPaused) ? Resume() : Pause();
 				break;
 			}
 		}
@@ -153,31 +161,31 @@ void GameplayScreen::HandleEvents(Game* game)
 	}
 }
 
-void GameplayScreen::InitializeLevel(std::string lvlName)
-{
-	// Load the level, create the nodes, and determine the edges
-	levelManager.LoadLevel(lvlName.c_str());
-	level = new Graph();
-	level->GenerateGraph(SCREEN_WIDTH / G_SIZE, SCREEN_HEIGHT / G_SIZE);
-	levelManager.FindEdges();
-
-	// Initialize the player
-	player = new Player();
-	player->Initialize();
-
-	// Load the AI
-	blinky = new Ghost("blinky", 12.0f, 5.0f, DirectionEnum::Left);
-	pinky = new Ghost("pinky", 15.0f, 5.0f, DirectionEnum::Right);
-	inky = new Ghost("inky", 9.0f, 5.0f, DirectionEnum::Down);
-	clyde = new Ghost("clyde", 18.0f, 5.0f, DirectionEnum::Down);
-
-	ghostList.push_back(blinky);
-	ghostList.push_back(pinky);
-	ghostList.push_back(inky);
-	ghostList.push_back(clyde);
-
-	score = 0;
-}
+//void GameplayScreen::InitializeLevel(std::string lvlName)
+//{
+//	// Load the level, create the nodes, and determine the edges
+//	levelManager->LoadLevel(lvlName.c_str());
+//	level = new Graph();
+//	level->GenerateGraph(SCREEN_WIDTH / G_SIZE, SCREEN_HEIGHT / G_SIZE);
+//	levelManager->FindEdges();
+//
+//	// Initialize the player
+//	player = new Player();
+//	levelManager->GetPlayer()->Initialize();
+//
+//	// Load the AI
+//	blinky = new Ghost("blinky", 12.0f, 5.0f, DirectionEnum::Left);
+//	pinky = new Ghost("pinky", 15.0f, 5.0f, DirectionEnum::Right);
+//	inky = new Ghost("inky", 9.0f, 5.0f, DirectionEnum::Down);
+//	clyde = new Ghost("clyde", 18.0f, 5.0f, DirectionEnum::Down);
+//
+//	levelManager->GetGhosts().push_back(blinky);
+//	levelManager->GetGhosts().push_back(pinky);
+//	levelManager->GetGhosts().push_back(inky);
+//	levelManager->GetGhosts().push_back(clyde);
+//
+//	score = 0;
+//}
 
 void GameplayScreen::Update(Game* game)
 {
@@ -185,22 +193,25 @@ void GameplayScreen::Update(Game* game)
 	if (isPaused) return;
 
 	// Check for victory condition
-	if (levelManager.pelletList.empty())
+	if (levelManager->GetPellets().empty())
 	{
+		// TODO we should go to the next level or end the game
 		endGameMessage = "Congratulations!";
 		isLevelOver = true;
 		return;
 	}
 
 	// Update the player
-	player->Update(game->GetDeltaTime());
+	levelManager->GetPlayer()->Update(game->GetDeltaTime());
 
 	// Update the AI
-	for (std::vector<Ghost*>::iterator iter = ghostList.begin(); iter != ghostList.end(); ++iter)
+	for (std::vector<Ghost*>::iterator iter = levelManager->GetGhosts().begin(); 
+		iter != levelManager->GetGhosts().end(); ++iter)
 	{
 		(*iter)->Update(game->GetDeltaTime());
 	}
 
+	// Handle the collisions last
 	HandleCollisions();
 }
 
@@ -215,8 +226,8 @@ void GameplayScreen::Render(Game* game)
 	{
 		// Iterate over each node in the level graph
 		//for (std::vector<Node*>::iterator iter = level->GetAllNodes()->begin(); iter != level->GetAllNodes()->end(); ++iter)
-		for (std::vector<Node*>::iterator iter = levelManager.legalPlayingNodes.begin();
-			iter != levelManager.legalPlayingNodes.end(); ++iter)
+		for (std::vector<Node*>::iterator iter = levelManager->GetLegalNodes().begin();
+			iter != levelManager->GetLegalNodes().end(); ++iter)
 		{
 			Node* node = (*iter);
 			Vector2f loc = node->GetLocation();
@@ -238,24 +249,25 @@ void GameplayScreen::Render(Game* game)
 	}
 
 	// Render the walls
-	for (std::vector<Wall*>::iterator iter = levelManager.wallList.begin();
-		iter != levelManager.wallList.end(); ++iter)
+	for (std::vector<Wall*>::iterator iter = levelManager->GetWalls().begin();
+		iter != levelManager->GetWalls().end(); ++iter)
 	{
 		(*iter)->Render(game->renderer);
 	}
 
 	// Render each remaining pellet on the board
-	for (std::vector<Pellet*>::iterator iter = levelManager.pelletList.begin();
-		iter != levelManager.pelletList.end(); ++iter)
+	for (std::vector<Pellet*>::iterator iter = levelManager->GetPellets().begin();
+		iter != levelManager->GetPellets().end(); ++iter)
 	{
 		(*iter)->Render(game->renderer);
 	}
 
 	// Render the player
-	player->Render(game->renderer);
+	levelManager->GetPlayer()->Render(game->renderer);
 
 	// Render the AI
-	for (std::vector<Ghost*>::iterator iter = ghostList.begin(); iter != ghostList.end(); ++iter)
+	for (std::vector<Ghost*>::iterator iter = levelManager->GetGhosts().begin(); 
+		iter != levelManager->GetGhosts().end(); ++iter)
 	{
 		(*iter)->Render(game->renderer);
 	}
@@ -269,6 +281,21 @@ void GameplayScreen::Render(Game* game)
 		SDL_FreeSurface(scoreFontSurface);
 		scoreFontSurface = NULL;
 		SDL_RenderCopy(game->renderer, scoreTexture, NULL, &scoreTextRect);
+	}
+
+	if (isPaused)
+	{
+		SDL_Rect pauseRect;
+		pauseRect.w = G_SIZE * 10;
+		pauseRect.h = G_SIZE * 2;
+		pauseRect.x = SCREEN_WIDTH / 2 - pauseRect.w / 2;
+		pauseRect.y = SCREEN_HEIGHT / 2 - pauseRect.h / 2;
+
+		SDL_Surface* fontSurface = TTF_RenderText_Solid(arialFont, "PAUSED", SDL_Color{ 255, 255, 255 });
+		SDL_Texture* fontTexture = SDL_CreateTextureFromSurface(game->renderer, fontSurface);
+		SDL_FreeSurface(fontSurface);
+		fontSurface = NULL;
+		SDL_RenderCopy(game->renderer, fontTexture, NULL, &pauseRect);
 	}
 
 	if (isLevelOver)
@@ -293,24 +320,24 @@ void GameplayScreen::Render(Game* game)
 void GameplayScreen::HandleCollisions()
 {
 	// Check which node the player/AI occupies
-	for (std::vector<Node*>::iterator iter = levelManager.legalPlayingNodes.begin();
-		iter != levelManager.legalPlayingNodes.end(); ++iter)
+	for (std::vector<Node*>::iterator iter = levelManager->GetLegalNodes().begin();
+		iter != levelManager->GetLegalNodes().end(); ++iter)
 	{
 		// Check if player is inside a node
-		if (Utils::CollisionChecker(player->GetBoundingRect(), (*iter)->GetBoundingRect()))
+		if (Utils::CollisionChecker(levelManager->GetPlayer()->GetBoundingRect(), (*iter)->GetBoundingRect()))
 		{
-			player->UpdateNodes(*iter);
-			if (player->GetCurrentNode() != player->GetPreviousNode())
+			levelManager->GetPlayer()->UpdateNodes(*iter);
+			if (levelManager->GetPlayer()->GetCurrentNode() != levelManager->GetPlayer()->GetPreviousNode())
 			{
 				// Print the node ID that the player enters
 				printf("Player is in node ID : %d\n", (*iter)->GetNodeId());
-				player->SetPreviousDirection(player->GetDirection());
+				levelManager->GetPlayer()->SetPreviousDirection(levelManager->GetPlayer()->GetDirection());
 			}
 
 		}
 
 		// Iterate over each ghost
-		for (std::vector<Ghost*>::iterator aiIter = ghostList.begin(); aiIter != ghostList.end(); ++aiIter)
+		for (std::vector<Ghost*>::iterator aiIter = levelManager->GetGhosts().begin(); aiIter != levelManager->GetGhosts().end(); ++aiIter)
 		{
 			// Check if a ghost is inside a node
 			if (Utils::CollisionChecker((*aiIter)->GetBoundingRect(), (*iter)->GetBoundingRect()))
@@ -327,31 +354,37 @@ void GameplayScreen::HandleCollisions()
 	}
 
 	// Check for collisions between the player/AI and the wall
-	for (std::vector<Wall*>::iterator iter = levelManager.wallList.begin(); iter != levelManager.wallList.end(); ++iter)
+	for (std::vector<Wall*>::iterator iter = levelManager->GetWalls().begin(); iter != levelManager->GetWalls().end(); ++iter)
 	{
 		// Check if the player collides with a wall
-		if (Utils::CollisionChecker(player->GetSpriteRect(), (*iter)->GetBoundingRect()))
+		if (Utils::CollisionChecker(levelManager->GetPlayer()->GetSpriteRect(), (*iter)->GetBoundingRect()))
 		{
-			if (((player->GetDirection() == DirectionEnum::Up) || (player->GetDirection() == DirectionEnum::Down))
-				&& ((player->GetPreviousDirection() == DirectionEnum::Left) || (player->GetPreviousDirection() == DirectionEnum::Right)))
+			if (((levelManager->GetPlayer()->GetDirection() == DirectionEnum::Up) || 
+				(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Down)) 
+				&& 
+				((levelManager->GetPlayer()->GetPreviousDirection() == DirectionEnum::Left) || 
+				(levelManager->GetPlayer()->GetPreviousDirection() == DirectionEnum::Right)))
 			{
-				player->SetDirection(player->GetPreviousDirection());
+				levelManager->GetPlayer()->SetDirection(levelManager->GetPlayer()->GetPreviousDirection());
 			}
-			else if (((player->GetDirection() == DirectionEnum::Left) || (player->GetDirection() == DirectionEnum::Right))
-				&& ((player->GetPreviousDirection() == DirectionEnum::Up) || (player->GetPreviousDirection() == DirectionEnum::Down)))
+			else if (((levelManager->GetPlayer()->GetDirection() == DirectionEnum::Left) || 
+				(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Right))
+				&& 
+				((levelManager->GetPlayer()->GetPreviousDirection() == DirectionEnum::Up) || 
+				(levelManager->GetPlayer()->GetPreviousDirection() == DirectionEnum::Down)))
 			{
-				player->SetDirection(player->GetPreviousDirection());
+				levelManager->GetPlayer()->SetDirection(levelManager->GetPlayer()->GetPreviousDirection());
 			}
 			else
 			{
-				player->SetDirection(DirectionEnum::None);
+				levelManager->GetPlayer()->SetDirection(DirectionEnum::None);
 
 			}
-			player->SetPosition(player->GetCurrentNode());
+			levelManager->GetPlayer()->SetPosition(levelManager->GetPlayer()->GetCurrentNode());
 		}
 
 		// Check if each ghost collides with a wall
-		/*for (std::vector<Ghost*>::iterator aiIter = ghostList.begin(); aiIter != ghostList.end(); ++aiIter)
+		/*for (std::vector<Ghost*>::iterator aiIter = levelManager->GetGhosts().begin(); aiIter != levelManager->GetGhosts().end(); ++aiIter)
 		{
 			if (Utils::CollisionChecker((*aiIter)->GetBoundingRect(), (*iter)->GetBoundingRect()))
 			{
@@ -365,13 +398,13 @@ void GameplayScreen::HandleCollisions()
 
 	// Check for collisions between player and consumable
 	// NOTE: we must use iter++ instead of ++iter
-	for (std::vector<Pellet*>::iterator iter = levelManager.pelletList.begin(); iter != levelManager.pelletList.end(); iter++)
+	for (std::vector<Pellet*>::iterator iter = levelManager->GetPellets().begin(); iter != levelManager->GetPellets().end(); iter++)
 	{
-		if (Utils::CollisionChecker(player->GetBoundingRect(), (*iter)->GetBoundingRect()))
+		if (Utils::CollisionChecker(levelManager->GetPlayer()->GetBoundingRect(), (*iter)->GetBoundingRect()))
 		{
 			// Free memory, clear list, and increment score
 			delete (*iter);
-			levelManager.pelletList.erase(iter);
+			levelManager->GetPellets().erase(iter);
 			score += 10;
 			// The break is necessary for two reasons
 			// 1) we stop checking for nodes once we found we collided with one
@@ -381,12 +414,13 @@ void GameplayScreen::HandleCollisions()
 	}
 
 	// Check player collision against the AI
-	for (std::vector<Ghost*>::iterator iter = ghostList.begin(); iter != ghostList.end(); ++iter)
+	for (std::vector<Ghost*>::iterator iter = levelManager->GetGhosts().begin(); 
+		iter != levelManager->GetGhosts().end(); ++iter)
 	{
-		if (Utils::CollisionChecker(player->GetBoundingRect(), (*iter)->GetBoundingRect()))
+		if (Utils::CollisionChecker(levelManager->GetPlayer()->GetBoundingRect(), 
+			(*iter)->GetBoundingRect()))
 		{
-
-			if (player->Kill()) isLevelOver = true;
+			if (levelManager->GetPlayer()->Kill()) isLevelOver = true;
 		}
 	}
 

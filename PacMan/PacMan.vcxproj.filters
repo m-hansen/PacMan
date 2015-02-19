@@ -62,4 +62,7 @@
   <ItemGroup>
     <None Include="Level1.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resources\LevelData\Level0.txt" />
+  </ItemGroup>
 </Project>

@@ -25,6 +25,8 @@ Player::~Player()
 
 void Player::Initialize()
 {
+	fprintf(stdout, "Initializing player\n");
+
 	Vector2f initialPlayerPos = { 112.0f, 188.0f };
 
 	isAlignedWithTile = false;
