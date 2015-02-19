@@ -190,7 +190,14 @@ void GameplayScreen::HandleEvents(Game* game)
 void GameplayScreen::Update(Game* game)
 {
 	// Immediately return if paused
-	if (isPaused) return;
+	if (isPaused) 
+		return;
+
+	// Check if the player has run out of lives
+	if (!levelManager->GetPlayer()->IsAlive())
+	{
+		isLevelOver = true;
+	}
 
 	// Check for victory condition
 	if (levelManager->GetPellets().empty())
@@ -359,18 +366,18 @@ void GameplayScreen::HandleCollisions()
 		// Check if the player collides with a wall
 		if (Utils::CollisionChecker(levelManager->GetPlayer()->GetSpriteRect(), (*iter)->GetBoundingRect()))
 		{
-			if (((levelManager->GetPlayer()->GetDirection() == DirectionEnum::Up) || 
-				(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Down)) 
-				&& 
-				((levelManager->GetPlayer()->GetPreviousDirection() == DirectionEnum::Left) || 
+			if (((levelManager->GetPlayer()->GetDirection() == DirectionEnum::Up) ||
+				(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Down))
+				&&
+				((levelManager->GetPlayer()->GetPreviousDirection() == DirectionEnum::Left) ||
 				(levelManager->GetPlayer()->GetPreviousDirection() == DirectionEnum::Right)))
 			{
 				levelManager->GetPlayer()->SetDirection(levelManager->GetPlayer()->GetPreviousDirection());
 			}
-			else if (((levelManager->GetPlayer()->GetDirection() == DirectionEnum::Left) || 
+			else if (((levelManager->GetPlayer()->GetDirection() == DirectionEnum::Left) ||
 				(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Right))
-				&& 
-				((levelManager->GetPlayer()->GetPreviousDirection() == DirectionEnum::Up) || 
+				&&
+				((levelManager->GetPlayer()->GetPreviousDirection() == DirectionEnum::Up) ||
 				(levelManager->GetPlayer()->GetPreviousDirection() == DirectionEnum::Down)))
 			{
 				levelManager->GetPlayer()->SetDirection(levelManager->GetPlayer()->GetPreviousDirection());
@@ -386,13 +393,13 @@ void GameplayScreen::HandleCollisions()
 		// Check if each ghost collides with a wall
 		/*for (std::vector<Ghost*>::iterator aiIter = levelManager->GetGhosts().begin(); aiIter != levelManager->GetGhosts().end(); ++aiIter)
 		{
-			if (Utils::CollisionChecker((*aiIter)->GetBoundingRect(), (*iter)->GetBoundingRect()))
-			{
-				//printf("A collision has occured between the AI and a wall!\n");
-				int randVal = std::rand() % 4; // 4 is the number of moving states
-				(*aiIter)->SetPosition((*aiIter)->GetCurrentNode());
-				(*aiIter)->SetDirection((DirectionEnum)randVal);
-			}
+		if (Utils::CollisionChecker((*aiIter)->GetBoundingRect(), (*iter)->GetBoundingRect()))
+		{
+		//printf("A collision has occured between the AI and a wall!\n");
+		int randVal = std::rand() % 4; // 4 is the number of moving states
+		(*aiIter)->SetPosition((*aiIter)->GetCurrentNode());
+		(*aiIter)->SetDirection((DirectionEnum)randVal);
+		}
 		}*/
 	}
 
@@ -414,13 +421,16 @@ void GameplayScreen::HandleCollisions()
 	}
 
 	// Check player collision against the AI
-	for (std::vector<Ghost*>::iterator iter = levelManager->GetGhosts().begin(); 
-		iter != levelManager->GetGhosts().end(); ++iter)
+	if (levelManager->GetPlayer()->IsAlive())
 	{
-		if (Utils::CollisionChecker(levelManager->GetPlayer()->GetBoundingRect(), 
-			(*iter)->GetBoundingRect()))
+		for (std::vector<Ghost*>::iterator iter = levelManager->GetGhosts().begin();
+			iter != levelManager->GetGhosts().end(); ++iter)
 		{
-			if (levelManager->GetPlayer()->Kill()) isLevelOver = true;
+			if (Utils::CollisionChecker(levelManager->GetPlayer()->GetBoundingRect(),
+				(*iter)->GetBoundingRect()))
+			{
+				levelManager->GetPlayer()->LoseLife();
+			}
 		}
 	}
 

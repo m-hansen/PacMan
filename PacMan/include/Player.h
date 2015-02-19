@@ -10,13 +10,14 @@ class Player : public IRenderable
 public:
 	Player();
 	~Player();
-	void Initialize();
+	//void Initialize();
+	void ResetPosition();
 	void Update(Uint32 deltaT);
 	void UpdateNodes(Node* newNode);
 	void Render(SDL_Renderer* renderer);
 	void SetDirection(DirectionEnum dirEnum);
 	void QueueDirection(DirectionEnum dirEnum);
-	bool Kill();
+	void LoseLife();
 	SDL_Rect* GetBoundingRect();
 	SDL_Rect* GetSpriteRect();
 	Node* GetCurrentNode();
@@ -26,6 +27,7 @@ public:
 	DirectionEnum GetPreviousDirection();
 	void SetPreviousDirection(DirectionEnum dir);
 	bool isAlignedWithTile;
+	bool IsAlive() { return isAlive; }
 private:
 	void ConsumeQueuedMovement();
 	bool isAlive;

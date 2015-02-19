@@ -21,7 +21,7 @@ void LevelManager::InitializeLevel()
 
 	// Initialize the player
 	player = new Player();
-	player->Initialize();
+	player->ResetPosition();
 
 	// Load the AI
 	ghostList.push_back(
