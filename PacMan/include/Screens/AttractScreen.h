@@ -2,6 +2,7 @@
 #include <string>
 #include "SDL_ttf.h"
 #include "IScreen.h"
+#include "Sprite.h"
 
 class AttractScreen : public IScreen
 {
@@ -20,8 +21,6 @@ private:
 	bool isRunning;
 	TTF_Font* titleFont;
 	TTF_Font* instructionFont;
-	SDL_Texture* titleTexture;
-	SDL_Texture* instructionTexture;
-	SDL_Rect titleTextRect;
-	SDL_Rect instrTextRect;
+	Sprite title;
+	Sprite instructions;
 };

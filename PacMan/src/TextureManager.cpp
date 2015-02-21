@@ -6,7 +6,6 @@ bool TextureManager::LoadTexture(SDL_Renderer* renderer, std::string referenceNa
 {
 	SDL_Surface* surface = NULL;
 
-	
 	if (location.substr(location.length()-3, location.length()) == "bmp")
 	{
 		// Load bitmaps
@@ -53,6 +52,7 @@ void TextureManager::ClearAll()
 		{
 			// Destroy each texture in the map
 			SDL_DestroyTexture(iter->second);
+			(iter->second) = NULL;
 		}
 	}
 	textureMap.clear();

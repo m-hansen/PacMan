@@ -10,35 +10,27 @@ void AttractScreen::Initialize(Game* game)
 	// Open the fonts
 	titleFont = TTF_OpenFont("Resources\\Fonts\\PAC-FONT.TTF", SCREEN_WIDTH);
 	instructionFont = TTF_OpenFont("Resources\\Fonts\\ARIAL.TTF", SCREEN_WIDTH / 2);
-
-	// Adjust the title font bounding rectangle
-	titleTextRect.w = SCREEN_WIDTH;
-	titleTextRect.h = SCREEN_HEIGHT / 5;
-	titleTextRect.x = (SCREEN_WIDTH / 2) - (titleTextRect.w / 2);
-	titleTextRect.y = (SCREEN_HEIGHT / 3) - (titleTextRect.h / 2);
-
+	
 	// Create the title font surface and texture
-	fontSurface = TTF_RenderText_Solid(titleFont, "Pac-Man", SDL_Color{ 0, 255, 255 });
-	titleTexture = SDL_CreateTextureFromSurface(game->renderer, fontSurface);
-	SDL_FreeSurface(fontSurface);
-	fontSurface = NULL;
-
-	// Adjust the instruction font bounding rectangle
-	instrTextRect.w = G_SIZE * 18;
-	instrTextRect.h = G_SIZE * 2;
-	instrTextRect.x = (SCREEN_WIDTH / 2) - (instrTextRect.w / 2);
-	instrTextRect.y = (SCREEN_HEIGHT - (SCREEN_HEIGHT / 4) - (instrTextRect.h / 2));
-
+	title.SetTexture( Utils::CreateFontTexture(game->renderer, titleFont, 
+		"Pac-Man", SDL_Color{ 0, 255, 255 }) );
+	title.SetBounds(SCREEN_WIDTH, SCREEN_HEIGHT / 5);
+	title.SetPosition((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 3));
+	
 	// Create the instruction font surface and texture
-	fontSurface = TTF_RenderText_Solid(instructionFont, "Press ENTER to play!", SDL_Color{ 255, 255, 255 });
-	instructionTexture = SDL_CreateTextureFromSurface(game->renderer, fontSurface);
-	SDL_FreeSurface(fontSurface);
-	fontSurface = NULL;
+	instructions.SetTexture(Utils::CreateFontTexture(game->renderer, instructionFont,
+		"Press ENTER to play!", SDL_Color{ 255, 255, 255 }));
+	instructions.SetBounds(SCREEN_WIDTH - (SCREEN_WIDTH / 3), SCREEN_HEIGHT / 16);
+	instructions.SetPosition((SCREEN_WIDTH / 2), (SCREEN_HEIGHT - (SCREEN_HEIGHT / 4)));
 }
 
 void AttractScreen::Cleanup(Game* game)
 {
+	TTF_CloseFont(instructionFont);
+	instructionFont = NULL;
 
+	TTF_CloseFont(titleFont);
+	titleFont = NULL;
 }
 
 AttractScreen::~AttractScreen()
@@ -98,11 +90,9 @@ void AttractScreen::Render(Game* game)
 	SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255); // black
 	SDL_RenderClear(game->renderer);
 
-	// Display the title text
-	SDL_RenderCopy(game->renderer, titleTexture, NULL, &titleTextRect);
-
-	// Display the instruction text
-	SDL_RenderCopy(game->renderer, instructionTexture, NULL, &instrTextRect);
+	// Display the sprites
+	title.Render(game->renderer);
+	instructions.Render(game->renderer);
 
 	// Update the screen
 	SDL_RenderPresent(game->renderer);

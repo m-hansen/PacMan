@@ -127,10 +127,15 @@ void GameplayScreen::HandleEvents(Game* game)
 						levelManager->GetPlayer()->SetDirection(DirectionEnum::Right) : levelManager->GetPlayer()->QueueDirection(DirectionEnum::Right);
 				}
 				break;
+			case SDLK_r:
+				// Reset the game
+				game->ChangeScreen(this);
 			case SDLK_LEFTBRACKET:
+				// Go to previous level
 				levelManager->PreviousLevel();
 				break;
 			case SDLK_RIGHTBRACKET:
+				// Go to next level
 				levelManager->NextLevel();
 				break;
 			case SDLK_F3:

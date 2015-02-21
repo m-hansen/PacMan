@@ -37,3 +37,14 @@ void Utils::CreateFolder(std::string folderName)
 	// Create the new directory
 	boost::filesystem::create_directory(directory);
 }
+
+SDL_Texture* Utils::CreateFontTexture(SDL_Renderer* renderer, TTF_Font* fontType, std::string text, SDL_Color fontColor)
+{
+	// Create the controls font surface and texture
+	SDL_Surface* fontSurface = TTF_RenderText_Solid(fontType, text.c_str(), fontColor);
+	SDL_Texture* fontTexture = SDL_CreateTextureFromSurface(renderer, fontSurface);
+	SDL_FreeSurface(fontSurface);
+	fontSurface = NULL;
+
+	return fontTexture;
+}
