@@ -12,7 +12,7 @@ public:
 	void HandleEvents(Game* game);
 	void Update(Game* game);
 	void Render(Game* game);
-	static AttractScreen* Instance();
+	static AttractScreen* Instance() { return &attractScreen; }
 private:
 	static AttractScreen attractScreen;
 	SDL_Event previousEvent;

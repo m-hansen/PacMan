@@ -1,7 +1,80 @@
 #include "LevelManager.h"
 
-void LevelManager::LoadLevel(std::string levelData)
+LevelManager LevelManager::levelManager;
+
+LevelManager::LevelManager()
 {
+}
+
+LevelManager::~LevelManager()
+{
+}
+
+void LevelManager::InitializeLevel()
+{
+	fprintf(stdout, "Loading new level\n");
+
+	// Create the graph, load the level data, and calculate the edges
+	level = new Graph();
+	LoadLevelData(*currentLevel);
+	FindEdges();
+
+	// Initialize the player
+	player = new Player();
+	player->ResetPosition();
+
+	// Load the AI
+	ghostList.push_back(
+		new Ghost("blinky", 12.0f, 5.0f, DirectionEnum::Left)
+		);
+
+	ghostList.push_back(
+		new Ghost("pinky", 15.0f, 5.0f, DirectionEnum::Right)
+		);
+
+	ghostList.push_back(
+		new Ghost("inky", 9.0f, 5.0f, DirectionEnum::Down)
+		);
+
+	ghostList.push_back(
+		new Ghost("clyde", 18.0f, 5.0f, DirectionEnum::Down)
+		);
+}
+
+void LevelManager::CleanupLevel()
+{
+	fprintf(stdout, "Unloading level\n");
+
+	// Free the player
+	delete (player);
+	player = NULL;
+
+	// Free all of the AI
+	for (std::vector<Ghost*>::iterator iter = ghostList.begin();
+		iter != ghostList.end(); ++iter)
+	{
+		delete (*iter);
+		(*iter) = NULL;
+	}
+
+	// erase the old lists
+	legalPlayingNodes.clear();
+	pelletList.clear();
+	wallList.clear();
+	ghostList.clear();
+
+	// Delete the level
+	delete (level);
+	level = NULL;
+
+	// Reset the static id variable for the node class
+	Node::ResetNodeCounter();
+}
+
+void LevelManager::LoadLevelData(std::string levelData)
+{
+	fprintf(stdout, "Loading level: %s\n", levelData.c_str());
+
 	const int ASCII_NUM_OFFSET = 48;
 
 	std::ifstream inputStream;
@@ -15,7 +88,6 @@ void LevelManager::LoadLevel(std::string levelData)
 		// Get each tile in a line
 		for (int i = 0; i < line.length(); i++)
 		{
-
 			// string::at returns a char so we will subtract the ascii offset value
 			// and store it as an integer
 			int nodeType = line.at(i) - ASCII_NUM_OFFSET;
@@ -25,60 +97,57 @@ void LevelManager::LoadLevel(std::string levelData)
 			switch (nodeType)
 			{
 			case NodeType::EmptyNode:
-				//node->SetContents(TileTypeEnum::Empty);
-				//node->SetTexture(TextureManager::GetTexture("tile"));
-
 				// Create on the heap
 				node = new Node(i * 1, lineNumber * 1, NodeType::EmptyNode);
-				level.AddNode(node);
+				level->AddNode(node);
 				legalPlayingNodes.push_back(node);
 				break;
 			case NodeType::PelletNode:
 				// Create on the heap
 				node = new Node(i * 1, lineNumber * 1, NodeType::PelletNode);
-				level.AddNode(node);
-
+				level->AddNode(node);
 				pelletList.push_back(new Pellet(node));
-
-				//tile->SetContents(TileTypeEnum::Pellet);
 				legalPlayingNodes.push_back(node);
-				//tile->SetTexture(TextureManager::GetTexture("pellet"));
 				break;
 			case NodeType::PowerPelletNode:
 				// Create on the heap
 				node = new Node(i * 1, lineNumber * 1, NodeType::PowerPelletNode);
-				level.AddNode(node);
-				//tile->SetContents(TileTypeEnum::PowerPellet);
+				level->AddNode(node);
 				legalPlayingNodes.push_back(node);
-				//tile->SetTexture(TextureManager::GetTexture("power pellet"));
 				break;
 			case NodeType::WallNode:
 				// Create on the heap
 				node = new Node(i * 1, lineNumber * 1, NodeType::WallNode);
-				level.AddNode(node);
-				//tile->SetContents(TileTypeEnum::Wall);
-				//tile->SetTexture(TextureManager::GetTexture("wall"));
+				level->AddNode(node);
 				wallList.push_back(new Wall(node));
 				break;
 			}
 
-			// TODO mem will eventually need to be freed=
-			//node = NULL;
 			printf("%c ", line.at(i));
 		}
+
 		printf("\n");
 		lineNumber++;
 	}
+	inputStream.close();
 }
 
 void LevelManager::FindEdges()
 {
-	std::ofstream outputFile("graph_edges.txt");
+	fprintf(stdout, "Calculating graph edges\n");
+
+	FILE* ofp = fopen((DEBUG_LOG_FOLDER + "GraphEdges.txt").c_str(), "a");
+
+	// Print the level header
+	std::string heavyLineBreak = "";
+	for (int i = 0; i < (*currentLevel).length(); ++i)
+		heavyLineBreak += '=';
+	fprintf(ofp, "%s\n%s\n%s\n", heavyLineBreak.c_str(), (*currentLevel).c_str(), heavyLineBreak.c_str());
 
 	for (std::vector<Node*>::iterator iter = legalPlayingNodes.begin(); iter != legalPlayingNodes.end(); ++iter)
 	{
 		// Write the graph node to file
-		outputFile << (*iter)->GetNodeId() << " -> ";
+		fprintf(ofp, "%d -> ", (*iter)->GetNodeId());
 
 		for (std::vector<Node*>::iterator iter2 = legalPlayingNodes.begin(); iter2 != legalPlayingNodes.end(); ++iter2)
 		{
@@ -104,11 +173,45 @@ void LevelManager::FindEdges()
 					(*iter)->AddNeighborNode((*iter2));
 
 					// Write the graph edges (neighbor nodes) to file
-					outputFile << (*iter2)->GetNodeId() << " ";
+					fprintf(ofp, "%d ", (*iter2)->GetNodeId());
 				}
 			}
 		}
 
-		outputFile << "\n";
+		fprintf(ofp, "\n");
 	}
+
+	fprintf(ofp, "\n\n");
+	fclose(ofp);
+}
+
+// Construct a list of all levels and their location on disk
+void LevelManager::CreateLevelList(std::string dataLoc, std::vector<std::string> levelList)
+{
+	for (std::vector<std::string>::iterator iter = levelList.begin();
+		iter != levelList.end(); ++iter)
+	{
+		levels.push_back(dataLoc + "\\" + (*iter));
+	}
+
+	// Set the current level
+	currentLevel = levels.begin();
+}
+
+void LevelManager::NextLevel()
+{
+	CleanupLevel();
+	// Dont allow the iterator to exceed the bounds of the level list
+	if (currentLevel + 1 < levels.end())
+		++currentLevel;
+	InitializeLevel();
+}
+
+void LevelManager::PreviousLevel()
+{
+	CleanupLevel();
+	// Dont allow the iterator to exceed the bounds of the level list
+	if (currentLevel > levels.begin())
+		--currentLevel;
+	InitializeLevel();
 }

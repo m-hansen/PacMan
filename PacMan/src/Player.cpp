@@ -14,6 +14,11 @@ Player::Player()
 	livesLeftRect.w = G_SIZE;
 	livesLeftRect.h = G_SIZE;
 	newDirection = DirectionEnum::None;
+	boundingRect.w = 1;
+	boundingRect.h = 1;
+	spriteRect.w = G_SIZE;
+	spriteRect.h = G_SIZE;
+	speed = 0.05f * (G_SIZE / 8); // adjust speed based on grid size
 }
 
 Player::~Player()
@@ -23,49 +28,79 @@ Player::~Player()
 	texture = NULL;
 }
 
-void Player::Initialize()
-{
-	Vector2f initialPlayerPos = { 112.0f, 188.0f };
+//void Player::Initialize()
+//{
+//	fprintf(stdout, "Initializing player\n");
+//
+//	Vector2f initialPlayerPos = { 112.0f, 188.0f };
+//
+//	isAlignedWithTile = false;
+//
+//	speed = 0.05f * (G_SIZE / 8); // adjust speed based on grid size
+//	position.x = initialPlayerPos.x * (G_SIZE / 8);
+//	position.y = initialPlayerPos.y * (G_SIZE / 8);
+//
+//	// Set the collision rectangle
+//	boundingRect.w = 1;
+//	boundingRect.h = 1;
+//	boundingRect.x = position.x;
+//	boundingRect.y = position.y;
+//
+//	// Set the rendering rectangle
+//	spriteRect.w = G_SIZE;
+//	spriteRect.h = G_SIZE;
+//	spriteRect.x = position.x - (G_SIZE / 2);
+//	spriteRect.y = position.y - (G_SIZE / 2);
+//
+//	direction = DirectionEnum::Right;
+//	previousDirection = direction;
+//}
 
+void Player::ResetPosition()
+{
+	fprintf(stdout, "Resetting player position to spawn point\n");
+
+	// Set the spawn point
+	const Vector2f SPAWN_POINT = { 112.0f, 188.0f };
 	isAlignedWithTile = false;
 
-	speed = 0.05f * (G_SIZE / 8); // adjust speed based on grid size
-	position.x = initialPlayerPos.x * (G_SIZE / 8);
-	position.y = initialPlayerPos.y * (G_SIZE / 8);
+	// Reset the position
+	position.x = SPAWN_POINT.x * (G_SIZE / 8);
+	position.y = SPAWN_POINT.y * (G_SIZE / 8);
 
-	// Set the collision rectangle
-	boundingRect.w = 1;
-	boundingRect.h = 1;
+	// Reset the collider position
 	boundingRect.x = position.x;
 	boundingRect.y = position.y;
 
-	// Set the rendering rectangle
-	spriteRect.w = G_SIZE;
-	spriteRect.h = G_SIZE;
+	// Reset the sprite rectangle position
 	spriteRect.x = position.x - (G_SIZE / 2);
 	spriteRect.y = position.y - (G_SIZE / 2);
 
+	// Set the default direction
 	direction = DirectionEnum::Right;
 	previousDirection = direction;
+
+	// Clear the queued direction
+	newDirection = DirectionEnum::None;
 }
 
-bool Player::Kill()
+void Player::LoseLife()
 {
+	// TODO play death animation
 	livesLeft--;
-	if (isAlive && livesLeft <= 0)
+
+	// Check if we are out of lives
+	if (livesLeft <= 0)
 	{
-		printf("Game Over!\n");
+		fprintf(stdout, "Game Over!\n");
 		isAlive = false;
 		isVisible = false;
-		position.x = -1;
-		position.y = -1;
-		return true;
 	}
 	else
 	{
-		Initialize();
-		return false;
+		ResetPosition();
 	}
+
 }
 
 void Player::Update(Uint32 deltaT)

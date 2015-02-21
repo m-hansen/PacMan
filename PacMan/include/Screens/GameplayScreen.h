@@ -13,27 +13,23 @@ public:
 	void Resume();
 	void Initialize(Game* game);
 	void Cleanup(Game* game);
-	void InitializeLevel(std::string lvlName);
+	//void InitializeLevel(std::string lvlName);
 	void HandleEvents(Game* game);
 	void Update(Game* game);
 	void Render(Game* game);
 	void HandleCollisions();
 	bool CollisionChecker(SDL_Rect* a, SDL_Rect* b);
-	static GameplayScreen* Instance()
-	{
-		return &gameplayScreen;
-	}
+	static GameplayScreen* Instance() { return &gameplayScreen; }
 private:
 	void LoadContent(SDL_Renderer* renderer);
 	static GameplayScreen gameplayScreen;
-	Graph* level;
-	Player* player;
-	LevelManager levelManager;
-	Ghost* blinky;
-	Ghost* pinky;
-	Ghost* inky;
-	Ghost* clyde;
-	std::vector<Ghost*> ghostList;
+	//Player* player;
+	LevelManager* levelManager;
+	//Ghost* blinky;
+	//Ghost* pinky;
+	//Ghost* inky;
+	//Ghost* clyde;
+	//std::vector<Ghost*> ghostList;
 	std::string endGameMessage;
 	bool isLevelOver;
 	SDL_Event previousEvent;

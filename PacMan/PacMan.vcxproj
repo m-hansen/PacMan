@@ -41,13 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\dev\boost_1_56_0;C:\dev\SDL2_image-2.0.0\include;C:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\dev\SDL2_image-2.0.0\lib\x86;C:\dev\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\dev\boost_1_57_0;C:\dev\SDL2_image-2.0.0\include;C:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\dev\boost_1_57_0\lib\x86;C:\dev\SDL2_image-2.0.0\lib\x86;C:\dev\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\dev\boost_1_56_0;C:\dev\SDL2_image-2.0.0\include;C:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\dev\SDL2_image-2.0.0\lib\x86;C:\dev\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\dev\boost_1_57_0;C:\dev\SDL2_image-2.0.0\include;C:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\dev\boost_1_57_0\lib\x86;C:\dev\SDL2_image-2.0.0\lib\x86;C:\dev\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -147,6 +147,9 @@
   <ItemGroup>
     <Font Include="Resources\Fonts\ARIAL.TTF" />
     <Font Include="Resources\Fonts\PAC-FONT.TTF" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resources\LevelData\Level0.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

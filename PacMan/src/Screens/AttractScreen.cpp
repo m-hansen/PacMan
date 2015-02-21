@@ -101,14 +101,9 @@ void AttractScreen::Render(Game* game)
 	// Display the title text
 	SDL_RenderCopy(game->renderer, titleTexture, NULL, &titleTextRect);
 
-	// Display the title text
+	// Display the instruction text
 	SDL_RenderCopy(game->renderer, instructionTexture, NULL, &instrTextRect);
 
 	// Update the screen
 	SDL_RenderPresent(game->renderer);
-}
-
-AttractScreen* AttractScreen::Instance()
-{
-	return &attractScreen;
 }

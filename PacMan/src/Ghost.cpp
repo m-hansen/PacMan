@@ -2,6 +2,8 @@
 
 Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum dir)
 {
+	fprintf(stdout, "Creating a new ghost\n");
+
 	texture = TextureManager::GetTexture(textureName.c_str());
 	position.x = (spawnX * G_SIZE);
 	position.y = (spawnY * G_SIZE);
