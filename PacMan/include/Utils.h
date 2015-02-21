@@ -1,5 +1,8 @@
 #pragma once
+#include <direct.h>
+#include <string>
 #include "SDL.h"
+#include "boost/filesystem.hpp"
 
 struct Vector2
 {
@@ -17,6 +20,7 @@ class Utils
 {
 public:
 	static bool CollisionChecker(SDL_Rect* a, SDL_Rect* b);
+	static void CreateFolder(std::string folderName);
 private:
 	Utils();
 };

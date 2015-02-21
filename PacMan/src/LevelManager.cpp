@@ -133,12 +133,18 @@ void LevelManager::FindEdges()
 {
 	fprintf(stdout, "Calculating graph edges\n");
 
-	//std::ofstream outputFile("graph_edges.txt");
+	FILE* ofp = fopen((DEBUG_LOG_FOLDER + "GraphEdges.txt").c_str(), "a");
+
+	// Print the level header
+	std::string heavyLineBreak = "";
+	for (int i = 0; i < (*currentLevel).length(); ++i)
+		heavyLineBreak += '=';
+	fprintf(ofp, "%s\n%s\n%s\n", heavyLineBreak.c_str(), (*currentLevel).c_str(), heavyLineBreak.c_str());
 
 	for (std::vector<Node*>::iterator iter = legalPlayingNodes.begin(); iter != legalPlayingNodes.end(); ++iter)
 	{
 		// Write the graph node to file
-		//outputFile << (*iter)->GetNodeId() << " -> ";
+		fprintf(ofp, "%d -> ", (*iter)->GetNodeId());
 
 		for (std::vector<Node*>::iterator iter2 = legalPlayingNodes.begin(); iter2 != legalPlayingNodes.end(); ++iter2)
 		{
@@ -164,15 +170,16 @@ void LevelManager::FindEdges()
 					(*iter)->AddNeighborNode((*iter2));
 
 					// Write the graph edges (neighbor nodes) to file
-					//outputFile << (*iter2)->GetNodeId() << " ";
+					fprintf(ofp, "%d ", (*iter2)->GetNodeId());
 				}
 			}
 		}
 
-		//outputFile << "\n";
+		fprintf(ofp, "\n");
 	}
 
-	//outputFile.close();
+	fprintf(ofp, "\n\n");
+	fclose(ofp);
 }
 
 // Construct a list of all levels and their location on disk

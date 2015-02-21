@@ -29,12 +29,12 @@ Node::Node(float x, float y, NodeType nodeType)
 
 Node::~Node()
 {
-	// Free all memory from neighboring nodes
-	/*for (std::vector<Node*>::iterator iter = neighborNodes.begin(); iter != neighborNodes.end(); ++iter)
-	{
-		delete (*iter);
-		(*iter) = NULL;
-	}*/
+	//// Free all memory from neighboring nodes
+	//for (std::vector<Node*>::iterator iter = neighborNodes.begin(); iter != neighborNodes.end(); ++iter)
+	//{
+	//	delete (*iter);
+	//	(*iter) = NULL;
+	//}
 }
 
 void Node::Render(SDL_Renderer* renderer)
@@ -44,6 +44,10 @@ void Node::Render(SDL_Renderer* renderer)
 
 void Node::AddNeighborNode(Node* neighbor)
 {
+	if (neighborNodes.size() > 4)
+	{
+		printf("break here");
+	}
 	neighborNodes.push_back(neighbor);
 }
 

@@ -54,7 +54,7 @@ void GameplayScreen::Initialize(Game* game)
 	// Construct the level list
 	std::vector<std::string> levelList;
 	levelList.push_back("Level1.txt");
-	levelList.push_back("Level0.txt");
+	levelList.push_back("Level1.txt");
 	levelManager->CreateLevelList("Resources\\LevelData", levelList);
 
 	// Initialize the level manager with the level list

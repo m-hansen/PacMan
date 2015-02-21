@@ -26,3 +26,14 @@ bool Utils::CollisionChecker(SDL_Rect* a, SDL_Rect* b)
 	// Both the horizontal and vertical coordinates have an overlap
 	return true;
 }
+
+void Utils::CreateFolder(std::string folderName)
+{
+	boost::filesystem::path directory(folderName);
+
+	// Remove the old directory and all of its contents
+	boost::filesystem::remove_all(directory);
+
+	// Create the new directory
+	boost::filesystem::create_directory(directory);
+}
