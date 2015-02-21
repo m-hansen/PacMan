@@ -44,10 +44,6 @@ void Node::Render(SDL_Renderer* renderer)
 
 void Node::AddNeighborNode(Node* neighbor)
 {
-	if (neighborNodes.size() > 4)
-	{
-		printf("break here");
-	}
 	neighborNodes.push_back(neighbor);
 }
 

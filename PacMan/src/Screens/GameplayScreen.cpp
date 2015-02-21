@@ -54,7 +54,7 @@ void GameplayScreen::Initialize(Game* game)
 	// Construct the level list
 	std::vector<std::string> levelList;
 	levelList.push_back("Level1.txt");
-	levelList.push_back("Level1.txt");
+	levelList.push_back("Level0.txt");
 	levelManager->CreateLevelList("Resources\\LevelData", levelList);
 
 	// Initialize the level manager with the level list
@@ -63,21 +63,6 @@ void GameplayScreen::Initialize(Game* game)
 
 void GameplayScreen::Cleanup(Game* game)
 {
-	/*delete (blinky);
-	blinky = NULL;
-	delete (pinky);
-	pinky = NULL;
-	delete (inky);
-	inky = NULL;
-	delete (clyde);
-	clyde = NULL;*/
-
-	/*delete (player);
-	player = NULL;*/
-
-	/*delete (level);
-	level = NULL;*/
-
 	TTF_CloseFont(arialFont);
 	arialFont = NULL;
 }
@@ -142,7 +127,10 @@ void GameplayScreen::HandleEvents(Game* game)
 						levelManager->GetPlayer()->SetDirection(DirectionEnum::Right) : levelManager->GetPlayer()->QueueDirection(DirectionEnum::Right);
 				}
 				break;
-			case SDLK_n:
+			case SDLK_LEFTBRACKET:
+				levelManager->PreviousLevel();
+				break;
+			case SDLK_RIGHTBRACKET:
 				levelManager->NextLevel();
 				break;
 			case SDLK_F3:

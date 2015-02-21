@@ -57,13 +57,15 @@ void LevelManager::CleanupLevel()
 		(*iter) = NULL;
 	}
 
-	// Free all nodes in the graph
-	for (std::vector<Node*>::iterator iter = level->GetAllNodes()->begin(); 
-		iter != level->GetAllNodes()->end(); ++iter)
-	{
-		delete (*iter);
-		(*iter) = NULL;
-	}
+	// erase the old lists
+	legalPlayingNodes.clear();
+	pelletList.clear();
+	wallList.clear();
+	ghostList.clear();
+
+	// Delete the level
+	delete (level);
+	level = NULL;
 
 	// Reset the static id variable for the node class
 	Node::ResetNodeCounter();
@@ -127,6 +129,7 @@ void LevelManager::LoadLevelData(std::string levelData)
 		printf("\n");
 		lineNumber++;
 	}
+	inputStream.close();
 }
 
 void LevelManager::FindEdges()
@@ -198,13 +201,17 @@ void LevelManager::CreateLevelList(std::string dataLoc, std::vector<std::string>
 void LevelManager::NextLevel()
 {
 	CleanupLevel();
-	++currentLevel;
+	// Dont allow the iterator to exceed the bounds of the level list
+	if (currentLevel + 1 < levels.end())
+		++currentLevel;
 	InitializeLevel();
 }
 
 void LevelManager::PreviousLevel()
 {
 	CleanupLevel();
-	--currentLevel;
+	// Dont allow the iterator to exceed the bounds of the level list
+	if (currentLevel > levels.begin())
+		--currentLevel;
 	InitializeLevel();
 }
