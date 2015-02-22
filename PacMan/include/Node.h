@@ -19,14 +19,13 @@ public:
 	void Node::Render(SDL_Renderer* renderer);
 	void AddNeighborNode(Node* neighbor);
 	std::vector<Node*> GetNeighborNodes();
-	Vector2f GetLocation();
+	Vector2f GetPosition();
 	NodeTypeEnum Node::GetType();
 	SDL_Rect* GetBoundingRect();
 	bool SearchNeighborId(int id);
 	int GetNodeId();
 	static void ResetNodeCounter() { id = 0; }
 private:
-	Vector2f location;
 	std::vector<Node*> neighborNodes;
 	NodeTypeEnum type;
 	SDL_Rect boundingRect;

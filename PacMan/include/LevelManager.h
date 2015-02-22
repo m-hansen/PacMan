@@ -13,6 +13,7 @@
 #include "Ghost.h"
 #include "Player.h"
 #include "Wall.h"
+#include "Sprite.h"
 
 class LevelManager
 {
@@ -32,7 +33,7 @@ public:
 	Player* GetPlayer() { return player; }
 	std::vector<Node*>& GetLegalNodes() { return legalPlayingNodes; }
 	std::vector<Pellet*>& GetPellets() { return pelletList; }
-	std::vector<Wall*>& GetWalls() { return wallList; }
+	std::vector<Sprite*>& GetWalls() { return wallList; }
 	std::vector<Ghost*>& GetGhosts() { return ghostList; }
 private:
 	static LevelManager levelManager;
@@ -40,7 +41,7 @@ private:
 	Graph* level;
 	std::vector<Node*> legalPlayingNodes;
 	std::vector<Pellet*> pelletList;
-	std::vector<Wall*> wallList;
+	std::vector<Sprite*> wallList;
 	std::vector<Ghost*> ghostList;
 	std::vector<std::string> levels;
 	std::vector<std::string>::iterator currentLevel;

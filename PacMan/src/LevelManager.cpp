@@ -98,29 +98,32 @@ void LevelManager::LoadLevelData(std::string levelData)
 			{
 			case NodeTypeEnum::EmptyNode:
 				// Create on the heap
-				node = new Node(i * 1, lineNumber * 1, NodeTypeEnum::EmptyNode);
+				node = new Node(i * GRID_SIZE, lineNumber * GRID_SIZE, NodeTypeEnum::EmptyNode);
 				level->AddNode(node);
 				legalPlayingNodes.push_back(node);
 				break;
 			case NodeTypeEnum::PelletNode:
 				// Create on the heap
-				node = new Node(i * 1, lineNumber * 1, NodeTypeEnum::PelletNode);
+				node = new Node(i * GRID_SIZE, lineNumber * GRID_SIZE, NodeTypeEnum::PelletNode);
 				level->AddNode(node);
 				pelletList.push_back(new Pellet(node));
 				legalPlayingNodes.push_back(node);
 				break;
 			case NodeTypeEnum::PowerPelletNode:
 				// Create on the heap
-				node = new Node(i * 1, lineNumber * 1, NodeTypeEnum::PowerPelletNode);
+				node = new Node(i * GRID_SIZE, lineNumber * GRID_SIZE, NodeTypeEnum::PowerPelletNode);
 				level->AddNode(node);
 				pelletList.push_back(new Pellet(node));
 				legalPlayingNodes.push_back(node);
 				break;
 			case NodeTypeEnum::WallNode:
 				// Create on the heap
-				node = new Node(i * 1, lineNumber * 1, NodeTypeEnum::WallNode);
+				const int WALL_OFFSET = GRID_SIZE / 2;
+				node = new Node(i * GRID_SIZE, lineNumber * GRID_SIZE, NodeTypeEnum::WallNode);
 				level->AddNode(node);
-				wallList.push_back(new Wall(node));
+				wallList.push_back(new Sprite(
+					TextureManager::GetTexture("wall"), WALL_OFFSET + (node->GetPosition().x),
+					WALL_OFFSET  +(node->GetPosition().y), GRID_SIZE, GRID_SIZE));
 				break;
 			}
 
@@ -163,20 +166,15 @@ void LevelManager::FindEdges()
 			if (iter != iter2)
 			{
 				// Get the distance between nodes
-				float deltaX = (*iter)->GetLocation().x - (*iter2)->GetLocation().x;
-				float deltaY = (*iter)->GetLocation().y - (*iter2)->GetLocation().y;
+				float deltaX = (*iter)->GetPosition().x - (*iter2)->GetPosition().x;
+				float deltaY = (*iter)->GetPosition().y - (*iter2)->GetPosition().y;
 
 				// Get the absolute value if needed
 				if (deltaX < 0) deltaX *= -1;
 				if (deltaY < 0) deltaY *= -1;
 
-				// Adjust based on scale
-				/*deltaX /= G_SIZE;
-				deltaY /= G_SIZE;*/
-
-				//if ((deltaX <= (1)) && (deltaY <= (1)))
-				if ((deltaX == 1 && deltaY == 0) || 
-					(deltaX == 0 && deltaY == 1))
+				if ((deltaX == GRID_SIZE && deltaY == 0) || 
+					(deltaX == 0 && deltaY == GRID_SIZE))
 				{
 					// We are within the range to be considered an edge
 					(*iter)->AddNeighborNode((*iter2));
@@ -200,7 +198,7 @@ void LevelManager::CreateLevelList(std::string dataLoc, std::vector<std::string>
 	for (std::vector<std::string>::iterator iter = levelList.begin();
 		iter != levelList.end(); ++iter)
 	{
-		levels.push_back(dataLoc + "\\" + (*iter));
+		levels.push_back(dataLoc + "/" + (*iter));
 	}
 
 	// Set the current level

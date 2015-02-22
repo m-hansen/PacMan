@@ -21,6 +21,6 @@ private:
 	bool isRunning;
 	TTF_Font* titleFont;
 	TTF_Font* instructionFont;
-	Sprite title;
-	Sprite instructions;
+	Sprite* title;
+	Sprite* instructions;
 };

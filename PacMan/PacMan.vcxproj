@@ -127,8 +127,6 @@
     <ClInclude Include="include\Screens\IScreen.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\TextureManager.h" />
-    <ClInclude Include="include\Tile.h" />
-    <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\Utils.h" />
     <ClInclude Include="include\Wall.h" />
   </ItemGroup>

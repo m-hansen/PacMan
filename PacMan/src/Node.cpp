@@ -6,8 +6,11 @@ Node::Node(float x, float y, NodeTypeEnum nodeType)
 {
 	currentId = id++;
 
-	location.x = x;
-	location.y = y;
+	boundingRect.w = GRID_SIZE;
+	boundingRect.h = GRID_SIZE;
+	boundingRect.x = x;
+	boundingRect.y = y;
+
 	type = nodeType;
 
 	if ((nodeType == NodeTypeEnum::EmptyNode) ||
@@ -21,10 +24,6 @@ Node::Node(float x, float y, NodeTypeEnum nodeType)
 		isLegalPlayingNode = false;
 	}
 
-	boundingRect.w = G_SIZE;
-	boundingRect.h = G_SIZE;
-	boundingRect.x = location.x * G_SIZE;
-	boundingRect.y = location.y* G_SIZE;
 }
 
 Node::~Node()
@@ -52,9 +51,9 @@ std::vector<Node*> Node::GetNeighborNodes()
 	return neighborNodes;
 }
 
-Vector2f Node::GetLocation()
+Vector2f Node::GetPosition()
 {
-	return location;
+	return Vector2f{ boundingRect.x, boundingRect.y };
 }
 
 NodeTypeEnum Node::GetType()

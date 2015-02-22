@@ -60,7 +60,7 @@ bool Game::Initialize()
 void Game::LoadContent()
 {
 	// Create the font
-	//sansFont = TTF_OpenFont("Fonts\\ARIAL.TTF", 24);
+	//sansFont = TTF_OpenFont("Fonts/ARIAL.TTF", 24);
 	/*SDL_Surface* scoreSurface = TTF_RenderText_Solid(sansFont, "Score: " + score, SDL_Color{255, 255, 255});
 	scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreSurface);
 	SDL_FreeSurface(scoreSurface);*/

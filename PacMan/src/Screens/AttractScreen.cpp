@@ -8,24 +8,30 @@ void AttractScreen::Initialize(Game* game)
 	SDL_Surface* fontSurface = NULL;
 
 	// Open the fonts
-	titleFont = TTF_OpenFont("Resources\\Fonts\\PAC-FONT.TTF", SCREEN_WIDTH);
-	instructionFont = TTF_OpenFont("Resources\\Fonts\\ARIAL.TTF", SCREEN_WIDTH / 2);
+	titleFont = TTF_OpenFont("Resources/Fonts/PAC-FONT.TTF", SCREEN_WIDTH);
+	instructionFont = TTF_OpenFont("Resources/Fonts/ARIAL.TTF", SCREEN_WIDTH);
 	
 	// Create the title font surface and texture
-	title.SetTexture( Utils::CreateFontTexture(game->renderer, titleFont, 
-		"Pac-Man", SDL_Color{ 0, 255, 255 }) );
-	title.SetBounds(SCREEN_WIDTH, SCREEN_HEIGHT / 5);
-	title.SetPosition((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 3));
-	
+	SDL_Texture* titleTexture = Utils::CreateFontTexture(game->renderer, titleFont, 
+		"Pac-Man", SDL_Color{ 0, 255, 255 });
+	title = new Sprite(titleTexture, (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 3), 
+		SCREEN_WIDTH, (SCREEN_HEIGHT / 5));
+
 	// Create the instruction font surface and texture
-	instructions.SetTexture(Utils::CreateFontTexture(game->renderer, instructionFont,
-		"Press ENTER to play!", SDL_Color{ 255, 255, 255 }));
-	instructions.SetBounds(SCREEN_WIDTH - (SCREEN_WIDTH / 3), SCREEN_HEIGHT / 16);
-	instructions.SetPosition((SCREEN_WIDTH / 2), (SCREEN_HEIGHT - (SCREEN_HEIGHT / 4)));
+	SDL_Texture* instrTexture = Utils::CreateFontTexture(game->renderer, instructionFont, 
+		"Press ENTER to play!", SDL_Color{ 255, 255, 255 });
+	instructions = new Sprite(instrTexture, (SCREEN_WIDTH / 2), (SCREEN_HEIGHT - (SCREEN_HEIGHT / 4)),
+		(SCREEN_WIDTH - (SCREEN_WIDTH / 3)), (SCREEN_HEIGHT / 16));
 }
 
 void AttractScreen::Cleanup(Game* game)
 {
+	delete (instructions);
+	instructions = NULL;
+
+	delete (title);
+	title = NULL;
+
 	TTF_CloseFont(instructionFont);
 	instructionFont = NULL;
 
@@ -91,8 +97,8 @@ void AttractScreen::Render(Game* game)
 	SDL_RenderClear(game->renderer);
 
 	// Display the sprites
-	title.Render(game->renderer);
-	instructions.Render(game->renderer);
+	title->Render(game->renderer);
+	instructions->Render(game->renderer);
 
 	// Update the screen
 	SDL_RenderPresent(game->renderer);

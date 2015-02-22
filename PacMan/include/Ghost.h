@@ -8,26 +8,25 @@
 #include "Node.h"
 #include "DirectionEnum.h"
 
-class Ghost : public MovingAgent, public IRenderable
+class Ghost : public IRenderable
 {
 public:
 	Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum dir);
 	~Ghost();
-	//void Respawn();
+	void Respawn();
 	void Update(Uint32 deltaT);
 	void ReverseDirection();
 	void UpdateNodes(Node* newNode);
 	void Render(SDL_Renderer* renderer);
-	
 	SDL_Rect* GetBoundingRect();
 	DirectionEnum GetDirection();
 	void SetDirection(DirectionEnum dirEnum);
-	/*Node* GetCurrentNode();
-	Node* GetPreviousNode();*/
-	void SetPosition(Node* node);
+	Node* GetCurrentNode();
+	Node* GetPreviousNode();
+	//void SetPosition(Node* node);
 	void SetPreviousDirection(DirectionEnum dir);
 private:
-	/*SDL_Rect boundingRect;
+	SDL_Rect boundingRect;
 	SDL_Texture* texture;
 	Vector2f spawnPoint;
 	Vector2f position;
@@ -38,6 +37,6 @@ private:
 	float speed;
 	Node* currentNode;
 	Node* previousNode;
-	Node* previousFrameNode;*/
+	Node* previousFrameNode;
 	bool isCenteredOnTile;
 };

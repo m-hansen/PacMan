@@ -11,14 +11,14 @@ Player::Player()
 	isAlive = true;
 	isMoving = true;
 	isVisible = true;
-	livesLeftRect.w = G_SIZE;
-	livesLeftRect.h = G_SIZE;
+	livesLeftRect.w = GRID_SIZE;
+	livesLeftRect.h = GRID_SIZE;
 	queuedDirection = DirectionEnum::None;
 	boundingRect.w = 1;
 	boundingRect.h = 1;
-	spriteRect.w = G_SIZE;
-	spriteRect.h = G_SIZE;
-	speed = 0.05f * (G_SIZE / 8); // adjust speed based on grid size
+	spriteRect.w = GRID_SIZE;
+	spriteRect.h = GRID_SIZE;
+	speed = 0.05f * (GRID_SIZE / 8); // adjust speed based on grid size
 }
 
 Player::~Player()
@@ -36,9 +36,9 @@ Player::~Player()
 //
 //	isAlignedWithTile = false;
 //
-//	speed = 0.05f * (G_SIZE / 8); // adjust speed based on grid size
-//	position.x = initialPlayerPos.x * (G_SIZE / 8);
-//	position.y = initialPlayerPos.y * (G_SIZE / 8);
+//	speed = 0.05f * (GRID_SIZE / 8); // adjust speed based on grid size
+//	position.x = initialPlayerPos.x * (GRID_SIZE / 8);
+//	position.y = initialPlayerPos.y * (GRID_SIZE / 8);
 //
 //	// Set the collision rectangle
 //	boundingRect.w = 1;
@@ -47,10 +47,10 @@ Player::~Player()
 //	boundingRect.y = position.y;
 //
 //	// Set the rendering rectangle
-//	spriteRect.w = G_SIZE;
-//	spriteRect.h = G_SIZE;
-//	spriteRect.x = position.x - (G_SIZE / 2);
-//	spriteRect.y = position.y - (G_SIZE / 2);
+//	spriteRect.w = GRID_SIZE;
+//	spriteRect.h = GRID_SIZE;
+//	spriteRect.x = position.x - (GRID_SIZE / 2);
+//	spriteRect.y = position.y - (GRID_SIZE / 2);
 //
 //	direction = DirectionEnum::Right;
 //	previousDirection = direction;
@@ -65,16 +65,16 @@ void Player::ResetPosition()
 	isAlignedWithTile = false;
 
 	// Reset the position
-	position.x = SPAWN_POINT.x * (G_SIZE / 8);
-	position.y = SPAWN_POINT.y * (G_SIZE / 8);
+	position.x = SPAWN_POINT.x * (GRID_SIZE / 8);
+	position.y = SPAWN_POINT.y * (GRID_SIZE / 8);
 
 	// Reset the collider position
 	boundingRect.x = position.x;
 	boundingRect.y = position.y;
 
 	// Reset the sprite rectangle position
-	spriteRect.x = position.x - (G_SIZE / 2);
-	spriteRect.y = position.y - (G_SIZE / 2);
+	spriteRect.x = position.x - (GRID_SIZE / 2);
+	spriteRect.y = position.y - (GRID_SIZE / 2);
 
 	// Set the default direction
 	direction = DirectionEnum::Right;
@@ -112,13 +112,13 @@ void Player::Update(Uint32 deltaT)
 	if (currentNode != NULL)
 	{
 		// Account for rounding errors
-		float posX = (position.x - (currentNode->GetLocation().x * G_SIZE)) - (G_SIZE / 2);
-		float posY = (position.y - (currentNode->GetLocation().y * G_SIZE)) - (G_SIZE / 2);
+		float posX = (position.x - (currentNode->GetPosition().x)) - (GRID_SIZE / 2);
+		float posY = (position.y - (currentNode->GetPosition().y)) - (GRID_SIZE / 2);
 		if (posX < 0) posX *= -1;
 		if (posY < 0) posY *= -1;
 
 		// Check if player is aligned within the grid
-		if (posX < (G_SIZE / 2) + G_SIZE - 1 && posY < (G_SIZE / 2) + G_SIZE - 1)
+		if (posX < (GRID_SIZE / 2) + GRID_SIZE - 1 && posY < (GRID_SIZE / 2) + GRID_SIZE - 1)
 		{
 			isAlignedWithTile = true;
 		}
@@ -172,8 +172,8 @@ void Player::Update(Uint32 deltaT)
 	// Update the bounding rectangle
 	boundingRect.x = position.x;
 	boundingRect.y = position.y;
-	spriteRect.x = position.x - (G_SIZE / 2);
-	spriteRect.y = position.y - (G_SIZE / 2);
+	spriteRect.x = position.x - (GRID_SIZE / 2);
+	spriteRect.y = position.y - (GRID_SIZE / 2);
 }
 
 void Player::UpdateNodes(Node* newNode)
@@ -192,8 +192,8 @@ void Player::Render(SDL_Renderer* renderer)
 	// Display the lives left
 	for (int i = 0; i < livesLeft - 1; i++)
 	{
-		livesLeftRect.x = G_SIZE * i;
-		livesLeftRect.y = G_SIZE * 32;
+		livesLeftRect.x = GRID_SIZE * i;
+		livesLeftRect.y = GRID_SIZE * 32;
 		SDL_RenderCopy(renderer, livesTexture, NULL, &livesLeftRect);
 	}
 	
@@ -236,8 +236,8 @@ void Player::ConsumeQueuedMovement()
 	if (!readyToConsume)
 		return;
 
-	position.x = (currentNode->GetLocation().x * G_SIZE) + (G_SIZE / 2);
-	position.y = (currentNode->GetLocation().y * G_SIZE) + (G_SIZE / 2);
+	position.x = (currentNode->GetPosition().x) + (GRID_SIZE / 2);
+	position.y = (currentNode->GetPosition().y) + (GRID_SIZE / 2);
 	direction = queuedDirection;
 	queuedDirection = DirectionEnum::None;
 }
@@ -275,8 +275,8 @@ Node* Player::GetPreviousNode()
 
 void Player::SetPosition(Node* node)
 {
-	position.x = (G_SIZE * node->GetLocation().x) + (G_SIZE / 2);
-	position.y = (G_SIZE * node->GetLocation().y) + (G_SIZE / 2);
+	position.x = (node->GetPosition().x) + (GRID_SIZE / 2);
+	position.y = (node->GetPosition().y) + (GRID_SIZE / 2);
 	currentNode = node;
 }
 

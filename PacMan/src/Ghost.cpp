@@ -7,14 +7,14 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum 
 	texture = TextureManager::GetTexture(textureName.c_str());
 
 	// Set the location and size
-	spawnPoint = { spawnX * G_SIZE, spawnY * G_SIZE};
+	spawnPoint = { spawnX * GRID_SIZE, spawnY * GRID_SIZE};
 	position = spawnPoint;
-	boundingRect.w = G_SIZE;
-	boundingRect.h = G_SIZE;
+	boundingRect.w = GRID_SIZE;
+	boundingRect.h = GRID_SIZE;
 	boundingRect.x = position.x;
 	boundingRect.y = position.y;
 
-	speed = 0.05f * (G_SIZE / 8);
+	speed = 0.05f * (GRID_SIZE / 8);
 
 	// Set direction variables
 	defaultDirection = dir;
@@ -34,24 +34,24 @@ Ghost::~Ghost()
 	texture = NULL;
 }
 
-//void Ghost::Respawn()
-//{
-//	// Reset the position
-//	position = spawnPoint;
-//	boundingRect.x = position.x;
-//	boundingRect.y = position.y;
-//
-//	// Reset direction variables
-//	defaultDirection = defaultDirection;
-//	direction = defaultDirection;
-//	previousDirection = direction;
-//	queuedDirection = DirectionEnum::None;
-//
-//	// Initialize the nodes
-//	currentNode = NULL;
-//	previousNode = NULL;
-//	previousFrameNode = NULL;
-//}
+void Ghost::Respawn()
+{
+	// Reset the position
+	position = spawnPoint;
+	boundingRect.x = position.x;
+	boundingRect.y = position.y;
+
+	// Reset direction variables
+	defaultDirection = defaultDirection;
+	direction = defaultDirection;
+	previousDirection = direction;
+	queuedDirection = DirectionEnum::None;
+
+	// Initialize the nodes
+	currentNode = NULL;
+	previousNode = NULL;
+	previousFrameNode = NULL;
+}
 
 void Ghost::Update(Uint32 deltaT)
 {
@@ -59,8 +59,8 @@ void Ghost::Update(Uint32 deltaT)
 	if (currentNode != NULL)
 	{
 		// Account for rounding errors
-		float posX = (position.x - (currentNode->GetLocation().x * G_SIZE));
-		float posY = (position.y - (currentNode->GetLocation().y * G_SIZE));
+		float posX = (position.x - (currentNode->GetPosition().x));
+		float posY = (position.y - (currentNode->GetPosition().y));
 		if (posX < 0) posX *= -1;
 		if (posY < 0) posY *= -1;
 
@@ -145,8 +145,8 @@ void Ghost::Update(Uint32 deltaT)
 	// Update the AI direction when we are centered in a tile
 	if ((isCenteredOnTile) && (queuedDirection != DirectionEnum::None))
 	{
-		position.x = (currentNode->GetLocation().x * G_SIZE);
-		position.y = (currentNode->GetLocation().y * G_SIZE);
+		position.x = (currentNode->GetPosition().x);
+		position.y = (currentNode->GetPosition().y);
 		direction = queuedDirection;
 		queuedDirection = DirectionEnum::None;
 	}
@@ -181,19 +181,19 @@ void Ghost::ReverseDirection()
 	switch (direction)
 	{
 		case DirectionEnum::Up:
-			direction = DirectionEnum::Down;
+			queuedDirection = DirectionEnum::Down;
 			break;
 		case DirectionEnum::Down:
-			direction = DirectionEnum::Up;
+			queuedDirection = DirectionEnum::Up;
 			break;
 		case DirectionEnum::Left:
-			direction = DirectionEnum::Right;
+			queuedDirection = DirectionEnum::Right;
 			break;
 		case DirectionEnum::Right:
-			direction = DirectionEnum::Left;
+			queuedDirection = DirectionEnum::Left;
 			break;
 		default:
-			direction = DirectionEnum::None;
+			queuedDirection = DirectionEnum::None;
 	}
 }
 
@@ -219,27 +219,30 @@ void Ghost::SetDirection(DirectionEnum dirEnum)
 	direction = dirEnum;
 }
 
-//Node* Ghost::GetCurrentNode()
-//{
-//	return currentNode;
-//}
-//
-//Node* Ghost::GetPreviousNode()
-//{
-//	return previousNode;
-//}
+Node* Ghost::GetCurrentNode()
+{
+	return currentNode;
+}
+
+Node* Ghost::GetPreviousNode()
+{
+	return previousNode;
+}
 
 DirectionEnum Ghost::GetDirection()
 {
 	return direction;
 }
 
-void Ghost::SetPosition(Node* node)
+/*void Ghost::SetPosition(Node* node)
 {
-	position.x = (G_SIZE * node->GetLocation().x) + (G_SIZE / 2);
-	position.y = (G_SIZE * node->GetLocation().y) + (G_SIZE / 2);
+	position.x = (node->GetPosition().x) + (GRID_SIZE / 2);
+	position.y = (node->GetPosition().y) + (GRID_SIZE / 2);
+	boundingRect.x = position.x;
+	boundingRect.y = position.y;
 	currentNode = node;
-}
+}*/
+
 SDL_Rect* Ghost::GetBoundingRect()
 {
 	return &boundingRect;

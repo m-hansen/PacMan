@@ -6,9 +6,10 @@
 class Sprite
 {
 public:
-	Sprite();
+	Sprite(SDL_Texture* t, float x, float y, float w, float h);
 	~Sprite();
 	void Render(SDL_Renderer* renderer);
+	SDL_Rect* GetBoundingRect() { return &boundingRect; }
 	void SetBounds(float w, float h);
 	void SetPosition(float x, float y);
 	void SetTexture(SDL_Texture* t) { texture = t; }
@@ -16,7 +17,7 @@ public:
 	void Hide() { isVisible = false; }
 	bool Visible() { return isVisible; }
 private:
-	Vector2f localOrigin;
+	Vector2f origin;
 	SDL_Texture* texture;
 	SDL_Rect boundingRect;
 	bool isVisible;
