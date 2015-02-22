@@ -1,5 +1,6 @@
 #pragma once
 #include "SDL.h"
+#include "MovingAgent.h"
 #include "TextureManager.h"
 #include "IRenderable.h"
 #include "DirectionEnum.h"

@@ -133,6 +133,14 @@ void LevelManager::LoadLevelData(std::string levelData)
 	inputStream.close();
 }
 
+void LevelManager::ResetAI()
+{
+	for (auto iter = ghostList.begin(); iter != ghostList.end(); ++iter)
+	{
+		(*iter)->Respawn();
+	}
+}
+
 void LevelManager::FindEdges()
 {
 	fprintf(stdout, "Calculating graph edges\n");

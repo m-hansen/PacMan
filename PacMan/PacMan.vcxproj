@@ -96,6 +96,7 @@
     <ClCompile Include="src\Graph.cpp" />
     <ClCompile Include="src\LevelManager.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MovingAgent.cpp" />
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\Pellet.cpp" />
     <ClCompile Include="src\Player.cpp" />
@@ -115,6 +116,7 @@
     <ClInclude Include="include\Global.h" />
     <ClInclude Include="include\graph.h" />
     <ClInclude Include="include\LevelManager.h" />
+    <ClInclude Include="include\MovingAgent.h" />
     <ClInclude Include="include\Node.h" />
     <ClInclude Include="include\Enumerations\NodeTypeEnum.h" />
     <ClInclude Include="include\Pellet.h" />

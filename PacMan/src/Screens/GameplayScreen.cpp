@@ -442,6 +442,7 @@ void GameplayScreen::HandleCollisions()
 				(*iter)->GetBoundingRect()))
 			{
 				levelManager->GetPlayer()->LoseLife();
+				levelManager->ResetAI();
 			}
 		}
 	}

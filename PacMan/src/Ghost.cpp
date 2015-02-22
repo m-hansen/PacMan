@@ -5,18 +5,22 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum 
 	fprintf(stdout, "Creating a new ghost\n");
 
 	texture = TextureManager::GetTexture(textureName.c_str());
-	position.x = (spawnX * G_SIZE);
-	position.y = (spawnY * G_SIZE);
 
+	// Set the location and size
+	spawnPoint = { spawnX * G_SIZE, spawnY * G_SIZE};
+	position = spawnPoint;
 	boundingRect.w = G_SIZE;
 	boundingRect.h = G_SIZE;
 	boundingRect.x = position.x;
 	boundingRect.y = position.y;
 
 	speed = 0.05f * (G_SIZE / 8);
-	direction = dir;
-	queuedDirection = DirectionEnum::None;
+
+	// Set direction variables
+	defaultDirection = dir;
+	direction = defaultDirection;
 	previousDirection = direction;
+	queuedDirection = DirectionEnum::None;
 
 	currentNode = NULL;
 	previousNode = NULL;
@@ -29,6 +33,25 @@ Ghost::~Ghost()
 	// The TextureManager will handle this
 	texture = NULL;
 }
+
+//void Ghost::Respawn()
+//{
+//	// Reset the position
+//	position = spawnPoint;
+//	boundingRect.x = position.x;
+//	boundingRect.y = position.y;
+//
+//	// Reset direction variables
+//	defaultDirection = defaultDirection;
+//	direction = defaultDirection;
+//	previousDirection = direction;
+//	queuedDirection = DirectionEnum::None;
+//
+//	// Initialize the nodes
+//	currentNode = NULL;
+//	previousNode = NULL;
+//	previousFrameNode = NULL;
+//}
 
 void Ghost::Update(Uint32 deltaT)
 {
@@ -196,15 +219,15 @@ void Ghost::SetDirection(DirectionEnum dirEnum)
 	direction = dirEnum;
 }
 
-Node* Ghost::GetCurrentNode()
-{
-	return currentNode;
-}
-
-Node* Ghost::GetPreviousNode()
-{
-	return previousNode;
-}
+//Node* Ghost::GetCurrentNode()
+//{
+//	return currentNode;
+//}
+//
+//Node* Ghost::GetPreviousNode()
+//{
+//	return previousNode;
+//}
 
 DirectionEnum Ghost::GetDirection()
 {
