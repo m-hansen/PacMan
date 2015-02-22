@@ -1,6 +1,6 @@
 #pragma once
 
-enum NodeType
+enum NodeTypeEnum
 {
 	WallNode = 0,
 	PelletNode = 1,

@@ -15,7 +15,7 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum 
 
 	speed = 0.05f * (G_SIZE / 8);
 	direction = dir;
-	newDirection = DirectionEnum::None;
+	queuedDirection = DirectionEnum::None;
 	previousDirection = direction;
 
 	currentNode = NULL;
@@ -54,7 +54,7 @@ void Ghost::Update(Uint32 deltaT)
 	// Check if the ghost has changed nodes
 	if (currentNode != previousFrameNode)
 	{
-		// Set out previous node to the node we were in last frame
+		// Set the previous node to the node we were in last frame
 		previousNode = previousFrameNode;
 	}
 
@@ -100,32 +100,32 @@ void Ghost::Update(Uint32 deltaT)
 		if (targetNodeId == (currentNodeId + 1))
 		{
 			// Move right
-			newDirection = DirectionEnum::Right;
+			queuedDirection = DirectionEnum::Right;
 		}
 		else if (targetNodeId == (currentNodeId - 1))
 		{
 			// Move left
-			newDirection = DirectionEnum::Left;
+			queuedDirection = DirectionEnum::Left;
 		}
 		else if (targetNodeId < (currentNodeId - 1))
 		{
 			// Move up
-			newDirection = DirectionEnum::Up;
+			queuedDirection = DirectionEnum::Up;
 		}
 		else if (targetNodeId > (currentNodeId + 1))
 		{
 			// Move down
-			newDirection = DirectionEnum::Down;
+			queuedDirection = DirectionEnum::Down;
 		}
 	}
 
 	// Update the AI direction when we are centered in a tile
-	if ((isCenteredOnTile) && (newDirection != DirectionEnum::None))
+	if ((isCenteredOnTile) && (queuedDirection != DirectionEnum::None))
 	{
 		position.x = (currentNode->GetLocation().x * G_SIZE);
 		position.y = (currentNode->GetLocation().y * G_SIZE);
-		direction = newDirection;
-		newDirection = DirectionEnum::None;
+		direction = queuedDirection;
+		queuedDirection = DirectionEnum::None;
 	}
 
 	// Update the position
@@ -151,6 +151,27 @@ void Ghost::Update(Uint32 deltaT)
 	boundingRect.y = position.y;
 
 	previousFrameNode = currentNode;
+}
+
+void Ghost::ReverseDirection()
+{
+	switch (direction)
+	{
+		case DirectionEnum::Up:
+			direction = DirectionEnum::Down;
+			break;
+		case DirectionEnum::Down:
+			direction = DirectionEnum::Up;
+			break;
+		case DirectionEnum::Left:
+			direction = DirectionEnum::Right;
+			break;
+		case DirectionEnum::Right:
+			direction = DirectionEnum::Left;
+			break;
+		default:
+			direction = DirectionEnum::None;
+	}
 }
 
 void Ghost::UpdateNodes(Node* newNode)

@@ -26,7 +26,7 @@ void Graph::GenerateGraph(int width, int height)
 	{
 		for (int j = 0; j < width; j++)
 		{
-			allNodes.push_back(new Node(j, i, NodeType::EmptyNode));
+			allNodes.push_back(new Node(j, i, NodeTypeEnum::EmptyNode));
 			printf("%d ", tempId);
 			tempId++;
 		}

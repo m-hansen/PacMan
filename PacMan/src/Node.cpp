@@ -2,7 +2,7 @@
 
 int Node::id = 0;
 
-Node::Node(float x, float y, NodeType nodeType)
+Node::Node(float x, float y, NodeTypeEnum nodeType)
 {
 	currentId = id++;
 
@@ -10,9 +10,9 @@ Node::Node(float x, float y, NodeType nodeType)
 	location.y = y;
 	type = nodeType;
 
-	if ((nodeType == NodeType::EmptyNode) || 
-		(nodeType == NodeType::PelletNode) || 
-		(nodeType == NodeType::PowerPelletNode))
+	if ((nodeType == NodeTypeEnum::EmptyNode) ||
+		(nodeType == NodeTypeEnum::PelletNode) ||
+		(nodeType == NodeTypeEnum::PowerPelletNode))
 	{
 		isLegalPlayingNode = true;
 	}
@@ -57,7 +57,7 @@ Vector2f Node::GetLocation()
 	return location;
 }
 
-NodeType Node::GetType()
+NodeTypeEnum Node::GetType()
 {
 	return type;
 }

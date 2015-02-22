@@ -13,6 +13,7 @@ public:
 	Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum dir);
 	~Ghost();
 	void Update(Uint32 deltaT);
+	void ReverseDirection();
 	void UpdateNodes(Node* newNode);
 	void Render(SDL_Renderer* renderer);
 	SDL_Rect* GetBoundingRect();
@@ -29,7 +30,7 @@ private:
 	Node* location;
 	DirectionEnum direction;
 	DirectionEnum previousDirection;
-	DirectionEnum newDirection;
+	DirectionEnum queuedDirection;
 	float speed;
 	Node* currentNode;
 	Node* previousNode;

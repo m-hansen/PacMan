@@ -13,7 +13,7 @@ Player::Player()
 	isVisible = true;
 	livesLeftRect.w = G_SIZE;
 	livesLeftRect.h = G_SIZE;
-	newDirection = DirectionEnum::None;
+	queuedDirection = DirectionEnum::None;
 	boundingRect.w = 1;
 	boundingRect.h = 1;
 	spriteRect.w = G_SIZE;
@@ -81,7 +81,7 @@ void Player::ResetPosition()
 	previousDirection = direction;
 
 	// Clear the queued direction
-	newDirection = DirectionEnum::None;
+	queuedDirection = DirectionEnum::None;
 }
 
 void Player::LoseLife()
@@ -138,7 +138,7 @@ void Player::Update(Uint32 deltaT)
 		}
 	}
 
-	if ((isCenteredOnTile) && (newDirection != DirectionEnum::None))
+	if ((isCenteredOnTile) && (queuedDirection != DirectionEnum::None))
 	{
 		ConsumeQueuedMovement();
 	}
@@ -208,7 +208,7 @@ void Player::ConsumeQueuedMovement()
 	for (std::vector<Node*>::iterator iter = neighbors.begin();
 		iter != neighbors.end(); ++iter)
 	{
-		switch (newDirection)
+		switch (queuedDirection)
 		{
 		case Up:
 			if ((*iter)->GetNodeId() < (currentNode->GetNodeId() - 1))
@@ -238,8 +238,8 @@ void Player::ConsumeQueuedMovement()
 
 	position.x = (currentNode->GetLocation().x * G_SIZE) + (G_SIZE / 2);
 	position.y = (currentNode->GetLocation().y * G_SIZE) + (G_SIZE / 2);
-	direction = newDirection;
-	newDirection = DirectionEnum::None;
+	direction = queuedDirection;
+	queuedDirection = DirectionEnum::None;
 }
 
 void Player::SetDirection(DirectionEnum dirEnum)
@@ -250,7 +250,7 @@ void Player::SetDirection(DirectionEnum dirEnum)
 
 void Player::QueueDirection(DirectionEnum dirEnum)
 {
-	newDirection = dirEnum;
+	queuedDirection = dirEnum;
 }
 
 SDL_Rect* Player::GetBoundingRect()

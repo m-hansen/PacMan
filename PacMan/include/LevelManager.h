@@ -6,9 +6,8 @@
 #include <vector>
 #include "Global.h"
 #include "TextureManager.h"
-#include "NodeType.h"
+#include "NodeTypeEnum.h"
 #include "Consumable.h"
-#include "ConsumableType.h"
 #include "Graph.h"
 #include "Pellet.h"
 #include "Ghost.h"
@@ -26,8 +25,8 @@ public:
 	void FindEdges();
 	void CreateLevelList(std::string dataLoc, 
 		std::vector<std::string> levelList);
-	void NextLevel();
-	void PreviousLevel();
+	bool NextLevel();
+	bool PreviousLevel();
 	Graph* GetLevel() { return level; }
 	Player* GetPlayer() { return player; }
 	std::vector<Node*>& GetLegalNodes() { return legalPlayingNodes; }

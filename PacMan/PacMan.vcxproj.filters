@@ -19,14 +19,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Consumable.h" />
-    <ClInclude Include="include\ConsumableType.h" />
-    <ClInclude Include="include\DirectionEnum.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Ghost.h" />
     <ClInclude Include="include\Global.h" />
     <ClInclude Include="include\LevelManager.h" />
     <ClInclude Include="include\Node.h" />
-    <ClInclude Include="include\NodeType.h" />
     <ClInclude Include="include\Pellet.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\Screens\AttractScreen.h" />
@@ -40,6 +37,9 @@
     <ClInclude Include="include\Wall.h" />
     <ClInclude Include="include\graph.h" />
     <ClInclude Include="include\IRenderable.h" />
+    <ClInclude Include="include\Enumerations\ConsumableTypeEnum.h" />
+    <ClInclude Include="include\Enumerations\NodeTypeEnum.h" />
+    <ClInclude Include="include\Enumerations\DirectionEnum.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\blinky.png" />
@@ -64,5 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\LevelData\Level0.txt" />
+    <Text Include="Resources\LevelData\PowerPelletLevel.txt" />
   </ItemGroup>
 </Project>

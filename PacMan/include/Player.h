@@ -40,7 +40,7 @@ private:
 	SDL_Rect boundingRect;
 	DirectionEnum direction;
 	DirectionEnum previousDirection;
-	DirectionEnum newDirection;
+	DirectionEnum queuedDirection;
 	Node* currentNode;
 	Node* previousNode;
 	SDL_Texture* texture;

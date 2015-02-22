@@ -96,28 +96,29 @@ void LevelManager::LoadLevelData(std::string levelData)
 
 			switch (nodeType)
 			{
-			case NodeType::EmptyNode:
+			case NodeTypeEnum::EmptyNode:
 				// Create on the heap
-				node = new Node(i * 1, lineNumber * 1, NodeType::EmptyNode);
+				node = new Node(i * 1, lineNumber * 1, NodeTypeEnum::EmptyNode);
 				level->AddNode(node);
 				legalPlayingNodes.push_back(node);
 				break;
-			case NodeType::PelletNode:
+			case NodeTypeEnum::PelletNode:
 				// Create on the heap
-				node = new Node(i * 1, lineNumber * 1, NodeType::PelletNode);
+				node = new Node(i * 1, lineNumber * 1, NodeTypeEnum::PelletNode);
 				level->AddNode(node);
 				pelletList.push_back(new Pellet(node));
 				legalPlayingNodes.push_back(node);
 				break;
-			case NodeType::PowerPelletNode:
+			case NodeTypeEnum::PowerPelletNode:
 				// Create on the heap
-				node = new Node(i * 1, lineNumber * 1, NodeType::PowerPelletNode);
+				node = new Node(i * 1, lineNumber * 1, NodeTypeEnum::PowerPelletNode);
 				level->AddNode(node);
+				pelletList.push_back(new Pellet(node));
 				legalPlayingNodes.push_back(node);
 				break;
-			case NodeType::WallNode:
+			case NodeTypeEnum::WallNode:
 				// Create on the heap
-				node = new Node(i * 1, lineNumber * 1, NodeType::WallNode);
+				node = new Node(i * 1, lineNumber * 1, NodeTypeEnum::WallNode);
 				level->AddNode(node);
 				wallList.push_back(new Wall(node));
 				break;
@@ -198,20 +199,29 @@ void LevelManager::CreateLevelList(std::string dataLoc, std::vector<std::string>
 	currentLevel = levels.begin();
 }
 
-void LevelManager::NextLevel()
+bool LevelManager::NextLevel()
 {
+	// We are already at the last level - return
+	if (currentLevel + 1 >= levels.end())
+		return false;
+
+	// Load in the next level
 	CleanupLevel();
-	// Dont allow the iterator to exceed the bounds of the level list
-	if (currentLevel + 1 < levels.end())
-		++currentLevel;
+	++currentLevel;
 	InitializeLevel();
+	return true;
+
 }
 
-void LevelManager::PreviousLevel()
+bool LevelManager::PreviousLevel()
 {
+	// We are already at the first level - return
+	if (currentLevel <= levels.begin())
+		return false;
+
+	// Load in the previous level
 	CleanupLevel();
-	// Dont allow the iterator to exceed the bounds of the level list
-	if (currentLevel > levels.begin())
-		--currentLevel;
+	--currentLevel;
 	InitializeLevel();
+	return true;
 }

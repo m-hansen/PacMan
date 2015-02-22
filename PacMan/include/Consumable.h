@@ -3,19 +3,19 @@
 #include <SDL.h>
 #include "TextureManager.h"
 #include "Utils.h"
-#include "ConsumableType.h"
+#include "ConsumableTypeEnum.h"
+#include "Node.h"
 
 class Consumable
 {
 public:
-	Consumable(ConsumableType consumableType, float x, float y);
+	Consumable(ConsumableTypeEnum consumableType, float x, float y);
 	~Consumable();
 	void Render(SDL_Renderer* renderer);
-	void HandleCollision();
 	SDL_Rect* GetBoundingRect();
 private:
-	ConsumableType type;
-	Vector2f location;
+	ConsumableTypeEnum type;
+	Vector2f position;
 	int scoreValue;
 	SDL_Texture* texture;
 	SDL_Rect boundingRect;

@@ -4,7 +4,7 @@
 #include <vector>
 #include "Global.h"
 #include "Utils.h"
-#include "NodeType.h"
+#include "NodeTypeEnum.h"
 
 enum NodeDirection
 {
@@ -14,13 +14,13 @@ enum NodeDirection
 class Node
 {
 public:
-	Node(float x, float y, NodeType nodetype);
+	Node(float x, float y, NodeTypeEnum nodetype);
 	~Node();
 	void Node::Render(SDL_Renderer* renderer);
 	void AddNeighborNode(Node* neighbor);
 	std::vector<Node*> GetNeighborNodes();
 	Vector2f GetLocation();
-	NodeType Node::GetType();
+	NodeTypeEnum Node::GetType();
 	SDL_Rect* GetBoundingRect();
 	bool SearchNeighborId(int id);
 	int GetNodeId();
@@ -28,7 +28,7 @@ public:
 private:
 	Vector2f location;
 	std::vector<Node*> neighborNodes;
-	NodeType type;
+	NodeTypeEnum type;
 	SDL_Rect boundingRect;
 	static int id;
 	int currentId;

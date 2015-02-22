@@ -17,25 +17,25 @@ void GameplayScreen::Resume()
 void GameplayScreen::LoadContent(SDL_Renderer* renderer)
 {
 	// Load textures
-	TextureManager::LoadTexture(renderer, "tile", "Resources\\tile.png");
-	TextureManager::LoadTexture(renderer, "pacmanRight", "Resources\\pac-man_R.png");
-	TextureManager::LoadTexture(renderer, "pacmanLeft", "Resources\\pac-man_L.png");
-	TextureManager::LoadTexture(renderer, "pacmanUp", "Resources\\pac-man_U.png");
-	TextureManager::LoadTexture(renderer, "pacmanDown", "Resources\\pac-man_D.png");
-	TextureManager::LoadTexture(renderer, "pacmanClosed", "Resources\\pac-man_closed.png");
-	TextureManager::LoadTexture(renderer, "wall", "Resources\\wall.png");
-	TextureManager::LoadTexture(renderer, "pellet", "Resources\\pellet.png");
-	TextureManager::LoadTexture(renderer, "blinky", "Resources\\blinky.png");
-	TextureManager::LoadTexture(renderer, "pinky", "Resources\\pinky.png");
-	TextureManager::LoadTexture(renderer, "inky", "Resources\\inky.png");
-	TextureManager::LoadTexture(renderer, "clyde", "Resources\\clyde.png");
+	TextureManager::LoadTexture(renderer, "tile", "Resources/tile.png");
+	TextureManager::LoadTexture(renderer, "pacmanRight", "Resources/pac-man_R.png");
+	TextureManager::LoadTexture(renderer, "pacmanLeft", "Resources/pac-man_L.png");
+	TextureManager::LoadTexture(renderer, "pacmanUp", "Resources/pac-man_U.png");
+	TextureManager::LoadTexture(renderer, "pacmanDown", "Resources/pac-man_D.png");
+	TextureManager::LoadTexture(renderer, "pacmanClosed", "Resources/pac-man_closed.png");
+	TextureManager::LoadTexture(renderer, "wall", "Resources/wall.png");
+	TextureManager::LoadTexture(renderer, "pellet", "Resources/pellet.png");
+	TextureManager::LoadTexture(renderer, "blinky", "Resources/blinky.png");
+	TextureManager::LoadTexture(renderer, "pinky", "Resources/pinky.png");
+	TextureManager::LoadTexture(renderer, "inky", "Resources/inky.png");
+	TextureManager::LoadTexture(renderer, "clyde", "Resources/clyde.png");
 }
 
 void GameplayScreen::Initialize(Game* game)
 {
 	// Load all content first
 	LoadContent(game->renderer);
-	arialFont = TTF_OpenFont("Resources\\Fonts\\ARIAL.TTF", G_SIZE);
+	arialFont = TTF_OpenFont("Resources/Fonts/ARIAL.TTF", G_SIZE);
 
 	// Initialize variables
 	score = 0;
@@ -54,8 +54,9 @@ void GameplayScreen::Initialize(Game* game)
 	// Construct the level list
 	std::vector<std::string> levelList;
 	levelList.push_back("Level1.txt");
+	levelList.push_back("PowerPelletLevel.txt");
 	levelList.push_back("Level0.txt");
-	levelManager->CreateLevelList("Resources\\LevelData", levelList);
+	levelManager->CreateLevelList("Resources/LevelData", levelList);
 
 	// Initialize the level manager with the level list
 	levelManager->InitializeLevel();
@@ -195,9 +196,13 @@ void GameplayScreen::Update(Game* game)
 	// Check for victory condition
 	if (levelManager->GetPellets().empty())
 	{
-		// TODO we should go to the next level or end the game
-		endGameMessage = "Congratulations!";
-		isLevelOver = true;
+		// Go to the next level if one exists
+		if (levelManager->NextLevel() == false)
+		{
+			// We played through every level
+			endGameMessage = "Congratulations!";
+			isLevelOver = true;
+		}
 		return;
 	}
 
@@ -402,10 +407,24 @@ void GameplayScreen::HandleCollisions()
 	{
 		if (Utils::CollisionChecker(levelManager->GetPlayer()->GetBoundingRect(), (*iter)->GetBoundingRect()))
 		{
-			// Free memory, clear list, and increment score
+			if ((*iter)->GetType() == NodeTypeEnum::PowerPelletNode)
+			{
+				// Reverse the ghosts directions
+				// TODO this will be changed after pathfinding in place
+				for (std::vector<Ghost*>::iterator iter = levelManager->GetGhosts().begin();
+					iter != levelManager->GetGhosts().end(); ++iter)
+				{
+					(*iter)->ReverseDirection();
+				}
+			}
+
+			// Increment the score
+			score += (*iter)->GetValue();
+
+			// Free memory, cleat the list, and break
 			delete (*iter);
 			levelManager->GetPellets().erase(iter);
-			score += 10;
+
 			// The break is necessary for two reasons
 			// 1) we stop checking for nodes once we found we collided with one
 			// 2) if we allow iter to increment we will crash because we are erasing elements
