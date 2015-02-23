@@ -4,6 +4,7 @@
 #include "LevelManager.h"
 #include "Ghost.h"
 #include "IScreen.h"
+#include "AttractScreen.h"
 
 class GameplayScreen : public IScreen
 {

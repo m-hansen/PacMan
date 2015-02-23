@@ -94,7 +94,7 @@ void GameplayScreen::HandleEvents(Game* game)
 			switch (currentEvent.key.keysym.sym)
 			{
 			case SDLK_UP:
-				if (levelManager->GetPlayer()->isAlignedWithTile && 
+				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile && 
 					levelManager->GetPlayer()->GetDirection() != DirectionEnum::Up)
 				{
 					// Quick movement if we are moving along the same axis
@@ -105,7 +105,7 @@ void GameplayScreen::HandleEvents(Game* game)
 				}
 				break;
 			case SDLK_DOWN:
-				if (levelManager->GetPlayer()->isAlignedWithTile 
+				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile
 					&& levelManager->GetPlayer()->GetDirection() != DirectionEnum::Down)
 				{
 					// Quick movement if we are moving along the same axis
@@ -116,7 +116,7 @@ void GameplayScreen::HandleEvents(Game* game)
 				}
 				break;
 			case SDLK_LEFT:
-				if (levelManager->GetPlayer()->isAlignedWithTile && 
+				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile &&
 					levelManager->GetPlayer()->GetDirection() != DirectionEnum::Left)
 				{
 					// Quick movement if we are moving along the same axis
@@ -127,7 +127,7 @@ void GameplayScreen::HandleEvents(Game* game)
 				}
 				break;
 			case SDLK_RIGHT:
-				if (levelManager->GetPlayer()->isAlignedWithTile 
+				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile
 					&& levelManager->GetPlayer()->GetDirection() != DirectionEnum::Right)
 				{
 					// Quick movement if we are moving along the same axis
@@ -153,9 +153,18 @@ void GameplayScreen::HandleEvents(Game* game)
 				isDebugging = !isDebugging;
 				break;
 			case SDLK_ESCAPE:
+			case SDLK_SPACE:
+			case SDLK_RETURN:
 			case SDLK_p:
-				// Pause or resume the game
-				(isPaused) ? Resume() : Pause();
+				if (!isLevelOver)
+				{
+					// Pause or resume the game
+					(isPaused) ? Resume() : Pause();
+				}
+				else
+				{
+					game->ChangeScreen(AttractScreen::Instance());
+				}
 				break;
 			}
 		}
