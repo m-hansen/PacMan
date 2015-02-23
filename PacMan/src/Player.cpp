@@ -6,13 +6,9 @@ Player::Player()
 	previousNode = NULL;
 	isAlignedWithTile = false;
 	texture = TextureManager::GetTexture("pacmanRight");
-	livesTexture = TextureManager::GetTexture("pacmanRight");
-	livesLeft = 3;
 	isAlive = true;
 	isMoving = true;
 	isVisible = true;
-	livesLeftRect.w = GRID_SIZE;
-	livesLeftRect.h = GRID_SIZE;
 	queuedDirection = DirectionEnum::None;
 	boundingRect.w = 1;
 	boundingRect.h = 1;
@@ -27,34 +23,6 @@ Player::~Player()
 	// The TextureManager will handle this
 	texture = NULL;
 }
-
-//void Player::Initialize()
-//{
-//	fprintf(stdout, "Initializing player\n");
-//
-//	Vector2f initialPlayerPos = { 112.0f, 188.0f };
-//
-//	isAlignedWithTile = false;
-//
-//	speed = 0.05f * (GRID_SIZE / 8); // adjust speed based on grid size
-//	position.x = initialPlayerPos.x * (GRID_SIZE / 8);
-//	position.y = initialPlayerPos.y * (GRID_SIZE / 8);
-//
-//	// Set the collision rectangle
-//	boundingRect.w = 1;
-//	boundingRect.h = 1;
-//	boundingRect.x = position.x;
-//	boundingRect.y = position.y;
-//
-//	// Set the rendering rectangle
-//	spriteRect.w = GRID_SIZE;
-//	spriteRect.h = GRID_SIZE;
-//	spriteRect.x = position.x - (GRID_SIZE / 2);
-//	spriteRect.y = position.y - (GRID_SIZE / 2);
-//
-//	direction = DirectionEnum::Right;
-//	previousDirection = direction;
-//}
 
 void Player::ResetPosition()
 {
@@ -82,25 +50,6 @@ void Player::ResetPosition()
 
 	// Clear the queued direction
 	queuedDirection = DirectionEnum::None;
-}
-
-void Player::LoseLife()
-{
-	// TODO play death animation
-	livesLeft--;
-
-	// Check if we are out of lives
-	if (livesLeft <= 0)
-	{
-		fprintf(stdout, "Game Over!\n");
-		isAlive = false;
-		isVisible = false;
-	}
-	else
-	{
-		ResetPosition();
-	}
-
 }
 
 void Player::Update(Uint32 deltaT)
@@ -188,15 +137,12 @@ void Player::Render(SDL_Renderer* renderer)
 	if (!isVisible) return;
 
 	SDL_RenderCopy(renderer, texture, NULL, &spriteRect);
+}
 
-	// Display the lives left
-	for (int i = 0; i < livesLeft - 1; i++)
-	{
-		livesLeftRect.x = GRID_SIZE * i;
-		livesLeftRect.y = GRID_SIZE * 32;
-		SDL_RenderCopy(renderer, livesTexture, NULL, &livesLeftRect);
-	}
-	
+void Player::Kill()
+{
+	isAlive = false;
+	isVisible = false;
 }
 
 void Player::ConsumeQueuedMovement()

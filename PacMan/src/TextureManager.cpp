@@ -60,5 +60,14 @@ void TextureManager::ClearAll()
 
 SDL_Texture* TextureManager::GetTexture(std::string key)
 {
-	return textureMap.find(key)->second;
+	std::map<std::string, SDL_Texture*>::iterator iter = textureMap.find(key);
+
+	// Validate the key
+	if (iter == textureMap.end())
+	{
+		fprintf(stdout, "Could not find the texture with the key \"%s\" - returning NULL\n", key.c_str());
+		return NULL;
+	}
+
+	return iter->second;
 }

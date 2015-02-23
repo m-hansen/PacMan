@@ -136,8 +136,12 @@ void LevelManager::LoadLevelData(std::string levelData)
 	inputStream.close();
 }
 
-void LevelManager::ResetAI()
+void LevelManager::ResetAgentPositions()
 {
+	// Reset the player's position
+	player->ResetPosition();
+
+	// Reset the AI
 	for (auto iter = ghostList.begin(); iter != ghostList.end(); ++iter)
 	{
 		(*iter)->Respawn();

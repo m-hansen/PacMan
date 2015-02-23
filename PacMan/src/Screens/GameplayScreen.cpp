@@ -47,6 +47,12 @@ void GameplayScreen::Initialize(Game* game)
 	isLevelOver = false;
 	isDebugging = false;
 	isPaused = false;
+	livesTexture = TextureManager::GetTexture("pacmanLeft");
+	livesRemaining = 3;
+	// livesLeftRect.x intentionally not set here
+	livesLeftRect.y = GRID_SIZE * 32; // 32 is the vertical node offset
+	livesLeftRect.w = GRID_SIZE;
+	livesLeftRect.h = GRID_SIZE;
 
 	// Create an instance of a level manager
 	levelManager = LevelManager::Instance();
@@ -220,10 +226,17 @@ void GameplayScreen::Render(Game* game)
 				//case NodeType::Empty:
 				//SDL_RenderCopy(renderer, TextureManager::GetTexture(, NULL, &boundingRect);
 			}
-			SDL_RenderDrawPoint(game->renderer, loc.x * GRID_SIZE, loc.y * GRID_SIZE);
+			SDL_RenderDrawPoint(game->renderer, loc.x, loc.y);
 
 			// Draw each node's bounding rectangle
 			(*iter)->Render(game->renderer);
+
+			// Display the node id
+			/*SDL_Texture* nodeIdText = Utils::CreateFontTexture(game->renderer, arialFont,
+				std::to_string((*iter)->GetNodeId()), SDL_Color{ 255, 255, 255 });
+			SDL_RenderCopy(game->renderer, nodeIdText, NULL, (*iter)->GetBoundingRect());
+			SDL_DestroyTexture(nodeIdText);
+			nodeIdText = NULL;*/
 
 			SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255); // black
 		}
@@ -253,15 +266,31 @@ void GameplayScreen::Render(Game* game)
 		(*iter)->Render(game->renderer);
 	}
 
+	// Render the GUI elements
+	RenderGUI(game->renderer);
+
+	// Update the screen
+	SDL_RenderPresent(game->renderer);
+}
+
+void GameplayScreen::RenderGUI(SDL_Renderer* renderer)
+{
+	// Display the lives left
+	for (int i = 0; i < livesRemaining - 1; i++)
+	{
+		livesLeftRect.x = GRID_SIZE * i;
+		SDL_RenderCopy(renderer, livesTexture, NULL, &livesLeftRect);
+	}
+
 	// Display the score
 	if (arialFont != NULL)
 	{
 		std::string scoreString = "Score: " + std::to_string(score);
 		scoreFontSurface = TTF_RenderText_Solid(arialFont, scoreString.c_str(), SDL_Color{ 255, 255, 255 });
-		scoreTexture = SDL_CreateTextureFromSurface(game->renderer, scoreFontSurface);
+		scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreFontSurface);
 		SDL_FreeSurface(scoreFontSurface);
 		scoreFontSurface = NULL;
-		SDL_RenderCopy(game->renderer, scoreTexture, NULL, &scoreTextRect);
+		SDL_RenderCopy(renderer, scoreTexture, NULL, &scoreTextRect);
 	}
 
 	if (isPaused)
@@ -273,10 +302,10 @@ void GameplayScreen::Render(Game* game)
 		pauseRect.y = SCREEN_HEIGHT / 2 - pauseRect.h / 2;
 
 		SDL_Surface* fontSurface = TTF_RenderText_Solid(arialFont, "PAUSED", SDL_Color{ 255, 255, 255 });
-		SDL_Texture* fontTexture = SDL_CreateTextureFromSurface(game->renderer, fontSurface);
+		SDL_Texture* fontTexture = SDL_CreateTextureFromSurface(renderer, fontSurface);
 		SDL_FreeSurface(fontSurface);
 		fontSurface = NULL;
-		SDL_RenderCopy(game->renderer, fontTexture, NULL, &pauseRect);
+		SDL_RenderCopy(renderer, fontTexture, NULL, &pauseRect);
 	}
 
 	if (isLevelOver)
@@ -288,14 +317,11 @@ void GameplayScreen::Render(Game* game)
 		endGameRect.y = SCREEN_HEIGHT / 2 - endGameRect.h / 2;
 
 		scoreFontSurface = TTF_RenderText_Solid(arialFont, endGameMessage.c_str(), SDL_Color{ 255, 255, 255 });
-		scoreTexture = SDL_CreateTextureFromSurface(game->renderer, scoreFontSurface);
+		scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreFontSurface);
 		SDL_FreeSurface(scoreFontSurface);
 		scoreFontSurface = NULL;
-		SDL_RenderCopy(game->renderer, scoreTexture, NULL, &endGameRect);
+		SDL_RenderCopy(renderer, scoreTexture, NULL, &endGameRect);
 	}
-
-	// Update the screen
-	SDL_RenderPresent(game->renderer);
 }
 
 void GameplayScreen::HandleCollisions()
@@ -417,8 +443,19 @@ void GameplayScreen::HandleCollisions()
 			if (Utils::CollisionChecker(levelManager->GetPlayer()->GetBoundingRect(),
 				(*iter)->GetBoundingRect()))
 			{
-				levelManager->GetPlayer()->LoseLife();
-				levelManager->ResetAI();
+				// TODO play death animation
+				livesRemaining--;
+
+				// Check if we are out of lives
+				if (livesRemaining <= 0)
+				{
+					fprintf(stdout, "Game Over!\n");
+					levelManager->GetPlayer()->Kill();
+				}
+				else
+				{
+					levelManager->ResetAgentPositions();
+				}
 			}
 		}
 	}

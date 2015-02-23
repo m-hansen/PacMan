@@ -23,10 +23,10 @@ public:
 	void InitializeLevel();
 	void CleanupLevel();
 	void LoadLevelData(std::string levelData);
+	void ResetAgentPositions();
 	void FindEdges();
 	void CreateLevelList(std::string dataLoc, 
 		std::vector<std::string> levelList);
-	void ResetAI();
 	bool NextLevel();
 	bool PreviousLevel();
 	Graph* GetLevel() { return level; }

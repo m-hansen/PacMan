@@ -17,6 +17,7 @@ public:
 	void HandleEvents(Game* game);
 	void Update(Game* game);
 	void Render(Game* game);
+	void RenderGUI(SDL_Renderer* renderer);
 	void HandleCollisions();
 	bool CollisionChecker(SDL_Rect* a, SDL_Rect* b);
 	static GameplayScreen* Instance() { return &gameplayScreen; }
@@ -25,6 +26,7 @@ private:
 	static GameplayScreen gameplayScreen;
 	//Player* player;
 	LevelManager* levelManager;
+	int livesRemaining;
 	//Ghost* blinky;
 	//Ghost* pinky;
 	//Ghost* inky;
@@ -42,4 +44,8 @@ private:
 	SDL_Rect scoreTextRect;
 	SDL_Surface* scoreFontSurface;
 	int score;
+
+	// GUI variables
+	SDL_Texture* livesTexture;
+	SDL_Rect livesLeftRect;
 };
