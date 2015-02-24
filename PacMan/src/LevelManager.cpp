@@ -142,6 +142,7 @@ void LevelManager::ResetAgentPositions()
 	player->ResetPosition();
 
 	// Reset the AI
+	Ghost::ChangeState(Scatter);
 	for (auto iter = ghostList.begin(); iter != ghostList.end(); ++iter)
 	{
 		(*iter)->Respawn();

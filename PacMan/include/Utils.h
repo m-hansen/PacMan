@@ -27,3 +27,14 @@ public:
 private:
 	Utils();
 };
+
+class Timer
+{
+private:
+	Uint32 startTime = 0;
+public:
+	void Pause();
+	void Start();
+	void Stop();
+	void Reset();
+};

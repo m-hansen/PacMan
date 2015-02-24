@@ -17,6 +17,7 @@
     <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="src\Wall.cpp" />
     <ClCompile Include="src\MovingAgent.cpp" />
+    <ClCompile Include="src\GameTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Consumable.h" />
@@ -40,6 +41,8 @@
     <ClInclude Include="include\Enumerations\NodeTypeEnum.h" />
     <ClInclude Include="include\Enumerations\DirectionEnum.h" />
     <ClInclude Include="include\MovingAgent.h" />
+    <ClInclude Include="include\Enumerations\GhostStateEnum.h" />
+    <ClInclude Include="include\GameTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\blinky.png" />

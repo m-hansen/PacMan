@@ -4,14 +4,16 @@ GameplayScreen GameplayScreen::gameplayScreen;
 
 void GameplayScreen::Pause()
 {
-	isPaused = true;
 	fprintf(stdout, "GameplayScreen paused\n");
+	isPaused = true;
+	Ghost::GetStateTimer().Pause();
 }
 
 void GameplayScreen::Resume()
 {
-	isPaused = false;
 	fprintf(stdout, "GameplayScreen resumed\n");
+	isPaused = false;
+	Ghost::GetStateTimer().Resume();
 }
 
 void GameplayScreen::LoadContent(SDL_Renderer* renderer)
@@ -25,6 +27,7 @@ void GameplayScreen::LoadContent(SDL_Renderer* renderer)
 	TextureManager::LoadTexture(renderer, "pacmanClosed", "Resources/pac-man_closed.png");
 	TextureManager::LoadTexture(renderer, "wall", "Resources/wall.png");
 	TextureManager::LoadTexture(renderer, "pellet", "Resources/pellet.png");
+	TextureManager::LoadTexture(renderer, "powerPellet", "Resources/power-pellet.png");
 	TextureManager::LoadTexture(renderer, "blinky", "Resources/blinky.png");
 	TextureManager::LoadTexture(renderer, "pinky", "Resources/pinky.png");
 	TextureManager::LoadTexture(renderer, "inky", "Resources/inky.png");
@@ -161,10 +164,6 @@ void GameplayScreen::HandleEvents(Game* game)
 					// Pause or resume the game
 					(isPaused) ? Resume() : Pause();
 				}
-				else
-				{
-					game->ChangeScreen(AttractScreen::Instance());
-				}
 				break;
 			}
 		}
@@ -300,7 +299,21 @@ void GameplayScreen::RenderGUI(SDL_Renderer* renderer)
 		SDL_FreeSurface(scoreFontSurface);
 		scoreFontSurface = NULL;
 		SDL_RenderCopy(renderer, scoreTexture, NULL, &scoreTextRect);
+		SDL_DestroyTexture(scoreTexture);
+		scoreTexture = NULL;
 	}
+
+	// Display the AI state
+	std::string aiStateString = Ghost::CurrentStateName();
+	SDL_Surface* aiStateSurface = TTF_RenderText_Solid(arialFont, ("AI State: " + aiStateString).c_str(), SDL_Color{ 255, 255, 255 });
+	SDL_Texture* aiStateTexture = SDL_CreateTextureFromSurface(renderer, aiStateSurface);
+	SDL_FreeSurface(scoreFontSurface);
+	scoreFontSurface = NULL;
+	SDL_Rect aiStateRect;
+	aiStateRect.x = GRID_SIZE * 18; aiStateRect.y = GRID_SIZE * 32; aiStateRect.w = GRID_SIZE * 8; aiStateRect.h = GRID_SIZE * 2;
+	SDL_RenderCopy(renderer, aiStateTexture, NULL, &aiStateRect);
+	SDL_DestroyTexture(aiStateTexture);
+	aiStateTexture = NULL;
 
 	if (isPaused)
 	{
@@ -426,6 +439,7 @@ void GameplayScreen::HandleCollisions()
 					iter != levelManager->GetGhosts().end(); ++iter)
 				{
 					(*iter)->ReverseDirection();
+					Ghost::ChangeState(GhostStateEnum::Frightened);
 				}
 			}
 

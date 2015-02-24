@@ -1,5 +1,9 @@
 #include "Ghost.h"
 
+GhostStateEnum Ghost::state;
+GhostStateEnum Ghost::previousState;
+GameTimer Ghost::stateTimer;
+
 Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum dir)
 {
 	fprintf(stdout, "Creating a new ghost\n");
@@ -15,6 +19,8 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum 
 	boundingRect.y = position.y;
 
 	speed = 0.05f * (GRID_SIZE / 8);
+	state = GhostStateEnum::Scatter;
+	previousState = state;
 
 	// Set direction variables
 	defaultDirection = dir;
@@ -25,6 +31,8 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum 
 	currentNode = NULL;
 	previousNode = NULL;
 	previousFrameNode = NULL;
+
+	stateTimer.Start();
 }
 
 Ghost::~Ghost()
@@ -55,6 +63,8 @@ void Ghost::Respawn()
 
 void Ghost::Update(Uint32 deltaT)
 {
+	CheckForStateChange();
+
 	// Check if the AI is centered
 	if (currentNode != NULL)
 	{
@@ -176,6 +186,23 @@ void Ghost::Update(Uint32 deltaT)
 	previousFrameNode = currentNode;
 }
 
+void Ghost::CheckForStateChange()
+{
+	Uint32 stateTimeLength = 0;
+
+	// Set the time for each state
+	if (state == Scatter)
+		stateTimeLength = 7000;
+	else if (state == Chase)
+		stateTimeLength = 20000;
+	else
+		stateTimeLength = 5000;
+
+	// Check if we have exceeded the time for the current state
+	if (stateTimer.GetTicks() > stateTimeLength)
+		NextState();
+}
+
 void Ghost::ReverseDirection()
 {
 	switch (direction)
@@ -251,4 +278,41 @@ SDL_Rect* Ghost::GetBoundingRect()
 void Ghost::SetPreviousDirection(DirectionEnum dir)
 {
 	previousDirection = dir;
+}
+
+bool Ghost::ChangeState(GhostStateEnum newState)
+{
+	// Don't update the state if we are already in the requested state
+	if (newState == state)
+		return false;
+
+	fprintf(stdout, "AI changing states\n");
+
+	stateTimer.Start();
+
+	// Update the previous and current state
+	previousState = state;
+	state = newState;
+
+	return true;
+}
+
+void Ghost::NextState()
+{
+	if (state == Scatter)
+		ChangeState(Chase);
+	else if (state == Chase)
+		ChangeState(Scatter);
+	else // frightened
+		ChangeState(previousState);
+}
+
+char* Ghost::CurrentStateName() 
+{ 
+	switch (state)
+	{
+		case Scatter: return "Scatter";
+		case Chase: return "Chase";
+		case Frightened: return "Frightened";
+	}
 }

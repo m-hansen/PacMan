@@ -7,6 +7,8 @@
 #include "IRenderable.h"
 #include "Node.h"
 #include "DirectionEnum.h"
+#include "GhostStateEnum.h"
+#include "GameTimer.h"
 
 class Ghost : public IRenderable
 {
@@ -15,6 +17,7 @@ public:
 	~Ghost();
 	void Respawn();
 	void Update(Uint32 deltaT);
+	void Ghost::CheckForStateChange();
 	void ReverseDirection();
 	void UpdateNodes(Node* newNode);
 	void Render(SDL_Renderer* renderer);
@@ -25,7 +28,15 @@ public:
 	Node* GetPreviousNode();
 	//void SetPosition(Node* node);
 	void SetPreviousDirection(DirectionEnum dir);
+	static GhostStateEnum CurrentState() { return state; }
+	static char* CurrentStateName();
+	static bool ChangeState(GhostStateEnum newState);
+	static void NextState();
+	static GameTimer& GetStateTimer() { return stateTimer; }
 private:
+	static GhostStateEnum state;
+	static GhostStateEnum previousState;
+	static GameTimer stateTimer;
 	SDL_Rect boundingRect;
 	SDL_Texture* texture;
 	Vector2f spawnPoint;

@@ -5,16 +5,17 @@ Pellet::Pellet(Node* node)
 	
 	location = node;
 	type = node->GetType();
-	texture = TextureManager::GetTexture("pellet");
 
 	if (type == NodeTypeEnum::PelletNode)
 	{
 		value = 10;
+		texture = TextureManager::GetTexture("pellet");
 		InitBoundingRect(GRID_SIZE / 4);
 	}
 	else if (type == NodeTypeEnum::PowerPelletNode)
 	{
 		value = 50;
+		texture = TextureManager::GetTexture("powerPellet");
 		InitBoundingRect(GRID_SIZE / 2);
 	}
 	else
