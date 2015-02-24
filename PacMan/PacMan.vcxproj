@@ -136,6 +136,7 @@
   <ItemGroup>
     <Image Include="Resources\blinky.png" />
     <Image Include="Resources\clyde.png" />
+    <Image Include="Resources\frightened-ghost.png" />
     <Image Include="Resources\inky.png" />
     <Image Include="Resources\pac-man_closed.png" />
     <Image Include="Resources\pac-man_D.png" />

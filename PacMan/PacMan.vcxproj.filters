@@ -57,6 +57,7 @@
     <Image Include="Resources\pinky.png" />
     <Image Include="Resources\tile.png" />
     <Image Include="Resources\wall.png" />
+    <Image Include="Resources\frightened-ghost.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Resources\Fonts\ARIAL.TTF" />

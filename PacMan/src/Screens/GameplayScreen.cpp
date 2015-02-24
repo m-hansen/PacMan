@@ -32,6 +32,7 @@ void GameplayScreen::LoadContent(SDL_Renderer* renderer)
 	TextureManager::LoadTexture(renderer, "pinky", "Resources/pinky.png");
 	TextureManager::LoadTexture(renderer, "inky", "Resources/inky.png");
 	TextureManager::LoadTexture(renderer, "clyde", "Resources/clyde.png");
+	TextureManager::LoadTexture(renderer, "frightened", "Resources/frightened-ghost.png");
 }
 
 void GameplayScreen::Initialize(Game* game)
@@ -434,11 +435,11 @@ void GameplayScreen::HandleCollisions()
 			if ((*iter)->GetType() == NodeTypeEnum::PowerPelletNode)
 			{
 				// Reverse the ghosts directions
-				// TODO this will be changed after pathfinding in place
 				for (std::vector<Ghost*>::iterator iter = levelManager->GetGhosts().begin();
 					iter != levelManager->GetGhosts().end(); ++iter)
 				{
 					(*iter)->ReverseDirection();
+					(*iter)->EnterFrightenedState(0.55f);
 					Ghost::ChangeState(GhostStateEnum::Frightened);
 				}
 			}
@@ -466,18 +467,29 @@ void GameplayScreen::HandleCollisions()
 			if (Utils::CollisionChecker(levelManager->GetPlayer()->GetBoundingRect(),
 				(*iter)->GetBoundingRect()))
 			{
-				// TODO play death animation
-				livesRemaining--;
-
-				// Check if we are out of lives
-				if (livesRemaining <= 0)
+				if (Ghost::CurrentState() == Frightened)
 				{
-					fprintf(stdout, "Game Over!\n");
-					levelManager->GetPlayer()->Kill();
+					// Eat the ghost
+					(*iter)->Respawn();
+					score += 500; // TODO adjust this 
 				}
 				else
 				{
-					levelManager->ResetAgentPositions();
+					// Player is killed
+
+					// TODO play death animation
+					livesRemaining--;
+
+					// Check if we are out of lives
+					if (livesRemaining <= 0)
+					{
+						fprintf(stdout, "Game Over!\n");
+						levelManager->GetPlayer()->Kill();
+					}
+					else
+					{
+						levelManager->ResetAgentPositions();
+					}
 				}
 			}
 		}

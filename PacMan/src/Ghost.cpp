@@ -9,6 +9,7 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum 
 	fprintf(stdout, "Creating a new ghost\n");
 
 	texture = TextureManager::GetTexture(textureName.c_str());
+	frightenedTexture = TextureManager::GetTexture("frightened");
 
 	// Set the location and size
 	spawnPoint = { spawnX * GRID_SIZE, spawnY * GRID_SIZE};
@@ -18,9 +19,12 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum 
 	boundingRect.x = position.x;
 	boundingRect.y = position.y;
 
-	speed = 0.05f * (GRID_SIZE / 8);
+	defaultSpeed = 0.045f * (GRID_SIZE / 8);
+	speed = defaultSpeed;
+
 	state = GhostStateEnum::Scatter;
 	previousState = state;
+	isFrightened = false;
 
 	// Set direction variables
 	defaultDirection = dir;
@@ -59,6 +63,10 @@ void Ghost::Respawn()
 	currentNode = NULL;
 	previousNode = NULL;
 	previousFrameNode = NULL;
+
+	// The ghost should never be frightened after a respawn
+	// even if the overall state is frightened
+	LeaveFrightenedState();
 }
 
 void Ghost::Update(Uint32 deltaT)
@@ -201,6 +209,9 @@ void Ghost::CheckForStateChange()
 	// Check if we have exceeded the time for the current state
 	if (stateTimer.GetTicks() > stateTimeLength)
 		NextState();
+
+	if (state != Frightened)
+		LeaveFrightenedState();
 }
 
 void Ghost::ReverseDirection()
@@ -224,6 +235,18 @@ void Ghost::ReverseDirection()
 	}
 }
 
+void Ghost::EnterFrightenedState(float percentSpeed)
+{
+	isFrightened = true;
+	speed = defaultSpeed * percentSpeed;
+}
+
+void Ghost::LeaveFrightenedState()
+{
+	isFrightened = false;
+	speed = defaultSpeed;
+}
+
 void Ghost::UpdateNodes(Node* newNode)
 {
 	previousNode = currentNode;
@@ -232,7 +255,10 @@ void Ghost::UpdateNodes(Node* newNode)
 
 void Ghost::Render(SDL_Renderer* renderer)
 {
-	SDL_RenderCopy(renderer, texture, NULL, &boundingRect);
+	if (isFrightened)
+		SDL_RenderCopy(renderer, frightenedTexture, NULL, &boundingRect);
+	else
+		SDL_RenderCopy(renderer, texture, NULL, &boundingRect);
 
 	// draw the bounding rectangle for degubbing
 	//SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white
