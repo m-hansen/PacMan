@@ -29,6 +29,7 @@ public:
 	Node* GetCurrentNode();
 	Node* GetPreviousNode();
 	//void SetPosition(Node* node);
+	bool IsFrightened() { return isFrightened; }
 	void SetPreviousDirection(DirectionEnum dir);
 	static GhostStateEnum CurrentState() { return state; }
 	static char* CurrentStateName();

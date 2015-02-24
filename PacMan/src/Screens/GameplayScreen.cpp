@@ -467,7 +467,7 @@ void GameplayScreen::HandleCollisions()
 			if (Utils::CollisionChecker(levelManager->GetPlayer()->GetBoundingRect(),
 				(*iter)->GetBoundingRect()))
 			{
-				if (Ghost::CurrentState() == Frightened)
+				if ((*iter)->IsFrightened())
 				{
 					// Eat the ghost
 					(*iter)->Respawn();

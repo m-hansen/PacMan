@@ -308,9 +308,11 @@ void Ghost::SetPreviousDirection(DirectionEnum dir)
 
 bool Ghost::ChangeState(GhostStateEnum newState)
 {
-	// Don't update the state if we are already in the requested state
+	// We want to accept the new state anyway...
+	// For example, if we wanted to refresh the frightened state
+	/*// Don't update the state if we are already in the requested state
 	if (newState == state)
-		return false;
+		return false;*/
 
 	fprintf(stdout, "AI changing states\n");
 
