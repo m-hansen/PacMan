@@ -40,6 +40,7 @@ void GameplayScreen::Initialize(Game* game)
 	// Load all content first
 	LoadContent(game->renderer);
 	arialFont = TTF_OpenFont("Resources/Fonts/ARIAL.TTF", GRID_SIZE);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
 
 	// Initialize variables
 	score = 0;
@@ -63,6 +64,7 @@ void GameplayScreen::Initialize(Game* game)
 	
 	// Construct the level list
 	std::vector<std::string> levelList;
+	levelList.push_back("Level1Quick.txt");
 	levelList.push_back("Level1.txt");
 	levelList.push_back("PowerPelletLevel.txt");
 	levelList.push_back("Level0.txt");
@@ -95,78 +97,78 @@ void GameplayScreen::HandleEvents(Game* game)
 		// User presses a key
 		else if (currentEvent.type == SDL_KEYDOWN)
 		{
-			switch (currentEvent.key.keysym.sym)
-			{
-			case SDLK_UP:
-				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile && 
-					levelManager->GetPlayer()->GetDirection() != DirectionEnum::Up)
-				{
-					// Quick movement if we are moving along the same axis
-					// queued movement otherwise
-					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Down) ?
-						levelManager->GetPlayer()->SetDirection(DirectionEnum::Up) : 
-						levelManager->GetPlayer()->QueueDirection(DirectionEnum::Up);
-				}
-				break;
-			case SDLK_DOWN:
-				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile
-					&& levelManager->GetPlayer()->GetDirection() != DirectionEnum::Down)
-				{
-					// Quick movement if we are moving along the same axis
-					// queued movement otherwise
-					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Up) ?
-						levelManager->GetPlayer()->SetDirection(DirectionEnum::Down) : 
-						levelManager->GetPlayer()->QueueDirection(DirectionEnum::Down);
-				}
-				break;
-			case SDLK_LEFT:
-				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile &&
-					levelManager->GetPlayer()->GetDirection() != DirectionEnum::Left)
-				{
-					// Quick movement if we are moving along the same axis
-					// queued movement otherwise
-					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Right) ?
-						levelManager->GetPlayer()->SetDirection(DirectionEnum::Left) : 
-						levelManager->GetPlayer()->QueueDirection(DirectionEnum::Left);
-				}
-				break;
-			case SDLK_RIGHT:
-				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile
-					&& levelManager->GetPlayer()->GetDirection() != DirectionEnum::Right)
-				{
-					// Quick movement if we are moving along the same axis
-					// queued movement otherwise
-					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Left) ?
-						levelManager->GetPlayer()->SetDirection(DirectionEnum::Right) : 
-						levelManager->GetPlayer()->QueueDirection(DirectionEnum::Right);
-				}
-				break;
-			case SDLK_r:
-				// Reset the game
-				game->ChangeScreen(this);
-			case SDLK_LEFTBRACKET:
-				// Go to previous level
-				levelManager->PreviousLevel();
-				break;
-			case SDLK_RIGHTBRACKET:
-				// Go to next level
-				levelManager->NextLevel();
-				break;
-			case SDLK_F3:
-				// Toggle debugging information
-				isDebugging = !isDebugging;
-				break;
-			case SDLK_ESCAPE:
-			case SDLK_SPACE:
-			case SDLK_RETURN:
-			case SDLK_p:
-				if (!isLevelOver)
-				{
-					// Pause or resume the game
-					(isPaused) ? Resume() : Pause();
-				}
-				break;
-			}
+switch (currentEvent.key.keysym.sym)
+{
+case SDLK_UP:
+	if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile &&
+		levelManager->GetPlayer()->GetDirection() != DirectionEnum::Up)
+	{
+		// Quick movement if we are moving along the same axis
+		// queued movement otherwise
+		(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Down) ?
+			levelManager->GetPlayer()->SetDirection(DirectionEnum::Up) :
+			levelManager->GetPlayer()->QueueDirection(DirectionEnum::Up);
+	}
+	break;
+case SDLK_DOWN:
+	if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile
+		&& levelManager->GetPlayer()->GetDirection() != DirectionEnum::Down)
+	{
+		// Quick movement if we are moving along the same axis
+		// queued movement otherwise
+		(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Up) ?
+			levelManager->GetPlayer()->SetDirection(DirectionEnum::Down) :
+			levelManager->GetPlayer()->QueueDirection(DirectionEnum::Down);
+	}
+	break;
+case SDLK_LEFT:
+	if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile &&
+		levelManager->GetPlayer()->GetDirection() != DirectionEnum::Left)
+	{
+		// Quick movement if we are moving along the same axis
+		// queued movement otherwise
+		(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Right) ?
+			levelManager->GetPlayer()->SetDirection(DirectionEnum::Left) :
+			levelManager->GetPlayer()->QueueDirection(DirectionEnum::Left);
+	}
+	break;
+case SDLK_RIGHT:
+	if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile
+		&& levelManager->GetPlayer()->GetDirection() != DirectionEnum::Right)
+	{
+		// Quick movement if we are moving along the same axis
+		// queued movement otherwise
+		(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Left) ?
+			levelManager->GetPlayer()->SetDirection(DirectionEnum::Right) :
+			levelManager->GetPlayer()->QueueDirection(DirectionEnum::Right);
+	}
+	break;
+case SDLK_r:
+	// Reset the game
+	game->ChangeScreen(this);
+case SDLK_LEFTBRACKET:
+	// Go to previous level
+	levelManager->PreviousLevel();
+	break;
+case SDLK_RIGHTBRACKET:
+	// Go to next level
+	levelManager->NextLevel();
+	break;
+case SDLK_F3:
+	// Toggle debugging information
+	isDebugging = !isDebugging;
+	break;
+case SDLK_ESCAPE:
+case SDLK_SPACE:
+case SDLK_RETURN:
+case SDLK_p:
+	if (!isLevelOver)
+	{
+		// Pause or resume the game
+		(isPaused) ? Resume() : Pause();
+	}
+	break;
+}
 		}
 
 		previousEvent = currentEvent;
@@ -176,7 +178,7 @@ void GameplayScreen::HandleEvents(Game* game)
 void GameplayScreen::Update(Game* game)
 {
 	// Immediately return if paused
-	if (isPaused) 
+	if (isPaused)
 		return;
 
 	// Check if the player has run out of lives
@@ -188,12 +190,12 @@ void GameplayScreen::Update(Game* game)
 	// Check for victory condition
 	if (levelManager->GetPellets().empty())
 	{
-		// Go to the next level if one exists
-		if (levelManager->NextLevel() == false)
+		// The level was completed
+		if (levelManager->LevelCompletedAnimation())
 		{
-			// We played through every level
-			endGameMessage = "Congratulations!";
-			isLevelOver = true;
+			// Go to the next level if one exists
+			if (levelManager->NextLevel() == false)
+				Victory();
 		}
 		return;
 	}
@@ -495,4 +497,11 @@ void GameplayScreen::HandleCollisions()
 		}
 	}
 
+}
+
+void GameplayScreen::Victory()
+{
+	// We completed every level
+	endGameMessage = "Congratulations!";
+	isLevelOver = true;
 }

@@ -69,5 +69,6 @@
   <ItemGroup>
     <Text Include="Resources\LevelData\Level0.txt" />
     <Text Include="Resources\LevelData\PowerPelletLevel.txt" />
+    <Text Include="Resources\LevelData\Level1Quick.txt" />
   </ItemGroup>
 </Project>

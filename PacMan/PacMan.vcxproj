@@ -154,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\LevelData\Level0.txt" />
+    <Text Include="Resources\LevelData\Level1Quick.txt" />
     <Text Include="Resources\LevelData\PowerPelletLevel.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
