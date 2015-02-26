@@ -11,6 +11,7 @@ Node::Node(float x, float y, NodeTypeEnum nodeType)
 	boundingRect.x = x;
 	boundingRect.y = y;
 
+	parentNode = NULL;
 	type = nodeType;
 
 	if ((nodeType == NodeTypeEnum::EmptyNode) ||
@@ -24,6 +25,10 @@ Node::Node(float x, float y, NodeTypeEnum nodeType)
 		isLegalPlayingNode = false;
 	}
 
+	// Initialize G, H, and F
+	movementCost = 0;
+	heuristic = 0;
+	totalCost = 0;
 }
 
 Node::~Node()
@@ -83,4 +88,23 @@ bool Node::SearchNeighborId(int id)
 			return true;
 	}
 	return false;
+}
+
+void Node::CalculateMovementCost(Node* node)
+{
+	// For now, we will assume the movement cost is always 10
+	// This will change when we implement diagonal pathfinding
+	movementCost = 10 + node->GetMovementCost();
+}
+
+void Node::CalculateHeuristic(Node* target)
+{
+	int horizontalSpaces = std::abs ((currentId % NUM_HORIZONTAL_TILES) - (target->GetNodeId() % NUM_HORIZONTAL_TILES));
+	int verticalSpaces = std::abs((currentId / NUM_HORIZONTAL_TILES) - (target->GetNodeId() / NUM_HORIZONTAL_TILES));
+	heuristic = (horizontalSpaces + verticalSpaces) * 10;
+}
+
+void Node::CalculateTotalCost()
+{
+	totalCost = movementCost + heuristic;
 }

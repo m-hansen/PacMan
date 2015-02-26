@@ -5,6 +5,9 @@
 #include "Ghost.h"
 #include "IScreen.h"
 #include "AttractScreen.h"
+#include "Pathfinder.h"
+
+enum NodeFlags{ID, G, H, F};
 
 class GameplayScreen : public IScreen
 {
@@ -27,6 +30,7 @@ private:
 	static GameplayScreen gameplayScreen;
 	//Player* player;
 	LevelManager* levelManager;
+	Pathfinder* pathfinder;
 	int livesRemaining;
 	//Ghost* blinky;
 	//Ghost* pinky;
@@ -45,6 +49,7 @@ private:
 	SDL_Rect scoreTextRect;
 	SDL_Surface* scoreFontSurface;
 	int score;
+	int nodeDisplayFlags[4];
 
 	// GUI variables
 	SDL_Texture* livesTexture;

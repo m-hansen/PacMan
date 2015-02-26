@@ -41,8 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\dev\boost_1_57_0;C:\dev\SDL2_image-2.0.0\include;C:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\dev\boost_1_57_0\lib\x86;C:\dev\SDL2_image-2.0.0\lib\x86;C:\dev\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\dev\boost_1_57_0;C:\dev\SDL2_image-2.0.0\include;C:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\dev\boost_1_57_0\lib\x86;C:\dev\SDL2_image-2.0.0\lib\x86;C:\dev\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -98,6 +98,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MovingAgent.cpp" />
     <ClCompile Include="src\Node.cpp" />
+    <ClCompile Include="src\Pathfinder.cpp" />
     <ClCompile Include="src\Pellet.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Screens\AttractScreen.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="include\MovingAgent.h" />
     <ClInclude Include="include\Node.h" />
     <ClInclude Include="include\Enumerations\NodeTypeEnum.h" />
+    <ClInclude Include="include\Pathfinder.h" />
     <ClInclude Include="include\Pellet.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\IRenderable.h" />
