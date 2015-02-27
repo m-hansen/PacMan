@@ -87,9 +87,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="Level1.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\Consumable.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Ghost.cpp" />
@@ -98,6 +95,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MovingAgent.cpp" />
     <ClCompile Include="src\Node.cpp" />
+    <ClCompile Include="src\Pathfinder.cpp" />
     <ClCompile Include="src\Pellet.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Screens\AttractScreen.cpp" />
@@ -121,6 +119,7 @@
     <ClInclude Include="include\MovingAgent.h" />
     <ClInclude Include="include\Node.h" />
     <ClInclude Include="include\Enumerations\NodeTypeEnum.h" />
+    <ClInclude Include="include\Pathfinder.h" />
     <ClInclude Include="include\Pellet.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\IRenderable.h" />

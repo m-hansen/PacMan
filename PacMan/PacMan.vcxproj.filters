@@ -18,6 +18,7 @@
     <ClCompile Include="src\Wall.cpp" />
     <ClCompile Include="src\MovingAgent.cpp" />
     <ClCompile Include="src\GameTimer.cpp" />
+    <ClCompile Include="src\Pathfinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Consumable.h" />
@@ -43,6 +44,7 @@
     <ClInclude Include="include\MovingAgent.h" />
     <ClInclude Include="include\Enumerations\GhostStateEnum.h" />
     <ClInclude Include="include\GameTimer.h" />
+    <ClInclude Include="include\Pathfinder.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\blinky.png" />
@@ -62,9 +64,6 @@
   <ItemGroup>
     <Font Include="Resources\Fonts\ARIAL.TTF" />
     <Font Include="Resources\Fonts\PAC-FONT.TTF" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Level1.txt" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\LevelData\Level0.txt" />

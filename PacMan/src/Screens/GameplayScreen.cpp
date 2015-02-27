@@ -42,6 +42,11 @@ void GameplayScreen::Initialize(Game* game)
 	arialFont = TTF_OpenFont("Resources/Fonts/ARIAL.TTF", GRID_SIZE);
 	SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
 
+	nodeDisplayFlags[ID] = false;
+	nodeDisplayFlags[G] = false;
+	nodeDisplayFlags[H] = false;
+	nodeDisplayFlags[F] = false;
+
 	// Initialize variables
 	score = 0;
 	scoreTextRect.w = GRID_SIZE * 6;
@@ -72,6 +77,9 @@ void GameplayScreen::Initialize(Game* game)
 
 	// Initialize the level manager with the level list
 	levelManager->InitializeLevel();
+
+	// Initialize the pathfinder with the legal playing nodes
+	pathfinder = new Pathfinder(levelManager->GetLegalNodes());
 }
 
 void GameplayScreen::Cleanup(Game* game)
@@ -97,78 +105,95 @@ void GameplayScreen::HandleEvents(Game* game)
 		// User presses a key
 		else if (currentEvent.type == SDL_KEYDOWN)
 		{
-switch (currentEvent.key.keysym.sym)
-{
-case SDLK_UP:
-	if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile &&
-		levelManager->GetPlayer()->GetDirection() != DirectionEnum::Up)
-	{
-		// Quick movement if we are moving along the same axis
-		// queued movement otherwise
-		(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Down) ?
-			levelManager->GetPlayer()->SetDirection(DirectionEnum::Up) :
-			levelManager->GetPlayer()->QueueDirection(DirectionEnum::Up);
-	}
-	break;
-case SDLK_DOWN:
-	if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile
-		&& levelManager->GetPlayer()->GetDirection() != DirectionEnum::Down)
-	{
-		// Quick movement if we are moving along the same axis
-		// queued movement otherwise
-		(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Up) ?
-			levelManager->GetPlayer()->SetDirection(DirectionEnum::Down) :
-			levelManager->GetPlayer()->QueueDirection(DirectionEnum::Down);
-	}
-	break;
-case SDLK_LEFT:
-	if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile &&
-		levelManager->GetPlayer()->GetDirection() != DirectionEnum::Left)
-	{
-		// Quick movement if we are moving along the same axis
-		// queued movement otherwise
-		(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Right) ?
-			levelManager->GetPlayer()->SetDirection(DirectionEnum::Left) :
-			levelManager->GetPlayer()->QueueDirection(DirectionEnum::Left);
-	}
-	break;
-case SDLK_RIGHT:
-	if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile
-		&& levelManager->GetPlayer()->GetDirection() != DirectionEnum::Right)
-	{
-		// Quick movement if we are moving along the same axis
-		// queued movement otherwise
-		(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Left) ?
-			levelManager->GetPlayer()->SetDirection(DirectionEnum::Right) :
-			levelManager->GetPlayer()->QueueDirection(DirectionEnum::Right);
-	}
-	break;
-case SDLK_r:
-	// Reset the game
-	game->ChangeScreen(this);
-case SDLK_LEFTBRACKET:
-	// Go to previous level
-	levelManager->PreviousLevel();
-	break;
-case SDLK_RIGHTBRACKET:
-	// Go to next level
-	levelManager->NextLevel();
-	break;
-case SDLK_F3:
-	// Toggle debugging information
-	isDebugging = !isDebugging;
-	break;
-case SDLK_ESCAPE:
-case SDLK_SPACE:
-case SDLK_RETURN:
-case SDLK_p:
-	if (!isLevelOver)
-	{
-		// Pause or resume the game
-		(isPaused) ? Resume() : Pause();
-	}
-	break;
-}
+			switch (currentEvent.key.keysym.sym)
+			{
+			case SDLK_UP:
+				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile && 
+					levelManager->GetPlayer()->GetDirection() != DirectionEnum::Up)
+				{
+					// Quick movement if we are moving along the same axis
+					// queued movement otherwise
+					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Down) ?
+						levelManager->GetPlayer()->SetDirection(DirectionEnum::Up) : 
+						levelManager->GetPlayer()->QueueDirection(DirectionEnum::Up);
+				}
+				break;
+			case SDLK_DOWN:
+				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile
+					&& levelManager->GetPlayer()->GetDirection() != DirectionEnum::Down)
+				{
+					// Quick movement if we are moving along the same axis
+					// queued movement otherwise
+					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Up) ?
+						levelManager->GetPlayer()->SetDirection(DirectionEnum::Down) : 
+						levelManager->GetPlayer()->QueueDirection(DirectionEnum::Down);
+				}
+				break;
+			case SDLK_LEFT:
+				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile &&
+					levelManager->GetPlayer()->GetDirection() != DirectionEnum::Left)
+				{
+					// Quick movement if we are moving along the same axis
+					// queued movement otherwise
+					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Right) ?
+						levelManager->GetPlayer()->SetDirection(DirectionEnum::Left) : 
+						levelManager->GetPlayer()->QueueDirection(DirectionEnum::Left);
+				}
+				break;
+			case SDLK_RIGHT:
+				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile
+					&& levelManager->GetPlayer()->GetDirection() != DirectionEnum::Right)
+				{
+					// Quick movement if we are moving along the same axis
+					// queued movement otherwise
+					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Left) ?
+						levelManager->GetPlayer()->SetDirection(DirectionEnum::Right) : 
+						levelManager->GetPlayer()->QueueDirection(DirectionEnum::Right);
+				}
+				break;
+			case SDLK_r:
+				// Reset the game
+				game->ChangeScreen(this);
+			case SDLK_LEFTBRACKET:
+				// Go to previous level
+				levelManager->PreviousLevel();
+				break;
+			case SDLK_RIGHTBRACKET:
+				// Go to next level
+				levelManager->NextLevel();
+				break;
+			case SDLK_F3:
+				// Toggle debugging information
+				isDebugging = !isDebugging;
+				break;
+			case SDLK_c:
+				printf("Calculating shortest path from node %d to node %d\n",
+					levelManager->GetLegalNodes()[37]->GetNodeId(), levelManager->GetLegalNodes()[59]->GetNodeId());
+				pathfinder->CalculateAStar(levelManager->GetLegalNodes()[37], levelManager->GetLegalNodes()[59]);
+				break;
+			case SDLK_0:
+				nodeDisplayFlags[ID] = !nodeDisplayFlags[ID];
+				break;
+			case SDLK_1:
+				nodeDisplayFlags[G] = !nodeDisplayFlags[G];
+				break;
+			case SDLK_2:
+				nodeDisplayFlags[H] = !nodeDisplayFlags[H];
+				break;
+			case SDLK_3:
+				nodeDisplayFlags[F] = !nodeDisplayFlags[F];
+				break;
+			case SDLK_ESCAPE:
+			case SDLK_SPACE:
+			case SDLK_RETURN:
+			case SDLK_p:
+				if (!isLevelOver)
+				{
+					// Pause or resume the game
+					(isPaused) ? Resume() : Pause();
+				}
+				break;
+			}
 		}
 
 		previousEvent = currentEvent;
@@ -242,12 +267,47 @@ void GameplayScreen::Render(Game* game)
 			// Draw each node's bounding rectangle
 			(*iter)->Render(game->renderer);
 
+			SDL_Texture* nodeIdText = NULL;
+
 			// Display the node id
-			/*SDL_Texture* nodeIdText = Utils::CreateFontTexture(game->renderer, arialFont,
-				std::to_string((*iter)->GetNodeId()), SDL_Color{ 255, 255, 255 });
-			SDL_RenderCopy(game->renderer, nodeIdText, NULL, (*iter)->GetBoundingRect());
-			SDL_DestroyTexture(nodeIdText);
-			nodeIdText = NULL;*/
+			if (nodeDisplayFlags[ID])
+			{
+				nodeIdText = Utils::CreateFontTexture(game->renderer, arialFont,
+					std::to_string((*iter)->GetNodeId()), SDL_Color{ 255, 255, 255 });
+				SDL_RenderCopy(game->renderer, nodeIdText, NULL, (*iter)->GetBoundingRect());
+				SDL_DestroyTexture(nodeIdText);
+				nodeIdText = NULL;
+			}
+
+			// Display the G val
+			if (nodeDisplayFlags[G])
+			{
+				nodeIdText = Utils::CreateFontTexture(game->renderer, arialFont,
+					std::to_string((*iter)->GetMovementCost()), SDL_Color{ 255, 255, 255 });
+				SDL_RenderCopy(game->renderer, nodeIdText, NULL, (*iter)->GetBoundingRect());
+				SDL_DestroyTexture(nodeIdText);
+				nodeIdText = NULL;
+			}
+
+			// Display the H val
+			if (nodeDisplayFlags[H])
+			{
+				nodeIdText = Utils::CreateFontTexture(game->renderer, arialFont,
+					std::to_string((*iter)->GetHeuristic()), SDL_Color{ 255, 255, 255 });
+				SDL_RenderCopy(game->renderer, nodeIdText, NULL, (*iter)->GetBoundingRect());
+				SDL_DestroyTexture(nodeIdText);
+				nodeIdText = NULL;
+			}
+
+			// Display the F val
+			if (nodeDisplayFlags[F])
+			{
+				nodeIdText = Utils::CreateFontTexture(game->renderer, arialFont,
+					std::to_string((*iter)->GetTotalCost()), SDL_Color{ 255, 255, 255 });
+				SDL_RenderCopy(game->renderer, nodeIdText, NULL, (*iter)->GetBoundingRect());
+				SDL_DestroyTexture(nodeIdText);
+				nodeIdText = NULL;
+			}
 
 			SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255); // black
 		}
