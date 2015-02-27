@@ -27,6 +27,7 @@ public:
 	static GameplayScreen* Instance() { return &gameplayScreen; }
 private:
 	void LoadContent(SDL_Renderer* renderer);
+	void Victory();
 	static GameplayScreen gameplayScreen;
 	//Player* player;
 	LevelManager* levelManager;

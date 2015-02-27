@@ -236,3 +236,37 @@ bool LevelManager::PreviousLevel()
 	InitializeLevel();
 	return true;
 }
+
+// Returns true if the animation is complete - false otherwise
+bool LevelManager::LevelCompletedAnimation()
+{
+	// The level is over
+	if (!endLevelTimer.IsStarted())
+		endLevelTimer.Start();
+
+	const int END_LEVEL_PAUSE_LEN = 2500;
+	const int NUM_FLASHES = 7;
+	float  flashRate = END_LEVEL_PAUSE_LEN / NUM_FLASHES;
+
+	if (endLevelTimer.GetTicks() > flashRate * 6)
+		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
+	else if (endLevelTimer.GetTicks() > flashRate * 5)
+		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 255, 255, 255);
+	else if (endLevelTimer.GetTicks() > flashRate * 4)
+		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
+	else if (endLevelTimer.GetTicks() > flashRate * 3)
+		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 255, 255, 255);
+	else if (endLevelTimer.GetTicks() > flashRate * 2)
+		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
+	else if (endLevelTimer.GetTicks() > flashRate)
+		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 255, 255, 255);
+
+	if (endLevelTimer.GetTicks() > END_LEVEL_PAUSE_LEN)
+	{
+		endLevelTimer.Stop();
+		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
+		return true;
+	}
+
+	return false;
+}

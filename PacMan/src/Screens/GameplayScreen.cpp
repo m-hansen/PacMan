@@ -40,6 +40,7 @@ void GameplayScreen::Initialize(Game* game)
 	// Load all content first
 	LoadContent(game->renderer);
 	arialFont = TTF_OpenFont("Resources/Fonts/ARIAL.TTF", GRID_SIZE);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
 
 	nodeDisplayFlags[ID] = false;
 	nodeDisplayFlags[G] = false;
@@ -68,6 +69,7 @@ void GameplayScreen::Initialize(Game* game)
 	
 	// Construct the level list
 	std::vector<std::string> levelList;
+	levelList.push_back("Level1Quick.txt");
 	levelList.push_back("Level1.txt");
 	levelList.push_back("PowerPelletLevel.txt");
 	levelList.push_back("Level0.txt");
@@ -201,7 +203,7 @@ void GameplayScreen::HandleEvents(Game* game)
 void GameplayScreen::Update(Game* game)
 {
 	// Immediately return if paused
-	if (isPaused) 
+	if (isPaused)
 		return;
 
 	// Check if the player has run out of lives
@@ -213,12 +215,12 @@ void GameplayScreen::Update(Game* game)
 	// Check for victory condition
 	if (levelManager->GetPellets().empty())
 	{
-		// Go to the next level if one exists
-		if (levelManager->NextLevel() == false)
+		// The level was completed
+		if (levelManager->LevelCompletedAnimation())
 		{
-			// We played through every level
-			endGameMessage = "Congratulations!";
-			isLevelOver = true;
+			// Go to the next level if one exists
+			if (levelManager->NextLevel() == false)
+				Victory();
 		}
 		return;
 	}
@@ -555,4 +557,11 @@ void GameplayScreen::HandleCollisions()
 		}
 	}
 
+}
+
+void GameplayScreen::Victory()
+{
+	// We completed every level
+	endGameMessage = "Congratulations!";
+	isLevelOver = true;
 }

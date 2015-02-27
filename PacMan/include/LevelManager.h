@@ -35,10 +35,12 @@ public:
 	std::vector<Pellet*>& GetPellets() { return pelletList; }
 	std::vector<Sprite*>& GetWalls() { return wallList; }
 	std::vector<Ghost*>& GetGhosts() { return ghostList; }
+	bool LevelCompletedAnimation();
 private:
 	static LevelManager levelManager;
 	Player* player;
 	Graph* level;
+	GameTimer endLevelTimer;
 	std::vector<Node*> legalPlayingNodes;
 	std::vector<Pellet*> pelletList;
 	std::vector<Sprite*> wallList;
