@@ -92,6 +92,30 @@ void Ghost::Update(Uint32 deltaT)
 		}
 	}
 
+	if (state == Frightened)
+	{
+		int blinkThreshold = 2000;
+		int timeRemaining = FRIGHTENED_DURATION - stateTimer.GetTicks();
+
+		// Play a blinking animation
+		if (timeRemaining < blinkThreshold)
+		{
+			int numBlinks = 5;
+			float rate = blinkThreshold / numBlinks;
+
+			if (timeRemaining > rate * 4)
+				frightenedTexture = TextureManager::GetTexture("frightened");
+			else if (timeRemaining > rate * 3)
+				frightenedTexture = TextureManager::GetTexture("frightenedWhite");
+			else if (timeRemaining > rate * 2)
+				frightenedTexture = TextureManager::GetTexture("frightened");
+			else if (timeRemaining > rate)
+				frightenedTexture = TextureManager::GetTexture("frightenedWhite");
+			else
+				frightenedTexture = TextureManager::GetTexture("frightened");
+		}
+	}
+
 	// Check if the ghost has changed nodes
 	if (currentNode != previousFrameNode)
 	{
@@ -99,64 +123,22 @@ void Ghost::Update(Uint32 deltaT)
 		previousNode = previousFrameNode;
 	}
 
-	// Check for crossroads
-	// only consider crossroads that have more than two neighbors
-	// since the ghosts can only move in one direction we must always move forward
-	if ((currentNode != previousFrameNode) &&
-		(currentNode->GetNeighborNodes().size() > 1))
+	// Recalculate movement directions based on the state pattern
+	if (IsAtIntersection())
 	{
-		const int MAX_NEIGHBORS = 4;
-		int nodeIdArray[MAX_NEIGHBORS] = {};
-		int index = 0;
-
-		// Iterate over all neighboring nodes
-		std::vector<Node*> neighbors = currentNode->GetNeighborNodes();
-		for (std::vector<Node*>::iterator iter = neighbors.begin(); 
-			iter != neighbors.end(); ++iter)
+		switch (state)
 		{
-			// prevent the program from crashing if the definition of neighbors changes
-			// (ie: if we decide to implement diagonal movement in the future)
-			if (index >= MAX_NEIGHBORS)
-			{
-				printf("Breaking out of ghost node neighbor early. This could cause unintended runtime results with the AI's behavior.\n" \
-					"Try updating the MAX_NEIGHBORS variable in the Ghost class.\n");
-				break;
-			}
-
-			// Construct a list of nodes that could be moved to (Ghosts cannot move to the previous node)
-			if ((*iter) != previousNode)
-			{
-				nodeIdArray[index] = (*iter)->GetNodeId();
-				index++;
-			}
-		}
-
-		// index is now the number of available directions
-		int randNodeIndex = std::rand() % index;
-		int targetNodeId = nodeIdArray[randNodeIndex];
-		int currentNodeId = currentNode->GetNodeId();
-
-		// Select a direction to move in based on the node ID
-		// the nodes are generated in order from left to right & top to bottom
-		if (targetNodeId == (currentNodeId + 1))
-		{
-			// Move right
-			queuedDirection = DirectionEnum::Right;
-		}
-		else if (targetNodeId == (currentNodeId - 1))
-		{
-			// Move left
-			queuedDirection = DirectionEnum::Left;
-		}
-		else if (targetNodeId < (currentNodeId - 1))
-		{
-			// Move up
-			queuedDirection = DirectionEnum::Up;
-		}
-		else if (targetNodeId > (currentNodeId + 1))
-		{
-			// Move down
-			queuedDirection = DirectionEnum::Down;
+		case Scatter:
+			// TODO switch to a scatter pattern
+			FrightenedMovement();
+			break;
+		case Chase:
+			// TODO switch to a chase pattern
+			FrightenedMovement();
+			break;
+		case Frightened:
+			FrightenedMovement();
+			break;
 		}
 	}
 
@@ -194,17 +176,90 @@ void Ghost::Update(Uint32 deltaT)
 	previousFrameNode = currentNode;
 }
 
+bool Ghost::IsAtIntersection()
+{
+	// Check for crossroads
+	// only consider crossroads that have more than two neighbors
+	// since the ghosts can only move in one direction we must always move forward
+	if ((currentNode != previousFrameNode) &&
+		(currentNode->GetNeighborNodes().size() > 1))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void Ghost::FrightenedMovement()
+{
+	const int MAX_NEIGHBORS = 4;
+	int nodeIdArray[MAX_NEIGHBORS] = {};
+	int index = 0;
+
+	// Iterate over all neighboring nodes
+	std::vector<Node*> neighbors = currentNode->GetNeighborNodes();
+	for (std::vector<Node*>::iterator iter = neighbors.begin();
+		iter != neighbors.end(); ++iter)
+	{
+		// prevent the program from crashing if the definition of neighbors changes
+		// (ie: if we decide to implement diagonal movement in the future)
+		if (index >= MAX_NEIGHBORS)
+		{
+			printf("Breaking out of ghost node neighbor early. This could cause unintended runtime results with the AI's behavior.\n" \
+				"Try updating the MAX_NEIGHBORS variable in the Ghost class.\n");
+			break;
+		}
+
+		// Construct a list of nodes that could be moved to (Ghosts cannot move to the previous node)
+		if ((*iter) != previousNode)
+		{
+			nodeIdArray[index] = (*iter)->GetNodeId();
+			index++;
+		}
+	}
+
+	// index is now the number of available directions
+	int randNodeIndex = std::rand() % index;
+	int targetNodeId = nodeIdArray[randNodeIndex];
+	int currentNodeId = currentNode->GetNodeId();
+
+	// Select a direction to move in based on the node ID
+	// the nodes are generated in order from left to right & top to bottom
+	if (targetNodeId == (currentNodeId + 1))
+	{
+		// Move right
+		queuedDirection = DirectionEnum::Right;
+	}
+	else if (targetNodeId == (currentNodeId - 1))
+	{
+		// Move left
+		queuedDirection = DirectionEnum::Left;
+	}
+	else if (targetNodeId < (currentNodeId - 1))
+	{
+		// Move up
+		queuedDirection = DirectionEnum::Up;
+	}
+	else if (targetNodeId > (currentNodeId + 1))
+	{
+		// Move down
+		queuedDirection = DirectionEnum::Down;
+	}
+}
+
 void Ghost::CheckForStateChange()
 {
 	Uint32 stateTimeLength = 0;
 
 	// Set the time for each state
 	if (state == Scatter)
-		stateTimeLength = 7000;
+		stateTimeLength = SCATTER_DURATION;
 	else if (state == Chase)
-		stateTimeLength = 20000;
+		stateTimeLength = CHASE_DURATION;
 	else
-		stateTimeLength = 5000;
+		stateTimeLength = FRIGHTENED_DURATION;
 
 	// Check if we have exceeded the time for the current state
 	if (stateTimer.GetTicks() > stateTimeLength)
@@ -218,20 +273,20 @@ void Ghost::ReverseDirection()
 {
 	switch (direction)
 	{
-		case DirectionEnum::Up:
-			queuedDirection = DirectionEnum::Down;
-			break;
-		case DirectionEnum::Down:
-			queuedDirection = DirectionEnum::Up;
-			break;
-		case DirectionEnum::Left:
-			queuedDirection = DirectionEnum::Right;
-			break;
-		case DirectionEnum::Right:
-			queuedDirection = DirectionEnum::Left;
-			break;
-		default:
-			queuedDirection = DirectionEnum::None;
+	case DirectionEnum::Up:
+		queuedDirection = DirectionEnum::Down;
+		break;
+	case DirectionEnum::Down:
+		queuedDirection = DirectionEnum::Up;
+		break;
+	case DirectionEnum::Left:
+		queuedDirection = DirectionEnum::Right;
+		break;
+	case DirectionEnum::Right:
+		queuedDirection = DirectionEnum::Left;
+		break;
+	default:
+		queuedDirection = DirectionEnum::None;
 	}
 }
 
@@ -240,6 +295,7 @@ void Ghost::EnterFrightenedState(float percentSpeed)
 	isFrightened = true;
 	stateTimer.Start(); // reset the state timer
 	speed = defaultSpeed * percentSpeed;
+	frightenedTexture = TextureManager::GetTexture("frightened");
 }
 
 void Ghost::LeaveFrightenedState()
@@ -257,9 +313,13 @@ void Ghost::UpdateNodes(Node* newNode)
 void Ghost::Render(SDL_Renderer* renderer)
 {
 	if (isFrightened)
+	{
 		SDL_RenderCopy(renderer, frightenedTexture, NULL, &boundingRect);
+	}
 	else
+	{
 		SDL_RenderCopy(renderer, texture, NULL, &boundingRect);
+	}
 
 	// draw the bounding rectangle for degubbing
 	//SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white

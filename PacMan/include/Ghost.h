@@ -17,6 +17,7 @@ public:
 	~Ghost();
 	void Respawn();
 	void Update(Uint32 deltaT);
+	void FrightenedMovement();
 	void CheckForStateChange();
 	void EnterFrightenedState(float percentSpeed);
 	void LeaveFrightenedState();
@@ -40,6 +41,10 @@ private:
 	static GhostStateEnum state;
 	static GhostStateEnum previousState;
 	static GameTimer stateTimer;
+	const static int SCATTER_DURATION = 7000;
+	const static int CHASE_DURATION = 20000;
+	const static int FRIGHTENED_DURATION = 5000;
+	bool IsAtIntersection();
 	SDL_Rect boundingRect;
 	SDL_Texture* texture;
 	SDL_Texture* frightenedTexture;

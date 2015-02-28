@@ -33,6 +33,7 @@ void GameplayScreen::LoadContent(SDL_Renderer* renderer)
 	TextureManager::LoadTexture(renderer, "inky", "Resources/inky.png");
 	TextureManager::LoadTexture(renderer, "clyde", "Resources/clyde.png");
 	TextureManager::LoadTexture(renderer, "frightened", "Resources/frightened-ghost.png");
+	TextureManager::LoadTexture(renderer, "frightenedWhite", "Resources/frightened-white.png");
 }
 
 void GameplayScreen::Initialize(Game* game)
