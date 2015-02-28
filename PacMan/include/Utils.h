@@ -21,9 +21,12 @@ class Utils
 {
 public:
 	static bool CollisionChecker(SDL_Rect* a, SDL_Rect* b);
-	static SDL_Texture* Utils::CreateFontTexture(SDL_Renderer* renderer, TTF_Font* fontType, 
-		std::string text, SDL_Color fontColor);
 	static void CreateFolder(std::string folderName);
+	static SDL_Texture* CreateFontTexture(SDL_Renderer* renderer, TTF_Font* fontType, std::string text, SDL_Color fontColor);
+	static void RenderText(SDL_Renderer* renderer, TTF_Font* fontType, std::string text, SDL_Color fontColor,
+		SDL_Rect* rect);
+	static void RenderText(SDL_Renderer* renderer, TTF_Font* fontType, std::string text, SDL_Color fontColor,
+		float x, float y, float w, float h);
 private:
 	Utils();
 };

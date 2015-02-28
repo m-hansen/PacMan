@@ -64,6 +64,11 @@ void GameplayScreen::Initialize(Game* game)
 	livesLeftRect.w = GRID_SIZE;
 	livesLeftRect.h = GRID_SIZE;
 
+	SDL_Surface* pauseSurface = TTF_RenderText_Solid(arialFont, "PAUSED", SDL_Color{ 255, 255, 255 });
+	pauseTexture = SDL_CreateTextureFromSurface(game->renderer, pauseSurface);
+	SDL_FreeSurface(pauseSurface);
+	pauseSurface = NULL;
+
 	// Create an instance of a level manager
 	levelManager = LevelManager::Instance();
 	
@@ -84,6 +89,9 @@ void GameplayScreen::Initialize(Game* game)
 
 void GameplayScreen::Cleanup(Game* game)
 {
+	SDL_DestroyTexture(pauseTexture);
+	pauseTexture = NULL;
+
 	TTF_CloseFont(arialFont);
 	arialFont = NULL;
 }
@@ -245,81 +253,6 @@ void GameplayScreen::Render(Game* game)
 	SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255); // black
 	SDL_RenderClear(game->renderer);
 
-	// Render each node in the level
-	if (isDebugging)
-	{
-		// Iterate over each node in the level graph
-		for (std::vector<Node*>::iterator iter = levelManager->GetLegalNodes().begin();
-			iter != levelManager->GetLegalNodes().end(); ++iter)
-		{
-			Node* node = (*iter);
-			Vector2f loc = node->GetPosition();
-
-			// Temporarily set the rendering color to white for the nodes
-			SDL_SetRenderDrawColor(game->renderer, 255, 255, 255, 255); // white
-			switch (node->GetType())
-			{
-				//case NodeType::Empty:
-				//SDL_RenderCopy(renderer, TextureManager::GetTexture(, NULL, &boundingRect);
-			}
-			SDL_RenderDrawPoint(game->renderer, loc.x, loc.y);
-
-			// Draw each node's bounding rectangle
-			(*iter)->Render(game->renderer);
-
-			SDL_Texture* nodeIdText = NULL;
-
-			// Display the node id
-			if (nodeDisplayFlags[ID])
-			{
-				nodeIdText = Utils::CreateFontTexture(game->renderer, arialFont,
-					std::to_string((*iter)->GetNodeId()), SDL_Color{ 255, 255, 255 });
-				SDL_RenderCopy(game->renderer, nodeIdText, NULL, (*iter)->GetBoundingRect());
-				SDL_DestroyTexture(nodeIdText);
-				nodeIdText = NULL;
-			}
-
-			// Display the G val
-			if (nodeDisplayFlags[G])
-			{
-				nodeIdText = Utils::CreateFontTexture(game->renderer, arialFont,
-					std::to_string((*iter)->GetMovementCost()), SDL_Color{ 255, 255, 255 });
-				SDL_RenderCopy(game->renderer, nodeIdText, NULL, (*iter)->GetBoundingRect());
-				SDL_DestroyTexture(nodeIdText);
-				nodeIdText = NULL;
-			}
-
-			// Display the H val
-			if (nodeDisplayFlags[H])
-			{
-				nodeIdText = Utils::CreateFontTexture(game->renderer, arialFont,
-					std::to_string((*iter)->GetHeuristic()), SDL_Color{ 255, 255, 255 });
-				SDL_RenderCopy(game->renderer, nodeIdText, NULL, (*iter)->GetBoundingRect());
-				SDL_DestroyTexture(nodeIdText);
-				nodeIdText = NULL;
-			}
-
-			// Display the F val
-			if (nodeDisplayFlags[F])
-			{
-				nodeIdText = Utils::CreateFontTexture(game->renderer, arialFont,
-					std::to_string((*iter)->GetTotalCost()), SDL_Color{ 255, 255, 255 });
-				SDL_RenderCopy(game->renderer, nodeIdText, NULL, (*iter)->GetBoundingRect());
-				SDL_DestroyTexture(nodeIdText);
-				nodeIdText = NULL;
-			}
-
-			SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255); // black
-		}
-	}
-
-	// Render the walls
-	for (std::vector<Sprite*>::iterator iter = levelManager->GetWalls().begin();
-		iter != levelManager->GetWalls().end(); ++iter)
-	{
-		(*iter)->Render(game->renderer);
-	}
-
 	// Render each remaining pellet on the board
 	for (std::vector<Pellet*>::iterator iter = levelManager->GetPellets().begin();
 		iter != levelManager->GetPellets().end(); ++iter)
@@ -337,8 +270,21 @@ void GameplayScreen::Render(Game* game)
 		(*iter)->Render(game->renderer);
 	}
 
+	// Render the walls
+	for (std::vector<Sprite*>::iterator iter = levelManager->GetWalls().begin();
+		iter != levelManager->GetWalls().end(); ++iter)
+	{
+		(*iter)->Render(game->renderer);
+	}
+
 	// Render the GUI elements
 	RenderGUI(game->renderer);
+
+	// Draw additional information for debugging
+	if (isDebugging)
+	{
+		DrawDebug(game->renderer);
+	}
 
 	// Update the screen
 	SDL_RenderPresent(game->renderer);
@@ -357,26 +303,18 @@ void GameplayScreen::RenderGUI(SDL_Renderer* renderer)
 	if (arialFont != NULL)
 	{
 		std::string scoreString = "Score: " + std::to_string(score);
-		scoreFontSurface = TTF_RenderText_Solid(arialFont, scoreString.c_str(), SDL_Color{ 255, 255, 255 });
-		scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreFontSurface);
-		SDL_FreeSurface(scoreFontSurface);
-		scoreFontSurface = NULL;
-		SDL_RenderCopy(renderer, scoreTexture, NULL, &scoreTextRect);
-		SDL_DestroyTexture(scoreTexture);
-		scoreTexture = NULL;
+		Utils::RenderText(renderer, arialFont, scoreString, SDL_Color{ 255, 255, 255 }, &scoreTextRect);
 	}
 
 	// Display the AI state
 	std::string aiStateString = Ghost::CurrentStateName();
-	SDL_Surface* aiStateSurface = TTF_RenderText_Solid(arialFont, ("AI State: " + aiStateString).c_str(), SDL_Color{ 255, 255, 255 });
-	SDL_Texture* aiStateTexture = SDL_CreateTextureFromSurface(renderer, aiStateSurface);
-	SDL_FreeSurface(scoreFontSurface);
-	scoreFontSurface = NULL;
 	SDL_Rect aiStateRect;
-	aiStateRect.x = GRID_SIZE * 18; aiStateRect.y = GRID_SIZE * 32; aiStateRect.w = GRID_SIZE * 8; aiStateRect.h = GRID_SIZE * 2;
-	SDL_RenderCopy(renderer, aiStateTexture, NULL, &aiStateRect);
-	SDL_DestroyTexture(aiStateTexture);
-	aiStateTexture = NULL;
+	aiStateRect.x = GRID_SIZE * 18; 
+	aiStateRect.y = GRID_SIZE * 32; 
+	aiStateRect.w = GRID_SIZE * 8; 
+	aiStateRect.h = GRID_SIZE * 2;
+	Utils::RenderText(renderer, arialFont, "AI State: " + aiStateString, SDL_Color{ 255, 255, 255 }, &aiStateRect);
+
 
 	if (isPaused)
 	{
@@ -386,11 +324,7 @@ void GameplayScreen::RenderGUI(SDL_Renderer* renderer)
 		pauseRect.x = SCREEN_WIDTH / 2 - pauseRect.w / 2;
 		pauseRect.y = SCREEN_HEIGHT / 2 - pauseRect.h / 2;
 
-		SDL_Surface* fontSurface = TTF_RenderText_Solid(arialFont, "PAUSED", SDL_Color{ 255, 255, 255 });
-		SDL_Texture* fontTexture = SDL_CreateTextureFromSurface(renderer, fontSurface);
-		SDL_FreeSurface(fontSurface);
-		fontSurface = NULL;
-		SDL_RenderCopy(renderer, fontTexture, NULL, &pauseRect);
+		SDL_RenderCopy(renderer, pauseTexture, NULL, &pauseRect);
 	}
 
 	if (isLevelOver)
@@ -401,11 +335,62 @@ void GameplayScreen::RenderGUI(SDL_Renderer* renderer)
 		endGameRect.x = SCREEN_WIDTH / 2 - endGameRect.w / 2;
 		endGameRect.y = SCREEN_HEIGHT / 2 - endGameRect.h / 2;
 
-		scoreFontSurface = TTF_RenderText_Solid(arialFont, endGameMessage.c_str(), SDL_Color{ 255, 255, 255 });
-		scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreFontSurface);
-		SDL_FreeSurface(scoreFontSurface);
-		scoreFontSurface = NULL;
-		SDL_RenderCopy(renderer, scoreTexture, NULL, &endGameRect);
+		Utils::RenderText(renderer, arialFont, endGameMessage, SDL_Color{ 255, 255, 255 }, &endGameRect);
+	}
+}
+
+void GameplayScreen::DrawDebug(SDL_Renderer* renderer)
+{
+	// Iterate over each node in the level graph
+	for (std::vector<Node*>::iterator iter = levelManager->GetLegalNodes().begin();
+		iter != levelManager->GetLegalNodes().end(); ++iter)
+	{
+		Node* node = (*iter);
+		Vector2f loc = node->GetPosition();
+
+		// Temporarily set the rendering color to white for the nodes
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white
+		switch (node->GetType())
+		{
+			//case NodeType::Empty:
+			//SDL_RenderCopy(renderer, TextureManager::GetTexture(, NULL, &boundingRect);
+		}
+		SDL_RenderDrawPoint(renderer, loc.x, loc.y);
+
+		// Draw each node's bounding rectangle
+		(*iter)->Render(renderer);
+
+		SDL_Texture* nodeIdText = NULL;
+
+		// Display the node id
+		if (nodeDisplayFlags[ID])
+		{
+			Utils::RenderText(renderer, arialFont, std::to_string((*iter)->GetNodeId()),
+				SDL_Color{ 255, 255, 255 }, (*iter)->GetBoundingRect());
+		}
+
+		// Display the G val
+		if (nodeDisplayFlags[G])
+		{
+			Utils::RenderText(renderer, arialFont, std::to_string((*iter)->GetMovementCost()),
+				SDL_Color{ 255, 255, 255 }, (*iter)->GetBoundingRect());
+		}
+
+		// Display the H val
+		if (nodeDisplayFlags[H])
+		{
+			Utils::RenderText(renderer, arialFont, std::to_string((*iter)->GetHeuristic()),
+				SDL_Color{ 255, 255, 255 }, (*iter)->GetBoundingRect());
+		}
+
+		// Display the F val
+		if (nodeDisplayFlags[F])
+		{
+			Utils::RenderText(renderer, arialFont, std::to_string((*iter)->GetTotalCost()),
+				SDL_Color{ 255, 255, 255 }, (*iter)->GetBoundingRect());
+		}
+
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
 	}
 }
 

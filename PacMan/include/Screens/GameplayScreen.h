@@ -22,6 +22,7 @@ public:
 	void Update(Game* game);
 	void Render(Game* game);
 	void RenderGUI(SDL_Renderer* renderer);
+	void DrawDebug(SDL_Renderer* renderer);
 	void HandleCollisions();
 	bool CollisionChecker(SDL_Rect* a, SDL_Rect* b);
 	static GameplayScreen* Instance() { return &gameplayScreen; }
@@ -53,6 +54,7 @@ private:
 	int nodeDisplayFlags[4];
 
 	// GUI variables
+	SDL_Texture* pauseTexture;
 	SDL_Texture* livesTexture;
 	SDL_Rect livesLeftRect;
 };

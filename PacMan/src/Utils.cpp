@@ -48,3 +48,29 @@ SDL_Texture* Utils::CreateFontTexture(SDL_Renderer* renderer, TTF_Font* fontType
 
 	return fontTexture;
 }
+
+void Utils::RenderText(SDL_Renderer* renderer, TTF_Font* fontType, std::string text, SDL_Color fontColor,
+	SDL_Rect* rect)
+{
+	// Create the controls font surface and texture
+	SDL_Surface* fontSurface = TTF_RenderText_Solid(fontType, text.c_str(), fontColor);
+	SDL_Texture* fontTexture = SDL_CreateTextureFromSurface(renderer, fontSurface);
+	SDL_FreeSurface(fontSurface);
+	fontSurface = NULL;
+	SDL_RenderCopy(renderer, fontTexture, NULL, rect);
+	SDL_DestroyTexture(fontTexture);
+	fontTexture = NULL;
+}
+
+void Utils::RenderText(SDL_Renderer* renderer, TTF_Font* fontType, std::string text, SDL_Color fontColor,
+	float x, float y, float w, float h)
+{
+	// Create the bounding rectangle
+	SDL_Rect rect;
+	rect.x = x;
+	rect.y = y;
+	rect.w = w;
+	rect.h = h;
+
+	RenderText(renderer, fontType, text, fontColor, &rect);
+}

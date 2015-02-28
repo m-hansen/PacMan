@@ -96,6 +96,7 @@ std::vector<Node*> Pathfinder::CalculateAStar(Node* startingNode, Node* targetNo
 		} // end for each neighbor
 	} // end while open list is not empty
 
+	shortestPath.clear();
 	RecursivelyConstructPath(targetNode);
 	PrintShortestPath();
 	return shortestPath;
