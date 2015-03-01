@@ -25,20 +25,16 @@ Node::Node(float x, float y, NodeTypeEnum nodeType)
 		isLegalPlayingNode = false;
 	}
 
+	InitializePathfindingInfo();
+}
+
+void Node::InitializePathfindingInfo()
+{
 	// Initialize G, H, and F
 	movementCost = 0;
 	heuristic = 0;
 	totalCost = 0;
-}
-
-Node::~Node()
-{
-	//// Free all memory from neighboring nodes
-	//for (std::vector<Node*>::iterator iter = neighborNodes.begin(); iter != neighborNodes.end(); ++iter)
-	//{
-	//	delete (*iter);
-	//	(*iter) = NULL;
-	//}
+	parentNode = NULL;
 }
 
 void Node::Render(SDL_Renderer* renderer)

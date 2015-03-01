@@ -9,7 +9,7 @@ public:
 	Graph();
 	~Graph();
 	void GenerateGraph(int width, int height);
-	std::vector<Node*>* GetAllNodes();
+	std::vector<Node*>& GetAllNodes();
 	void AddNode(Node* node);
 private:
 	std::vector<Node*> allNodes;

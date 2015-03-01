@@ -2,6 +2,11 @@
 
 std::vector<Node*> Pathfinder::CalculateAStar(Node* startingNode, Node* targetNode)
 {
+	InitializeAStar();
+
+	std::vector<Node*> openList;
+	std::vector<Node*> closedList;
+
 	// Add the starting node to the open list
 	openList.push_back(startingNode);
 	startingNode->CalculateHeuristic(targetNode);
@@ -96,10 +101,20 @@ std::vector<Node*> Pathfinder::CalculateAStar(Node* startingNode, Node* targetNo
 		} // end for each neighbor
 	} // end while open list is not empty
 
-	shortestPath.clear();
 	RecursivelyConstructPath(targetNode);
 	PrintShortestPath();
 	return shortestPath;
+}
+
+// TODO currently not in use
+int Pathfinder::CalculateHeuristic(Node* start, Node* target)
+{
+	int horizontalSpaces = std::abs((start->GetNodeId() % NUM_HORIZONTAL_TILES) - 
+		(target->GetNodeId() % NUM_HORIZONTAL_TILES));
+	int verticalSpaces = std::abs((start->GetNodeId() / NUM_HORIZONTAL_TILES) - 
+		(target->GetNodeId() / NUM_HORIZONTAL_TILES));
+	int heuristic = (horizontalSpaces + verticalSpaces) * 10;
+	return heuristic;
 }
 
 void Pathfinder::PrintShortestPath()
@@ -109,7 +124,19 @@ void Pathfinder::PrintShortestPath()
 	{
 		fprintf(ofp, "%d ", shortestPath[i]->GetNodeId());
 	}
+	fprintf(ofp, "\n");
 	fclose(ofp);
+}
+
+void Pathfinder::InitializeAStar()
+{
+	shortestPath.clear();
+
+	std::vector<Node*>& nodes = world->GetAllNodes();
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		nodes[i]->InitializePathfindingInfo();
+	}
 }
 
 void Pathfinder::RecursivelyConstructPath(Node* target)
@@ -117,5 +144,9 @@ void Pathfinder::RecursivelyConstructPath(Node* target)
 	if (target->GetParentNode() != NULL)
 		RecursivelyConstructPath(target->GetParentNode());
 
+	// Clear the parent so we don't have any interference after the next A* calculation
+	target->SetParentNode(NULL);
+
+	// Save our path
 	shortestPath.push_back(target);
 }

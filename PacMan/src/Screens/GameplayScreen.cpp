@@ -85,7 +85,7 @@ void GameplayScreen::Initialize(Game* game)
 	levelManager->InitializeLevel();
 
 	// Initialize the pathfinder with the legal playing nodes
-	pathfinder = new Pathfinder(levelManager->GetLegalNodes());
+	//pathfinder = new Pathfinder(levelManager->GetLegalNodes());
 }
 
 void GameplayScreen::Cleanup(Game* game)
@@ -174,11 +174,6 @@ void GameplayScreen::HandleEvents(Game* game)
 			case SDLK_F3:
 				// Toggle debugging information
 				isDebugging = !isDebugging;
-				break;
-			case SDLK_c:
-				printf("Calculating shortest path from node %d to node %d\n",
-					levelManager->GetLegalNodes()[37]->GetNodeId(), levelManager->GetLegalNodes()[59]->GetNodeId());
-				pathfinder->CalculateAStar(levelManager->GetLegalNodes()[37], levelManager->GetLegalNodes()[59]);
 				break;
 			case SDLK_0:
 				nodeDisplayFlags[ID] = !nodeDisplayFlags[ID];
@@ -315,7 +310,6 @@ void GameplayScreen::RenderGUI(SDL_Renderer* renderer)
 	aiStateRect.w = GRID_SIZE * 8; 
 	aiStateRect.h = GRID_SIZE * 2;
 	Utils::RenderText(renderer, arialFont, "AI State: " + aiStateString, SDL_Color{ 255, 255, 255 }, &aiStateRect);
-
 
 	if (isPaused)
 	{

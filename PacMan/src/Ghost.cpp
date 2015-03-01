@@ -4,7 +4,7 @@ GhostStateEnum Ghost::state;
 GhostStateEnum Ghost::previousState;
 GameTimer Ghost::stateTimer;
 
-Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum dir)
+Ghost::Ghost(std::string textureName, float spawnX, float spawnY, Pathfinder* pf, Node* scatterNode, DirectionEnum dir)
 {
 	fprintf(stdout, "Creating a new ghost\n");
 
@@ -23,6 +23,8 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum 
 	speed = defaultSpeed;
 
 	state = GhostStateEnum::Scatter;
+	this->scatterNode = scatterNode;
+	this->pf = pf;
 	previousState = state;
 	isFrightened = false;
 
@@ -69,8 +71,52 @@ void Ghost::Respawn()
 	LeaveFrightenedState();
 }
 
+void Ghost::FollowPath()
+{
+	// Return if there is no path
+	if (pathStack.empty())
+		return;
+	
+	Node* target = pathStack.back();
+	printf("pathBackId=%d\n", target->GetNodeId());
+	if (currentNode->GetNodeId() == target->GetNodeId())
+	{
+		printf("@target\n");
+		pathStack.pop_back();
+		if (pathStack.empty()) return;
+		target = pathStack.back();
+	}
+
+	if (position.x < target->GetPosition().x)
+	{
+		queuedDirection = DirectionEnum::Right;
+	}
+	else if (position.x > target->GetPosition().x)
+	{
+		queuedDirection = DirectionEnum::Left;
+	}
+	else if (position.y < target->GetPosition().y)
+	{
+		queuedDirection = DirectionEnum::Down;
+	}
+	else if (position.y > target->GetPosition().y)
+	{
+		queuedDirection = DirectionEnum::Up;
+	}
+	else
+	{
+		printf("We reached our target node, popping back of path list\n");
+		pathStack.pop_back();
+	}
+}
+
 void Ghost::Update(Uint32 deltaT)
 {
+	if (currentNode != NULL && currentNode != previousFrameNode)
+		printf("currentNode=%d\n", currentNode->GetNodeId());
+	else if (currentNode == NULL)
+		printf("currentNode=NULL\n");
+
 	CheckForStateChange();
 
 	// Check if the AI is centered
@@ -129,8 +175,7 @@ void Ghost::Update(Uint32 deltaT)
 		switch (state)
 		{
 		case Scatter:
-			// TODO switch to a scatter pattern
-			FrightenedMovement();
+			ScatterMovement();
 			break;
 		case Chase:
 			// TODO switch to a chase pattern
@@ -141,6 +186,9 @@ void Ghost::Update(Uint32 deltaT)
 			break;
 		}
 	}
+
+	// Follow the path if one exists
+	FollowPath();
 
 	// Update the AI direction when we are centered in a tile
 	if ((isCenteredOnTile) && (queuedDirection != DirectionEnum::None))
@@ -181,8 +229,8 @@ bool Ghost::IsAtIntersection()
 	// Check for crossroads
 	// only consider crossroads that have more than two neighbors
 	// since the ghosts can only move in one direction we must always move forward
-	if ((currentNode != previousFrameNode) &&
-		(currentNode->GetNeighborNodes().size() > 1))
+	if ((currentNode != NULL) && (currentNode != previousFrameNode) &&
+		(currentNode->GetNeighborNodes().size() > 2))
 	{
 		return true;
 	}
@@ -190,6 +238,19 @@ bool Ghost::IsAtIntersection()
 	{
 		return false;
 	}
+}
+
+void Ghost::ScatterMovement()
+{
+	pathStack = pf->CalculateAStar(currentNode, scatterNode);
+	// Reverse our list because we will use it as a stack instead of a queue
+	// in this class
+	std::reverse(pathStack.begin(), pathStack.end());
+}
+
+void Ghost::ChaseMovement()
+{
+
 }
 
 void Ghost::FrightenedMovement()
@@ -292,6 +353,8 @@ void Ghost::ReverseDirection()
 
 void Ghost::EnterFrightenedState(float percentSpeed)
 {
+	// First clear the path - AI moves randomly when frightened
+	pathStack.clear();
 	isFrightened = true;
 	stateTimer.Start(); // reset the state timer
 	speed = defaultSpeed * percentSpeed;

@@ -19,26 +19,30 @@ void LevelManager::InitializeLevel()
 	LoadLevelData(*currentLevel);
 	FindEdges();
 
+	// Initialize the pathfinder with the level data
+	pathfinder = new Pathfinder(level);
+
 	// Initialize the player
 	player = new Player();
-	player->ResetPosition();
+	//player->ResetPosition();
 
 	// Load the AI
+	// TODO update scatter node locations
 	ghostList.push_back(
-		new Ghost("blinky", 12.0f, 5.0f, DirectionEnum::Left)
+		new Ghost("blinky", 12.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Left)
+		);
+
+	/*ghostList.push_back(
+		new Ghost("pinky", 15.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Right)
 		);
 
 	ghostList.push_back(
-		new Ghost("pinky", 15.0f, 5.0f, DirectionEnum::Right)
+		new Ghost("inky", 9.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Down)
 		);
 
 	ghostList.push_back(
-		new Ghost("inky", 9.0f, 5.0f, DirectionEnum::Down)
-		);
-
-	ghostList.push_back(
-		new Ghost("clyde", 18.0f, 5.0f, DirectionEnum::Down)
-		);
+		new Ghost("clyde", 18.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Down)
+		);*/
 }
 
 void LevelManager::CleanupLevel()
@@ -62,6 +66,10 @@ void LevelManager::CleanupLevel()
 	pelletList.clear();
 	wallList.clear();
 	ghostList.clear();
+
+	// Delete the pathfinder
+	delete (pathfinder);
+	pathfinder = NULL;
 
 	// Delete the level
 	delete (level);

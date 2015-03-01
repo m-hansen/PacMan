@@ -47,6 +47,7 @@ private:
 	std::vector<Ghost*> ghostList;
 	std::vector<std::string> levels;
 	std::vector<std::string>::iterator currentLevel;
+	Pathfinder* pathfinder;
 protected:
 	LevelManager();
 };

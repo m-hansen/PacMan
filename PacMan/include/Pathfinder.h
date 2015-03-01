@@ -1,20 +1,21 @@
 #pragma once
 #include <vector>
+#include "Graph.h"
 #include "Node.h"
 
 class Pathfinder
 {
 public:
-	Pathfinder(std::vector<Node*> nodes) : world(nodes) {}
+	Pathfinder(Graph* g) : world(g) {}
 	~Pathfinder() {}
 	std::vector<Node*> CalculateAStar(Node* startingNode, Node* targetNode);
 private:
-	void ConstructPath(Node* node);
-	void RecursivelyConstructPath(Node* target);
+	int CalculateHeuristic(Node* start, Node* target);
 	void PrintShortestPath();
-	void MoveFromOpenToClosed(std::vector<Node*>::iterator iter);
-	std::vector<Node*> world;
-	std::vector<Node*> openList;
-	std::vector<Node*> closedList;
+	void InitializeAStar();
+	void RecursivelyConstructPath(Node* target);
+	Graph* world;
+	//std::vector<Node*> openList;
+	//std::vector<Node*> closedList;
 	std::vector<Node*> shortestPath;
 };

@@ -9,14 +9,20 @@
 #include "DirectionEnum.h"
 #include "GhostStateEnum.h"
 #include "GameTimer.h"
+#include "Sprite.h"
+#include "Pathfinder.h"
 
 class Ghost : public IRenderable
 {
 public:
-	Ghost(std::string textureName, float spawnX, float spawnY, DirectionEnum dir);
+	Ghost(std::string textureName, float spawnX, float spawnY, 
+		Pathfinder* pf, Node* scatterNode, DirectionEnum dir);
 	~Ghost();
 	void Respawn();
+	void FollowPath();
 	void Update(Uint32 deltaT);
+	void ScatterMovement();
+	void ChaseMovement();
 	void FrightenedMovement();
 	void CheckForStateChange();
 	void EnterFrightenedState(float percentSpeed);
@@ -56,9 +62,12 @@ private:
 	DirectionEnum defaultDirection;
 	float defaultSpeed;
 	float speed;
+	Node* scatterNode;
 	Node* currentNode;
 	Node* previousNode;
 	Node* previousFrameNode;
 	bool isCenteredOnTile;
 	bool isFrightened;
+	std::vector<Node*> pathStack;
+	Pathfinder* pf;
 };
