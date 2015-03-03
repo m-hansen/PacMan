@@ -4,7 +4,7 @@
 #include <vector>
 #include "Global.h"
 #include "Utils.h"
-#include "NodeTypeEnum.h"
+#include "Enumerations/NodeTypeEnum.h"
 
 enum NodeDirection
 {

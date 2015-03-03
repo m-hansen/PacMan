@@ -2,7 +2,7 @@
 #include "SDL.h"
 #include "Node.h"
 #include "Utils.h"
-#include "DirectionEnum.h"
+#include "Enumerations/DirectionEnum.h"
 
 class MovingAgent
 {

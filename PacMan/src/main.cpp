@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "AttractScreen.h"
+#include "Screens/AttractScreen.h"
 
 int main( int argc, char* args[] )
 {

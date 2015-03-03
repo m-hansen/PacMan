@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include "SDL_ttf.h"
-#include "IScreen.h"
+#include "Screens/IScreen.h"
 #include "Sprite.h"
 
 class AttractScreen : public IScreen

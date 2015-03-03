@@ -6,8 +6,8 @@
 #include "TextureManager.h"
 #include "IRenderable.h"
 #include "Node.h"
-#include "DirectionEnum.h"
-#include "GhostStateEnum.h"
+#include "Enumerations/DirectionEnum.h"
+#include "Enumerations/GhostStateEnum.h"
 #include "GameTimer.h"
 
 class Ghost : public IRenderable

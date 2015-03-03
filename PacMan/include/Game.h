@@ -8,12 +8,12 @@
 #include "Global.h"
 #include "TextureManager.h"
 #include "Player.h"
-#include "DirectionEnum.h"
+#include "Enumerations/DirectionEnum.h"
 #include "Wall.h"
 #include "LevelManager.h"
 #include "Graph.h"
 #include "Ghost.h"
-//#include "IScreen.h"
+//#include "Screens/IScreen.h"
 class IScreen;
 
 class Game

@@ -3,7 +3,7 @@
 #include "MovingAgent.h"
 #include "TextureManager.h"
 #include "IRenderable.h"
-#include "DirectionEnum.h"
+#include "Enumerations/DirectionEnum.h"
 #include "Node.h"
 
 class Player : public IRenderable

@@ -1,5 +1,5 @@
-#include "AttractScreen.h"
-#include "GameplayScreen.h"
+#include "Screens/AttractScreen.h"
+#include "Screens/GameplayScreen.h"
 
 AttractScreen AttractScreen::attractScreen;
 

@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include "TextureManager.h"
 #include "Utils.h"
-#include "ConsumableTypeEnum.h"
+#include "Enumerations/ConsumableTypeEnum.h"
 #include "Node.h"
 
 class Consumable

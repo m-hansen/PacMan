@@ -3,8 +3,8 @@
 #include "Player.h"
 #include "LevelManager.h"
 #include "Ghost.h"
-#include "IScreen.h"
-#include "AttractScreen.h"
+#include "Screens/IScreen.h"
+#include "Screens/AttractScreen.h"
 #include "Pathfinder.h"
 
 enum NodeFlags{ID, G, H, F};

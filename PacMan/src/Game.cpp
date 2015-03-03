@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "IScreen.h"
+#include "Screens/IScreen.h"
 
 Game::Game()
 {
