@@ -66,6 +66,8 @@ void Ghost::Respawn()
 	previousNode = NULL;
 	previousFrameNode = NULL;
 
+	pathStack.clear();
+
 	// The ghost should never be frightened after a respawn
 	// even if the overall state is frightened
 	LeaveFrightenedState();
@@ -78,12 +80,20 @@ void Ghost::FollowPath()
 		return;
 	
 	Node* target = pathStack.back();
-	printf("pathBackId=%d\n", target->GetNodeId());
+	printf("targetNodeId=%d\n", target->GetNodeId());
 	if (currentNode->GetNodeId() == target->GetNodeId())
 	{
-		printf("@target\n");
+		// We have reached our target node
+		printf("@target - popping stack\n");
 		pathStack.pop_back();
-		if (pathStack.empty()) return;
+		if (pathStack.empty())
+		{
+			printf("The path stack is empty - returning from function\n");
+			return;
+		}
+
+		// Center the AI on its current tile and grab the next one
+		CenterOnCurrentNode();
 		target = pathStack.back();
 	}
 
@@ -103,11 +113,11 @@ void Ghost::FollowPath()
 	{
 		queuedDirection = DirectionEnum::Up;
 	}
-	else
+	/*else
 	{
 		printf("We reached our target node, popping back of path list\n");
 		pathStack.pop_back();
-	}
+	}*/
 }
 
 void Ghost::Update(Uint32 deltaT)
@@ -116,6 +126,12 @@ void Ghost::Update(Uint32 deltaT)
 		printf("currentNode=%d\n", currentNode->GetNodeId());
 	else if (currentNode == NULL)
 		printf("currentNode=NULL\n");
+
+	if (currentNode != NULL && previousNode != NULL && currentNode->IsLegal() == false)
+	{
+		currentNode = previousNode;
+		CenterOnCurrentNode();
+	}
 
 	CheckForStateChange();
 
@@ -175,7 +191,9 @@ void Ghost::Update(Uint32 deltaT)
 		switch (state)
 		{
 		case Scatter:
-			ScatterMovement();
+			// TODO switch to ScatterMovement
+			FrightenedMovement();
+			//ScatterMovement();
 			break;
 		case Chase:
 			// TODO switch to a chase pattern
@@ -349,6 +367,13 @@ void Ghost::ReverseDirection()
 	default:
 		queuedDirection = DirectionEnum::None;
 	}
+}
+
+void Ghost::CenterOnCurrentNode()
+{
+	position = { currentNode->GetPosition().x, currentNode->GetPosition().y };
+	boundingRect.x = position.x;
+	boundingRect.y = position.y;
 }
 
 void Ghost::EnterFrightenedState(float percentSpeed)

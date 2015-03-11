@@ -44,6 +44,7 @@ public:
 	static void NextState();
 	static GameTimer& GetStateTimer() { return stateTimer; }
 private:
+	void CenterOnCurrentNode();
 	static GhostStateEnum state;
 	static GhostStateEnum previousState;
 	static GameTimer stateTimer;

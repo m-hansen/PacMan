@@ -24,7 +24,7 @@ void LevelManager::InitializeLevel()
 
 	// Initialize the player
 	player = new Player();
-	//player->ResetPosition();
+	player->ResetPosition();
 
 	// Load the AI
 	// TODO update scatter node locations
@@ -32,7 +32,7 @@ void LevelManager::InitializeLevel()
 		new Ghost("blinky", 12.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Left)
 		);
 
-	/*ghostList.push_back(
+	ghostList.push_back(
 		new Ghost("pinky", 15.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Right)
 		);
 
@@ -42,7 +42,7 @@ void LevelManager::InitializeLevel()
 
 	ghostList.push_back(
 		new Ghost("clyde", 18.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Down)
-		);*/
+		);
 }
 
 void LevelManager::CleanupLevel()

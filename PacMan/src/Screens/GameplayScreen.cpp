@@ -90,6 +90,8 @@ void GameplayScreen::Initialize(Game* game)
 
 void GameplayScreen::Cleanup(Game* game)
 {
+	levelManager->CleanupLevel();
+
 	SDL_DestroyTexture(pauseTexture);
 	pauseTexture = NULL;
 
