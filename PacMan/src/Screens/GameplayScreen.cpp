@@ -231,15 +231,17 @@ void GameplayScreen::Update(Game* game)
 		return;
 	}
 
-	// Update the player
-	levelManager->GetPlayer()->Update(game->GetDeltaTime());
+	levelManager->Update(game->GetDeltaTime());
 
-	// Update the AI
-	for (std::vector<Ghost*>::iterator iter = levelManager->GetGhosts().begin(); 
-		iter != levelManager->GetGhosts().end(); ++iter)
-	{
-		(*iter)->Update(game->GetDeltaTime());
-	}
+	//// Update the player
+	//levelManager->GetPlayer()->Update(game->GetDeltaTime());
+
+	//// Update the AI
+	//for (std::vector<Ghost*>::iterator iter = levelManager->GetGhosts().begin(); 
+	//	iter != levelManager->GetGhosts().end(); ++iter)
+	//{
+	//	(*iter)->Update(game->GetDeltaTime());
+	//}
 
 	// Handle the collisions last
 	HandleCollisions();
@@ -388,6 +390,23 @@ void GameplayScreen::DrawDebug(SDL_Renderer* renderer)
 		}
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
+	}
+
+	// Display the current node ID for each ghost
+	auto ghostList = levelManager->GetGhosts();
+	for (int i = 0; i < ghostList.size(); i++)
+	{
+		if (ghostList[i]->GetCurrentNode() != NULL)
+		{
+			const int OFFSET = 20;
+			SDL_Rect loc;
+			loc.x = 100;
+			loc.y = 200 + (i * OFFSET);
+			loc.w = 40;
+			loc.h = 30;
+			Utils::RenderText(renderer, arialFont, std::to_string(ghostList[i]->GetCurrentNode()->GetNodeId()),
+				SDL_Color{ 255, 255, 255 }, &loc);
+		}
 	}
 }
 

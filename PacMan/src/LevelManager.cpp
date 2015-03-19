@@ -43,11 +43,16 @@ void LevelManager::InitializeLevel()
 	ghostList.push_back(
 		new Ghost("clyde", 18.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Down)
 		);
+
+	// Start the timer
+	startLevelTimer.Start();
 }
 
 void LevelManager::CleanupLevel()
 {
 	fprintf(stdout, "Unloading level\n");
+
+	startLevelTimer.Stop();
 
 	// Free the player
 	delete (player);
@@ -155,6 +160,28 @@ void LevelManager::ResetAgentPositions()
 	{
 		(*iter)->Respawn();
 	}
+}
+
+void LevelManager::Update(Uint32 deltaTime)
+{
+	// Break out of the update function if the start level timer is still counting down
+	if ((startLevelTimer.IsStarted()) && (startLevelTimer.GetTicks() < 3000))
+	{
+		printf("Starting in ");
+		if (startLevelTimer.GetTicks() > 2000) printf("1\n");
+		else if (startLevelTimer.GetTicks() > 1000) printf("2\n");
+		else if (startLevelTimer.GetTicks() > 0) printf("3\n");
+		return;
+	}
+
+	if (startLevelTimer.IsStarted()) startLevelTimer.Stop();
+
+	// Update the player
+	player->Update(deltaTime);
+
+	// Update the AI
+	for (int i = 0; i < ghostList.size(); i++)
+		ghostList[i]->Update(deltaTime);
 }
 
 void LevelManager::FindEdges()

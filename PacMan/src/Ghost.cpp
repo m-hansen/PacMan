@@ -34,6 +34,7 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY, Pathfinder* pf
 	previousDirection = direction;
 	queuedDirection = DirectionEnum::None;
 
+	// TODO the nodes should be initialized to the spawn point
 	currentNode = NULL;
 	previousNode = NULL;
 	previousFrameNode = NULL;
@@ -80,15 +81,17 @@ void Ghost::FollowPath()
 		return;
 	
 	Node* target = pathStack.back();
-	printf("targetNodeId=%d\n", target->GetNodeId());
+	//printf("targetNodeId=%d\n", target->GetNodeId());
 	if (currentNode->GetNodeId() == target->GetNodeId())
 	{
 		// We have reached our target node
-		printf("@target - popping stack\n");
+		//printf("@target - popping stack\n");
 		pathStack.pop_back();
 		if (pathStack.empty())
 		{
-			printf("The path stack is empty - returning from function\n");
+			printf("The path stack is empty - returning from FollowPath() function\n");
+			printf("but first... Calling MoveForward() function\n");
+			MoveForward();
 			return;
 		}
 
@@ -122,16 +125,11 @@ void Ghost::FollowPath()
 
 void Ghost::Update(Uint32 deltaT)
 {
-	if (currentNode != NULL && currentNode != previousFrameNode)
-		printf("currentNode=%d\n", currentNode->GetNodeId());
-	else if (currentNode == NULL)
-		printf("currentNode=NULL\n");
-
-	if (currentNode != NULL && previousNode != NULL && currentNode->IsLegal() == false)
-	{
-		currentNode = previousNode;
-		CenterOnCurrentNode();
-	}
+	// Debugging info
+	//if (currentNode != NULL && currentNode != previousFrameNode)
+	//	printf("currentNode=%d\n", currentNode->GetNodeId());
+	//else if (currentNode == NULL)
+	//	printf("currentNode=NULL\n");
 
 	CheckForStateChange();
 
@@ -154,6 +152,7 @@ void Ghost::Update(Uint32 deltaT)
 		}
 	}
 
+	// Check if the frightened animations should play
 	if (state == Frightened)
 	{
 		int blinkThreshold = 2000;
@@ -192,8 +191,8 @@ void Ghost::Update(Uint32 deltaT)
 		{
 		case Scatter:
 			// TODO switch to ScatterMovement
-			FrightenedMovement();
-			//ScatterMovement();
+			//FrightenedMovement();
+			ScatterMovement();
 			break;
 		case Chase:
 			// TODO switch to a chase pattern
@@ -242,13 +241,49 @@ void Ghost::Update(Uint32 deltaT)
 	previousFrameNode = currentNode;
 }
 
+// Move toward the next legal node
+void Ghost::MoveForward()
+{
+	const int MAX_NEIGHBORS = 4;
+	Node* availableNodes[MAX_NEIGHBORS] = {};
+	int index = 0;
+
+	// Search each neighbor node
+	auto neighbors = currentNode->GetNeighborNodes();
+	for (int i = 0; i < neighbors.size(); i++)
+	{
+		// prevent the program from crashing if the definition of neighbors changes
+		// (ie: if we decide to implement diagonal movement in the future)
+		if (i >= MAX_NEIGHBORS)
+		{
+			printf("Breaking out of ghost node neighbor early. This could cause unintended runtime results with the AI's behavior.\n" \
+				"Try updating the MAX_NEIGHBORS variable in the Ghost class.\n");
+			break;
+		}
+
+		// Ignore any node that is not a legal playing node
+		if (neighbors[i]->IsLegal() == false)
+			continue;
+
+		// Construct a list of nodes that could be moved to (Ghosts cannot move to the previous node)
+		if (neighbors[i] != previousNode)
+		{
+			availableNodes[index] = neighbors[i];
+			index++;
+		}
+	}
+
+	QueueDirectionTowardNode(
+		availableNodes[std::rand() % index]);
+}
+
 bool Ghost::IsAtIntersection()
 {
 	// Check for crossroads
 	// only consider crossroads that have more than two neighbors
 	// since the ghosts can only move in one direction we must always move forward
 	if ((currentNode != NULL) && (currentNode != previousFrameNode) &&
-		(currentNode->GetNeighborNodes().size() > 2))
+		(currentNode->GetNeighborNodes().size() > 1)) // todo - notice that we are calculating this every frame, the size should be > 2 but then we will not account for the corner case where the size is equal to 2
 	{
 		return true;
 	}
@@ -261,6 +296,14 @@ bool Ghost::IsAtIntersection()
 void Ghost::ScatterMovement()
 {
 	pathStack = pf->CalculateAStar(currentNode, scatterNode);
+
+	// Don't search for a path if we are already at the target node or the path is empty
+	/*if (pathStack.empty() || currentNode == scatterNode)
+	{
+		FrightenedMovement();
+		return;
+	}
+*/
 	// Reverse our list because we will use it as a stack instead of a queue
 	// in this class
 	std::reverse(pathStack.begin(), pathStack.end());
@@ -273,36 +316,13 @@ void Ghost::ChaseMovement()
 
 void Ghost::FrightenedMovement()
 {
-	const int MAX_NEIGHBORS = 4;
-	int nodeIdArray[MAX_NEIGHBORS] = {};
-	int index = 0;
+	MoveForward();
+}
 
-	// Iterate over all neighboring nodes
-	std::vector<Node*> neighbors = currentNode->GetNeighborNodes();
-	for (std::vector<Node*>::iterator iter = neighbors.begin();
-		iter != neighbors.end(); ++iter)
-	{
-		// prevent the program from crashing if the definition of neighbors changes
-		// (ie: if we decide to implement diagonal movement in the future)
-		if (index >= MAX_NEIGHBORS)
-		{
-			printf("Breaking out of ghost node neighbor early. This could cause unintended runtime results with the AI's behavior.\n" \
-				"Try updating the MAX_NEIGHBORS variable in the Ghost class.\n");
-			break;
-		}
-
-		// Construct a list of nodes that could be moved to (Ghosts cannot move to the previous node)
-		if ((*iter) != previousNode)
-		{
-			nodeIdArray[index] = (*iter)->GetNodeId();
-			index++;
-		}
-	}
-
-	// index is now the number of available directions
-	int randNodeIndex = std::rand() % index;
-	int targetNodeId = nodeIdArray[randNodeIndex];
-	int currentNodeId = currentNode->GetNodeId();
+void Ghost::QueueDirectionTowardNode(Node* target)
+{
+	const int targetNodeId = target->GetNodeId();
+	const int currentNodeId = currentNode->GetNodeId();
 
 	// Select a direction to move in based on the node ID
 	// the nodes are generated in order from left to right & top to bottom
@@ -321,7 +341,7 @@ void Ghost::FrightenedMovement()
 		// Move up
 		queuedDirection = DirectionEnum::Up;
 	}
-	else if (targetNodeId > (currentNodeId + 1))
+	else if (targetNodeId >(currentNodeId + 1))
 	{
 		// Move down
 		queuedDirection = DirectionEnum::Down;

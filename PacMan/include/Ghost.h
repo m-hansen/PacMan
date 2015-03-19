@@ -30,6 +30,7 @@ public:
 	void ReverseDirection();
 	void UpdateNodes(Node* newNode);
 	void Render(SDL_Renderer* renderer);
+	void MoveForward();
 	SDL_Rect* GetBoundingRect();
 	DirectionEnum GetDirection();
 	void SetDirection(DirectionEnum dirEnum);
@@ -44,14 +45,18 @@ public:
 	static void NextState();
 	static GameTimer& GetStateTimer() { return stateTimer; }
 private:
+	// Functions
+	void QueueDirectionTowardNode(Node* target);
 	void CenterOnCurrentNode();
+	bool IsAtIntersection();
+
+	// Variables
 	static GhostStateEnum state;
 	static GhostStateEnum previousState;
 	static GameTimer stateTimer;
 	const static int SCATTER_DURATION = 7000;
 	const static int CHASE_DURATION = 20000;
 	const static int FRIGHTENED_DURATION = 5000;
-	bool IsAtIntersection();
 	SDL_Rect boundingRect;
 	SDL_Texture* texture;
 	SDL_Texture* frightenedTexture;
