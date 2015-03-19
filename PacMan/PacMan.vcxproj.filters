@@ -19,12 +19,12 @@
     <ClCompile Include="src\MovingAgent.cpp" />
     <ClCompile Include="src\GameTimer.cpp" />
     <ClCompile Include="src\Pathfinder.cpp" />
+    <ClCompile Include="src\Config.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Consumable.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Ghost.h" />
-    <ClInclude Include="include\Global.h" />
     <ClInclude Include="include\LevelManager.h" />
     <ClInclude Include="include\Node.h" />
     <ClInclude Include="include\Pellet.h" />
@@ -45,6 +45,7 @@
     <ClInclude Include="include\Enumerations\GhostStateEnum.h" />
     <ClInclude Include="include\GameTimer.h" />
     <ClInclude Include="include\Pathfinder.h" />
+    <ClInclude Include="include\Config.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\blinky.png" />

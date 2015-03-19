@@ -111,32 +111,32 @@ void LevelManager::LoadLevelData(std::string levelData)
 			{
 			case NodeTypeEnum::EmptyNode:
 				// Create on the heap
-				node = new Node(i * GRID_SIZE, lineNumber * GRID_SIZE, NodeTypeEnum::EmptyNode);
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::EmptyNode);
 				level->AddNode(node);
 				legalPlayingNodes.push_back(node);
 				break;
 			case NodeTypeEnum::PelletNode:
 				// Create on the heap
-				node = new Node(i * GRID_SIZE, lineNumber * GRID_SIZE, NodeTypeEnum::PelletNode);
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::PelletNode);
 				level->AddNode(node);
 				pelletList.push_back(new Pellet(node));
 				legalPlayingNodes.push_back(node);
 				break;
 			case NodeTypeEnum::PowerPelletNode:
 				// Create on the heap
-				node = new Node(i * GRID_SIZE, lineNumber * GRID_SIZE, NodeTypeEnum::PowerPelletNode);
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::PowerPelletNode);
 				level->AddNode(node);
 				pelletList.push_back(new Pellet(node));
 				legalPlayingNodes.push_back(node);
 				break;
 			case NodeTypeEnum::WallNode:
 				// Create on the heap
-				const int WALL_OFFSET = GRID_SIZE / 2;
-				node = new Node(i * GRID_SIZE, lineNumber * GRID_SIZE, NodeTypeEnum::WallNode);
+				const int WALL_OFFSET = Config::gridSize / 2;
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::WallNode);
 				level->AddNode(node);
 				wallList.push_back(new Sprite(
 					TextureManager::GetTexture("wall"), WALL_OFFSET + (node->GetPosition().x),
-					WALL_OFFSET  +(node->GetPosition().y), GRID_SIZE, GRID_SIZE));
+					WALL_OFFSET  +(node->GetPosition().y), Config::gridSize, Config::gridSize));
 				break;
 			}
 
@@ -188,7 +188,7 @@ void LevelManager::FindEdges()
 {
 	fprintf(stdout, "Calculating graph edges\n");
 
-	FILE* ofp = fopen((DEBUG_LOG_FOLDER + "GraphEdges.txt").c_str(), "a");
+	FILE* ofp = fopen((Config::debugLogFolder + "GraphEdges.txt").c_str(), "a");
 
 	// Print the level header
 	std::string heavyLineBreak = "";
@@ -213,8 +213,8 @@ void LevelManager::FindEdges()
 				if (deltaX < 0) deltaX *= -1;
 				if (deltaY < 0) deltaY *= -1;
 
-				if ((deltaX == GRID_SIZE && deltaY == 0) || 
-					(deltaX == 0 && deltaY == GRID_SIZE))
+				if ((deltaX == Config::gridSize && deltaY == 0) || 
+					(deltaX == 0 && deltaY == Config::gridSize))
 				{
 					// We are within the range to be considered an edge
 					(*iter)->AddNeighborNode((*iter2));

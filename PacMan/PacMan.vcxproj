@@ -87,6 +87,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Consumable.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Ghost.cpp" />
@@ -107,13 +108,13 @@
     <ClCompile Include="src\Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Config.h" />
     <ClInclude Include="include\Consumable.h" />
     <ClInclude Include="include\Enumerations\ConsumableTypeEnum.h" />
     <ClInclude Include="include\Enumerations\DirectionEnum.h" />
     <ClInclude Include="include\Enumerations\GhostStateEnum.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Ghost.h" />
-    <ClInclude Include="include\Global.h" />
     <ClInclude Include="include\graph.h" />
     <ClInclude Include="include\LevelManager.h" />
     <ClInclude Include="include\MovingAgent.h" />

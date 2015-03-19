@@ -12,14 +12,14 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY, Pathfinder* pf
 	frightenedTexture = TextureManager::GetTexture("frightened");
 
 	// Set the location and size
-	spawnPoint = { spawnX * GRID_SIZE, spawnY * GRID_SIZE};
+	spawnPoint = { spawnX * Config::gridSize, spawnY * Config::gridSize};
 	position = spawnPoint;
-	boundingRect.w = GRID_SIZE;
-	boundingRect.h = GRID_SIZE;
+	boundingRect.w = Config::gridSize;
+	boundingRect.h = Config::gridSize;
 	boundingRect.x = position.x;
 	boundingRect.y = position.y;
 
-	defaultSpeed = 0.045f * (GRID_SIZE / 8);
+	defaultSpeed = 0.045f * (Config::gridSize / 8);
 	speed = defaultSpeed;
 
 	state = GhostStateEnum::Scatter;
@@ -458,8 +458,8 @@ DirectionEnum Ghost::GetDirection()
 
 /*void Ghost::SetPosition(Node* node)
 {
-	position.x = (node->GetPosition().x) + (GRID_SIZE / 2);
-	position.y = (node->GetPosition().y) + (GRID_SIZE / 2);
+	position.x = (node->GetPosition().x) + (Config::gridSize / 2);
+	position.y = (node->GetPosition().y) + (Config::gridSize / 2);
 	boundingRect.x = position.x;
 	boundingRect.y = position.y;
 	currentNode = node;

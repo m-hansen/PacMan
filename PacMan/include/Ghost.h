@@ -1,7 +1,7 @@
 #pragma once
 #include "SDL.h"
 #include "MovingAgent.h"
-#include "Global.h"
+#include "Config.h"
 #include "Utils.h"
 #include "TextureManager.h"
 #include "IRenderable.h"

@@ -10,13 +10,13 @@ Pellet::Pellet(Node* node)
 	{
 		value = 10;
 		texture = TextureManager::GetTexture("pellet");
-		InitBoundingRect(GRID_SIZE / 4);
+		InitBoundingRect(Config::gridSize / 4);
 	}
 	else if (type == NodeTypeEnum::PowerPelletNode)
 	{
 		value = 50;
 		texture = TextureManager::GetTexture("powerPellet");
-		InitBoundingRect(GRID_SIZE / 2);
+		InitBoundingRect(Config::gridSize / 2);
 	}
 	else
 		fprintf(stdout, "ERROR: %s is not a valid pellet type\n", std::to_string(type));
@@ -31,8 +31,8 @@ void Pellet::InitBoundingRect(int size)
 {
 	boundingRect.w = size;
 	boundingRect.h = size;
-	boundingRect.x = (location->GetPosition().x) + (GRID_SIZE / 2 - size / 2);
-	boundingRect.y = (location->GetPosition().y) + (GRID_SIZE / 2 - size / 2);
+	boundingRect.x = (location->GetPosition().x) + (Config::gridSize / 2 - size / 2);
+	boundingRect.y = (location->GetPosition().y) + (Config::gridSize / 2 - size / 2);
 }
 
 void Pellet::Render(SDL_Renderer* renderer)

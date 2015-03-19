@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 #include <vector>
-#include "Global.h"
+#include "Config.h"
 #include "Utils.h"
 #include "NodeTypeEnum.h"
 

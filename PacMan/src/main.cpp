@@ -5,7 +5,7 @@ int main( int argc, char* args[] )
 {
     Game game;
 
-	Utils::CreateFolder(DEBUG_LOG_FOLDER);
+	Utils::CreateFolder(Config::debugLogFolder);
 
 	// Only run the game if it initialized properly
 	if (!game.Initialize())

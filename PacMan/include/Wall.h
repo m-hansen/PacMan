@@ -1,9 +1,10 @@
 #pragma once
 #include <SDL.h>
-#include "Global.h"
+#include "Config.h"
 #include "Utils.h"
 #include "TextureManager.h"
 #include "Node.h"
+#include "Config.h"
 
 class Wall 
 {

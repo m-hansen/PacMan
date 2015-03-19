@@ -40,7 +40,7 @@ void GameplayScreen::Initialize(Game* game)
 {
 	// Load all content first
 	LoadContent(game->renderer);
-	arialFont = TTF_OpenFont("Resources/Fonts/ARIAL.TTF", GRID_SIZE);
+	arialFont = TTF_OpenFont("Resources/Fonts/ARIAL.TTF", Config::gridSize);
 	SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
 
 	nodeDisplayFlags[ID] = false;
@@ -50,10 +50,10 @@ void GameplayScreen::Initialize(Game* game)
 
 	// Initialize variables
 	score = 0;
-	scoreTextRect.w = GRID_SIZE * 6;
-	scoreTextRect.h = GRID_SIZE * 1.5;
-	scoreTextRect.x = 4 * GRID_SIZE;
-	scoreTextRect.y = 32 * GRID_SIZE;
+	scoreTextRect.w = Config::gridSize * 6;
+	scoreTextRect.h = Config::gridSize * 1.5;
+	scoreTextRect.x = 4 * Config::gridSize;
+	scoreTextRect.y = 32 * Config::gridSize;
 	endGameMessage = "Game Over!";
 	isLevelOver = false;
 	isDebugging = false;
@@ -61,9 +61,9 @@ void GameplayScreen::Initialize(Game* game)
 	livesTexture = TextureManager::GetTexture("pacmanLeft");
 	livesRemaining = 3;
 	// livesLeftRect.x intentionally not set here
-	livesLeftRect.y = GRID_SIZE * 32; // 32 is the vertical node offset
-	livesLeftRect.w = GRID_SIZE;
-	livesLeftRect.h = GRID_SIZE;
+	livesLeftRect.y = Config::gridSize * 32; // 32 is the vertical node offset
+	livesLeftRect.w = Config::gridSize;
+	livesLeftRect.h = Config::gridSize;
 
 	SDL_Surface* pauseSurface = TTF_RenderText_Solid(arialFont, "PAUSED", SDL_Color{ 255, 255, 255 });
 	pauseTexture = SDL_CreateTextureFromSurface(game->renderer, pauseSurface);
@@ -295,7 +295,7 @@ void GameplayScreen::RenderGUI(SDL_Renderer* renderer)
 	// Display the lives left
 	for (int i = 0; i < livesRemaining - 1; i++)
 	{
-		livesLeftRect.x = GRID_SIZE * i;
+		livesLeftRect.x = Config::gridSize * i;
 		SDL_RenderCopy(renderer, livesTexture, NULL, &livesLeftRect);
 	}
 
@@ -309,19 +309,19 @@ void GameplayScreen::RenderGUI(SDL_Renderer* renderer)
 	// Display the AI state
 	std::string aiStateString = Ghost::CurrentStateName();
 	SDL_Rect aiStateRect;
-	aiStateRect.x = GRID_SIZE * 18; 
-	aiStateRect.y = GRID_SIZE * 32; 
-	aiStateRect.w = GRID_SIZE * 8; 
-	aiStateRect.h = GRID_SIZE * 2;
+	aiStateRect.x = Config::gridSize * 18; 
+	aiStateRect.y = Config::gridSize * 32; 
+	aiStateRect.w = Config::gridSize * 8; 
+	aiStateRect.h = Config::gridSize * 2;
 	Utils::RenderText(renderer, arialFont, "AI State: " + aiStateString, SDL_Color{ 255, 255, 255 }, &aiStateRect);
 
 	if (isPaused)
 	{
 		SDL_Rect pauseRect;
-		pauseRect.w = GRID_SIZE * 10;
-		pauseRect.h = GRID_SIZE * 2;
-		pauseRect.x = SCREEN_WIDTH / 2 - pauseRect.w / 2;
-		pauseRect.y = SCREEN_HEIGHT / 2 - pauseRect.h / 2;
+		pauseRect.w = Config::gridSize * 10;
+		pauseRect.h = Config::gridSize * 2;
+		pauseRect.x = Config::screenWidth / 2 - pauseRect.w / 2;
+		pauseRect.y = Config::screenHeight / 2 - pauseRect.h / 2;
 
 		SDL_RenderCopy(renderer, pauseTexture, NULL, &pauseRect);
 	}
@@ -329,10 +329,10 @@ void GameplayScreen::RenderGUI(SDL_Renderer* renderer)
 	if (isLevelOver)
 	{
 		SDL_Rect endGameRect;
-		endGameRect.w = GRID_SIZE * 10;
-		endGameRect.h = GRID_SIZE * 2;
-		endGameRect.x = SCREEN_WIDTH / 2 - endGameRect.w / 2;
-		endGameRect.y = SCREEN_HEIGHT / 2 - endGameRect.h / 2;
+		endGameRect.w = Config::gridSize * 10;
+		endGameRect.h = Config::gridSize * 2;
+		endGameRect.x = Config::screenWidth / 2 - endGameRect.w / 2;
+		endGameRect.y = Config::screenHeight / 2 - endGameRect.h / 2;
 
 		Utils::RenderText(renderer, arialFont, endGameMessage, SDL_Color{ 255, 255, 255 }, &endGameRect);
 	}

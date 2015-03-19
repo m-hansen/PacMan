@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "Global.h"
+#include "Config.h"
 #include "TextureManager.h"
 #include "NodeTypeEnum.h"
 #include "Consumable.h"

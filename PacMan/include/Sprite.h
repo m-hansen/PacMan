@@ -1,7 +1,7 @@
 #pragma once
 #include "SDL.h"
 #include "Utils.h"
-#include "Global.h"
+#include "Config.h"
 
 class Sprite
 {

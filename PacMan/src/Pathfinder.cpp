@@ -109,17 +109,17 @@ std::vector<Node*> Pathfinder::CalculateAStar(Node* startingNode, Node* targetNo
 // TODO currently not in use
 int Pathfinder::CalculateHeuristic(Node* start, Node* target)
 {
-	int horizontalSpaces = std::abs((start->GetNodeId() % NUM_HORIZONTAL_TILES) - 
-		(target->GetNodeId() % NUM_HORIZONTAL_TILES));
-	int verticalSpaces = std::abs((start->GetNodeId() / NUM_HORIZONTAL_TILES) - 
-		(target->GetNodeId() / NUM_HORIZONTAL_TILES));
+	int horizontalSpaces = std::abs((start->GetNodeId() % Config::numberOfHorizontalTiles) - 
+		(target->GetNodeId() % Config::numberOfHorizontalTiles));
+	int verticalSpaces = std::abs((start->GetNodeId() / Config::numberOfHorizontalTiles) - 
+		(target->GetNodeId() / Config::numberOfHorizontalTiles));
 	int heuristic = (horizontalSpaces + verticalSpaces) * 10;
 	return heuristic;
 }
 
 void Pathfinder::PrintShortestPath()
 {
-	FILE* ofp = fopen((DEBUG_LOG_FOLDER + "ShortestPath.txt").c_str(), "a");
+	FILE* ofp = fopen((Config::debugLogFolder + "ShortestPath.txt").c_str(), "a");
 	for (int i = 0; i < shortestPath.size(); i++)
 	{
 		fprintf(ofp, "%d ", shortestPath[i]->GetNodeId());
