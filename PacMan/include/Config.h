@@ -23,12 +23,7 @@ namespace Config
 	extern bool isSoundMuted;
 
 	// Internal constants
-	const std::string configFilename = "config.xml";
 	const int GRID_SIZE_MULTIPLIER = 8;
-
-	// Internal variables
-	//std::string file;
-	//int boardSize;
 
 	// Functions
 	bool LoadConfig(std::string& filename);
