@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include "Global.h"
+#include "Config.h"
 #include "TextureManager.h"
 #include "Player.h"
 #include "Enumerations/DirectionEnum.h"

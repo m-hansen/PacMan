@@ -41,13 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\dev\boost_1_57_0;C:\dev\SDL2_image-2.0.0\include;C:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\dev\boost_1_57_0\lib\x86;C:\dev\SDL2_image-2.0.0\lib\x86;C:\dev\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\dev\lua-5.3.0\src;C:\dev\boost_1_57_0;C:\dev\SDL2_image-2.0.0\include;C:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\dev\boost_1_57_0\lib\x86;C:\dev\SDL2_image-2.0.0\lib\x86;C:\dev\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>E:\dev\boost_1_57_0;C:\dev\SDL2_image-2.0.0\include;C:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\dev\boost_1_57_0\lib\x86;C:\dev\SDL2_image-2.0.0\lib\x86;C:\dev\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\dev\lua-5.3.0\src;C:\dev\boost_1_57_0;C:\dev\SDL2_image-2.0.0\include;C:\dev\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\dev\boost_1_57_0\lib\x86;C:\dev\SDL2_image-2.0.0\lib\x86;C:\dev\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -87,6 +87,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Consumable.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Ghost.cpp" />
@@ -107,13 +108,13 @@
     <ClCompile Include="src\Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Config.h" />
     <ClInclude Include="include\Consumable.h" />
     <ClInclude Include="include\Enumerations\ConsumableTypeEnum.h" />
     <ClInclude Include="include\Enumerations\DirectionEnum.h" />
     <ClInclude Include="include\Enumerations\GhostStateEnum.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Ghost.h" />
-    <ClInclude Include="include\Global.h" />
     <ClInclude Include="include\graph.h" />
     <ClInclude Include="include\LevelManager.h" />
     <ClInclude Include="include\MovingAgent.h" />

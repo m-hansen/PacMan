@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 #include <vector>
-#include "Global.h"
+#include "Config.h"
 #include "Utils.h"
 #include "Enumerations/NodeTypeEnum.h"
 
@@ -15,7 +15,8 @@ class Node
 {
 public:
 	Node(float x, float y, NodeTypeEnum nodetype);
-	~Node();
+	~Node() {}
+	void InitializePathfindingInfo();
 	void Node::Render(SDL_Renderer* renderer);
 	void AddNeighborNode(Node* neighbor);
 	std::vector<Node*> GetNeighborNodes();

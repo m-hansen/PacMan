@@ -6,8 +6,8 @@ Node::Node(float x, float y, NodeTypeEnum nodeType)
 {
 	currentId = id++;
 
-	boundingRect.w = GRID_SIZE;
-	boundingRect.h = GRID_SIZE;
+	boundingRect.w = Config::gridSize;
+	boundingRect.h = Config::gridSize;
 	boundingRect.x = x;
 	boundingRect.y = y;
 
@@ -25,20 +25,16 @@ Node::Node(float x, float y, NodeTypeEnum nodeType)
 		isLegalPlayingNode = false;
 	}
 
+	InitializePathfindingInfo();
+}
+
+void Node::InitializePathfindingInfo()
+{
 	// Initialize G, H, and F
 	movementCost = 0;
 	heuristic = 0;
 	totalCost = 0;
-}
-
-Node::~Node()
-{
-	//// Free all memory from neighboring nodes
-	//for (std::vector<Node*>::iterator iter = neighborNodes.begin(); iter != neighborNodes.end(); ++iter)
-	//{
-	//	delete (*iter);
-	//	(*iter) = NULL;
-	//}
+	parentNode = NULL;
 }
 
 void Node::Render(SDL_Renderer* renderer)
@@ -99,8 +95,8 @@ void Node::CalculateMovementCost(Node* node)
 
 void Node::CalculateHeuristic(Node* target)
 {
-	int horizontalSpaces = std::abs ((currentId % NUM_HORIZONTAL_TILES) - (target->GetNodeId() % NUM_HORIZONTAL_TILES));
-	int verticalSpaces = std::abs((currentId / NUM_HORIZONTAL_TILES) - (target->GetNodeId() / NUM_HORIZONTAL_TILES));
+	int horizontalSpaces = std::abs ((currentId % Config::numberOfHorizontalTiles) - (target->GetNodeId() % Config::numberOfHorizontalTiles));
+	int verticalSpaces = std::abs((currentId / Config::numberOfHorizontalTiles) - (target->GetNodeId() / Config::numberOfHorizontalTiles));
 	heuristic = (horizontalSpaces + verticalSpaces) * 10;
 }
 

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "Global.h"
+#include "Config.h"
 #include "TextureManager.h"
 #include "Enumerations/NodeTypeEnum.h"
 #include "Consumable.h"
@@ -24,6 +24,7 @@ public:
 	void CleanupLevel();
 	void LoadLevelData(std::string levelData);
 	void ResetAgentPositions();
+	void Update(Uint32 deltaTime);
 	void FindEdges();
 	void CreateLevelList(std::string dataLoc, 
 		std::vector<std::string> levelList);
@@ -40,6 +41,7 @@ private:
 	static LevelManager levelManager;
 	Player* player;
 	Graph* level;
+	GameTimer startLevelTimer;
 	GameTimer endLevelTimer;
 	std::vector<Node*> legalPlayingNodes;
 	std::vector<Pellet*> pelletList;
@@ -47,6 +49,7 @@ private:
 	std::vector<Ghost*> ghostList;
 	std::vector<std::string> levels;
 	std::vector<std::string>::iterator currentLevel;
+	Pathfinder* pathfinder;
 protected:
 	LevelManager();
 };

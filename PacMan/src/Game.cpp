@@ -19,6 +19,10 @@ Game::~Game()
 
 bool Game::Initialize()
 {
+	// Load the configuration file
+	std::string configFile = "Resources/config.xml";
+	Config::LoadConfig(configFile);
+
 	// Initialize fonts
 	if (TTF_Init() != 0)
 	{
@@ -34,7 +38,7 @@ bool Game::Initialize()
 	}
 	
 	// Create a window
-	window = SDL_CreateWindow("Pac-Man", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Pac-Man", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Config::screenWidth, Config::screenHeight, SDL_WINDOW_SHOWN);
 	if (window == NULL)
 	{
 		printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());

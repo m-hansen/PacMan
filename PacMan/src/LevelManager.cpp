@@ -19,31 +19,40 @@ void LevelManager::InitializeLevel()
 	LoadLevelData(*currentLevel);
 	FindEdges();
 
+	// Initialize the pathfinder with the level data
+	pathfinder = new Pathfinder(level);
+
 	// Initialize the player
 	player = new Player();
 	player->ResetPosition();
 
 	// Load the AI
+	// TODO update scatter node locations
 	ghostList.push_back(
-		new Ghost("blinky", 12.0f, 5.0f, DirectionEnum::Left)
+		new Ghost("blinky", 12.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Left)
 		);
 
 	ghostList.push_back(
-		new Ghost("pinky", 15.0f, 5.0f, DirectionEnum::Right)
+		new Ghost("pinky", 15.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Right)
 		);
 
 	ghostList.push_back(
-		new Ghost("inky", 9.0f, 5.0f, DirectionEnum::Down)
+		new Ghost("inky", 9.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Down)
 		);
 
 	ghostList.push_back(
-		new Ghost("clyde", 18.0f, 5.0f, DirectionEnum::Down)
+		new Ghost("clyde", 18.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Down)
 		);
+
+	// Start the timer
+	startLevelTimer.Start();
 }
 
 void LevelManager::CleanupLevel()
 {
 	fprintf(stdout, "Unloading level\n");
+
+	startLevelTimer.Stop();
 
 	// Free the player
 	delete (player);
@@ -62,6 +71,10 @@ void LevelManager::CleanupLevel()
 	pelletList.clear();
 	wallList.clear();
 	ghostList.clear();
+
+	// Delete the pathfinder
+	delete (pathfinder);
+	pathfinder = NULL;
 
 	// Delete the level
 	delete (level);
@@ -98,32 +111,32 @@ void LevelManager::LoadLevelData(std::string levelData)
 			{
 			case NodeTypeEnum::EmptyNode:
 				// Create on the heap
-				node = new Node(i * GRID_SIZE, lineNumber * GRID_SIZE, NodeTypeEnum::EmptyNode);
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::EmptyNode);
 				level->AddNode(node);
 				legalPlayingNodes.push_back(node);
 				break;
 			case NodeTypeEnum::PelletNode:
 				// Create on the heap
-				node = new Node(i * GRID_SIZE, lineNumber * GRID_SIZE, NodeTypeEnum::PelletNode);
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::PelletNode);
 				level->AddNode(node);
 				pelletList.push_back(new Pellet(node));
 				legalPlayingNodes.push_back(node);
 				break;
 			case NodeTypeEnum::PowerPelletNode:
 				// Create on the heap
-				node = new Node(i * GRID_SIZE, lineNumber * GRID_SIZE, NodeTypeEnum::PowerPelletNode);
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::PowerPelletNode);
 				level->AddNode(node);
 				pelletList.push_back(new Pellet(node));
 				legalPlayingNodes.push_back(node);
 				break;
 			case NodeTypeEnum::WallNode:
 				// Create on the heap
-				const int WALL_OFFSET = GRID_SIZE / 2;
-				node = new Node(i * GRID_SIZE, lineNumber * GRID_SIZE, NodeTypeEnum::WallNode);
+				const int WALL_OFFSET = Config::gridSize / 2;
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::WallNode);
 				level->AddNode(node);
 				wallList.push_back(new Sprite(
 					TextureManager::GetTexture("wall"), WALL_OFFSET + (node->GetPosition().x),
-					WALL_OFFSET  +(node->GetPosition().y), GRID_SIZE, GRID_SIZE));
+					WALL_OFFSET  +(node->GetPosition().y), Config::gridSize, Config::gridSize));
 				break;
 			}
 
@@ -149,11 +162,33 @@ void LevelManager::ResetAgentPositions()
 	}
 }
 
+void LevelManager::Update(Uint32 deltaTime)
+{
+	// Break out of the update function if the start level timer is still counting down
+	if ((startLevelTimer.IsStarted()) && (startLevelTimer.GetTicks() < 3000))
+	{
+		printf("Starting in ");
+		if (startLevelTimer.GetTicks() > 2000) printf("1\n");
+		else if (startLevelTimer.GetTicks() > 1000) printf("2\n");
+		else if (startLevelTimer.GetTicks() > 0) printf("3\n");
+		return;
+	}
+
+	if (startLevelTimer.IsStarted()) startLevelTimer.Stop();
+
+	// Update the player
+	player->Update(deltaTime);
+
+	// Update the AI
+	for (int i = 0; i < ghostList.size(); i++)
+		ghostList[i]->Update(deltaTime);
+}
+
 void LevelManager::FindEdges()
 {
 	fprintf(stdout, "Calculating graph edges\n");
 
-	FILE* ofp = fopen((DEBUG_LOG_FOLDER + "GraphEdges.txt").c_str(), "a");
+	FILE* ofp = fopen((Config::debugLogFolder + "GraphEdges.txt").c_str(), "a");
 
 	// Print the level header
 	std::string heavyLineBreak = "";
@@ -178,8 +213,8 @@ void LevelManager::FindEdges()
 				if (deltaX < 0) deltaX *= -1;
 				if (deltaY < 0) deltaY *= -1;
 
-				if ((deltaX == GRID_SIZE && deltaY == 0) || 
-					(deltaX == 0 && deltaY == GRID_SIZE))
+				if ((deltaX == Config::gridSize && deltaY == 0) || 
+					(deltaX == 0 && deltaY == Config::gridSize))
 				{
 					// We are within the range to be considered an edge
 					(*iter)->AddNeighborNode((*iter2));

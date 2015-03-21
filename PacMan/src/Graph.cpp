@@ -34,9 +34,9 @@ void Graph::GenerateGraph(int width, int height)
 	}
 }
 
-std::vector<Node*>* Graph::GetAllNodes()
+std::vector<Node*>& Graph::GetAllNodes()
 {
-	return &allNodes;
+	return allNodes;
 }
 
 void Graph::AddNode(Node* node)

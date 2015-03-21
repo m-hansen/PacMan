@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="config">
+  <xs:complexType>
+    <xs:element name="size" type="xs:string"/>
+    <xs:attribute name="fullscreen" type="xs:boolean"/>
+    <xs:attribute name="muted" type="xs:boolean"/>
+  </cs:complexType>
+</xs::element>
+</xs:schema>
