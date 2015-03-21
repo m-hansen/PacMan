@@ -28,8 +28,9 @@ namespace Config
 
 	// Internal variables
 	//std::string file;
+	//int boardSize;
 
 	// Functions
-	/*bool LoadConfig(std::string& filename);
-	bool SaveConfig(std::string& filename);*/
+	bool LoadConfig(std::string& filename);
+	bool SaveConfig(std::string& filename);
 }

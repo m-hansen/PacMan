@@ -19,6 +19,10 @@ Game::~Game()
 
 bool Game::Initialize()
 {
+	// Load the configuration file
+	std::string configFile = "Resources/config.xml";
+	Config::LoadConfig(configFile);
+
 	// Initialize fonts
 	if (TTF_Init() != 0)
 	{
