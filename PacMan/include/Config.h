@@ -14,11 +14,13 @@ namespace Config
 
 	// External config vars
 	extern std::string debugLogFolder;
+	extern std::string highScoresFile;
 	extern int gridSize;
 	extern int numberOfHorizontalTiles;
 	extern int numberOfVerticalTiles;
 	extern int screenWidth;
 	extern int screenHeight;
+	extern int highScoreTableCapacity;
 	extern bool isFullScreen;
 	extern bool isSoundMuted;
 	extern float joystickDeadZone;

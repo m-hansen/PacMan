@@ -6,6 +6,7 @@
 #include "Screens/IScreen.h"
 #include "Screens/AttractScreen.h"
 #include "Pathfinder.h"
+#include "HighScoreTable.h"
 
 enum NodeFlags{ID, G, H, F};
 
@@ -28,7 +29,7 @@ public:
 	static GameplayScreen* Instance() { return &gameplayScreen; }
 private:
 	void LoadContent(SDL_Renderer* renderer);
-	void Victory();
+	void GameEnd(int condition);
 	static GameplayScreen gameplayScreen;
 	//Player* player;
 	LevelManager* levelManager;

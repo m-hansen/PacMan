@@ -27,6 +27,7 @@ public:
 		SDL_Rect* rect);
 	static void RenderText(SDL_Renderer* renderer, TTF_Font* fontType, std::string text, SDL_Color fontColor,
 		float x, float y, float w, float h);
+	static void SwapPointers(int* a, int* b);
 private:
 	Utils();
 };

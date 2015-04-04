@@ -3,11 +3,13 @@
 namespace Config
 {
 	std::string debugLogFolder = "Logs/";
+	std::string highScoresFile = "highscores.txt";
 	int gridSize = BoardSizeEnum::Medium * GRID_SIZE_MULTIPLIER; // use increments of 8
 	int numberOfHorizontalTiles = 28;
 	int numberOfVerticalTiles = 36;
 	int screenWidth = numberOfHorizontalTiles * gridSize; // 224 width with 8x8 tiles
 	int screenHeight = numberOfVerticalTiles * gridSize; // 288 height with 8x8 tiles
+	int highScoreTableCapacity = 10;
 	bool isFullScreen = false;
 	bool isSoundMuted = false;
 	float joystickDeadZone = 15000.0f;

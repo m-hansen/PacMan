@@ -92,6 +92,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Ghost.cpp" />
     <ClCompile Include="src\Graph.cpp" />
+    <ClCompile Include="src\HighScoreTable.cpp" />
     <ClCompile Include="src\LevelManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MovingAgent.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Ghost.h" />
     <ClInclude Include="include\graph.h" />
+    <ClInclude Include="include\HighScoreTable.h" />
     <ClInclude Include="include\LevelManager.h" />
     <ClInclude Include="include\MovingAgent.h" />
     <ClInclude Include="include\Node.h" />

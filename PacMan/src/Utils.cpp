@@ -74,3 +74,10 @@ void Utils::RenderText(SDL_Renderer* renderer, TTF_Font* fontType, std::string t
 
 	RenderText(renderer, fontType, text, fontColor, &rect);
 }
+
+void Utils::SwapPointers(int* a, int* b)
+{
+	*a += *b;
+	*b = *a - *b;
+	*a = *a - *b;
+}

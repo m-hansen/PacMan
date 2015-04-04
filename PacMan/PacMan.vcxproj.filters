@@ -20,6 +20,7 @@
     <ClCompile Include="src\GameTimer.cpp" />
     <ClCompile Include="src\Pathfinder.cpp" />
     <ClCompile Include="src\Config.cpp" />
+    <ClCompile Include="src\HighScoreTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Consumable.h" />
@@ -46,6 +47,7 @@
     <ClInclude Include="include\GameTimer.h" />
     <ClInclude Include="include\Pathfinder.h" />
     <ClInclude Include="include\Config.h" />
+    <ClInclude Include="include\HighScoreTable.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\blinky.png" />

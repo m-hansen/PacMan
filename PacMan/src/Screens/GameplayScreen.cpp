@@ -241,7 +241,7 @@ void GameplayScreen::Update(Game* game)
 	// Check if the player has run out of lives
 	if (!levelManager->GetPlayer()->IsAlive())
 	{
-		isLevelOver = true;
+		GameEnd(0);
 	}
 
 	// Check for victory condition
@@ -252,7 +252,7 @@ void GameplayScreen::Update(Game* game)
 		{
 			// Go to the next level if one exists
 			if (levelManager->NextLevel() == false)
-				Victory();
+				GameEnd(1);
 		}
 		return;
 	}
@@ -586,9 +586,28 @@ void GameplayScreen::HandleCollisions()
 
 }
 
-void GameplayScreen::Victory()
+void GameplayScreen::GameEnd(int condition)
 {
-	// We completed every level
-	endGameMessage = "Congratulations!";
 	isLevelOver = true;
+
+	if (condition == 1)
+	{
+		// Player wins!
+		// We completed every level
+		endGameMessage = "Congratulations!";
+	}
+	else
+	{
+		// Player died!
+
+	}
+
+	// Display the high score table
+	HighScoreTable table;
+	table.LoadHighScores(Config::highScoresFile);
+	int scores[10] = table.GetHighScores();
+	if (table.UploadScore(score))
+	{
+		table.SaveHighScores();
+	}
 }
