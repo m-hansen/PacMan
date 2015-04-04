@@ -34,10 +34,12 @@ public:
 	SDL_Renderer* renderer;
 	Uint32 GetDeltaTime() { return deltaT; }
 private:
+	void CheckForJoysticks();
 	Uint32 deltaT = 0;
 	Uint32 previousTime = 0;
 	SDL_Window* window;
 	SDL_Surface* screenSurface;
+	SDL_Joystick* gameController;
 	bool isGameRunning;
 	std::vector<IScreen*> screens;
 };

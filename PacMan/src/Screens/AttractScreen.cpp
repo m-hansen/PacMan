@@ -55,9 +55,26 @@ void AttractScreen::HandleEvents(Game* game)
 			game->Quit();
 		}
 		// User presses a key
-		else if (currentEvent.type == SDL_KEYDOWN)
+		else if (currentEvent.type == SDL_KEYDOWN 
+			|| currentEvent.type == SDL_JOYBUTTONDOWN)
 		{
-			switch (currentEvent.key.keysym.sym)
+
+			if (currentEvent.cbutton.button == 10 // A button
+				|| currentEvent.cbutton.button == 4 // Start button
+				|| currentEvent.key.keysym.sym == SDLK_SPACE
+				|| currentEvent.key.keysym.sym == SDLK_RETURN)
+			{
+				game->ChangeScreen(GameplayScreen::Instance());
+				printf("Starting game!\n");
+			}
+			else if (currentEvent.cbutton.button == 5 // Back button
+				|| currentEvent.key.keysym.sym == SDLK_ESCAPE)
+			{
+				// User requests quit
+				game->Quit();
+			}
+
+			/*switch (currentEvent.key.keysym.sym)
 			{
 			case SDLK_SPACE:
 			case SDLK_RETURN:
@@ -68,7 +85,7 @@ void AttractScreen::HandleEvents(Game* game)
 				// User requests quit
 				game->Quit();
 				break;
-			}
+			}*/
 		}
 		// User clicks the mouse
 		else if (currentEvent.type == SDL_MOUSEBUTTONDOWN)

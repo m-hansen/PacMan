@@ -21,6 +21,7 @@ namespace Config
 	extern int screenHeight;
 	extern bool isFullScreen;
 	extern bool isSoundMuted;
+	extern float joystickDeadZone;
 
 	// Internal constants
 	const int GRID_SIZE_MULTIPLIER = 8;

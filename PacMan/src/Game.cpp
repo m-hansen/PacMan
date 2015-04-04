@@ -5,11 +5,16 @@ Game::Game()
 {
 	window = NULL;
 	screenSurface = NULL;
+	gameController = NULL;
 	isGameRunning = true;
 }
 
 Game::~Game()
 {
+	// Close game controller
+	SDL_JoystickClose(gameController);
+	gameController = NULL;
+
 	// Destroy the renderer and window    
 	SDL_DestroyRenderer(renderer);
 	renderer = NULL;
@@ -29,9 +34,9 @@ bool Game::Initialize()
 		printf("Failed to initialize SDL_ttf\n");
 		return false;
 	}
-
+	
 	// Initialize SDL
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
 	{
 		printf("SDL could not initailize! SDL_Error: %s\n", SDL_GetError());
 		return false;
@@ -58,7 +63,27 @@ bool Game::Initialize()
 
 	SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
 
+	// Check for joysticks and gamepads
+	CheckForJoysticks();
+
 	return true;
+}
+
+void Game::CheckForJoysticks()
+{
+	if (SDL_NumJoysticks() < 1)
+	{
+		printf("Warning: No joysticks connected!\n");
+	}
+	else
+	{
+		// Load joysticks
+		gameController = SDL_JoystickOpen(0);
+		if (gameController == NULL)
+		{
+			printf("Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError());
+		}
+	}
 }
 
 void Game::LoadContent()

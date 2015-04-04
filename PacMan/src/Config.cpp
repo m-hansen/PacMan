@@ -10,6 +10,7 @@ namespace Config
 	int screenHeight = numberOfVerticalTiles * gridSize; // 288 height with 8x8 tiles
 	bool isFullScreen = false;
 	bool isSoundMuted = false;
+	float joystickDeadZone = 15000.0f;
 }
 
 bool Config::LoadConfig(std::string& filename)

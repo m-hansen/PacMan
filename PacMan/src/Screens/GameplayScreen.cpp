@@ -114,91 +114,117 @@ void GameplayScreen::HandleEvents(Game* game)
 			game->Quit();
 		}
 		// User presses a key
-		else if (currentEvent.type == SDL_KEYDOWN)
+		else if (currentEvent.type == SDL_KEYDOWN
+			|| currentEvent.type == SDL_JOYBUTTONDOWN
+			|| currentEvent.type == SDL_JOYAXISMOTION)
 		{
-			switch (currentEvent.key.keysym.sym)
+			if (currentEvent.key.keysym.sym == SDLK_UP
+				|| (currentEvent.jaxis.which == 0
+				&& currentEvent.jaxis.axis == 1
+				&& currentEvent.jaxis.value < -Config::joystickDeadZone))
 			{
-			case SDLK_UP:
-				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile && 
+				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile &&
 					levelManager->GetPlayer()->GetDirection() != DirectionEnum::Up)
 				{
 					// Quick movement if we are moving along the same axis
 					// queued movement otherwise
 					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Down) ?
-						levelManager->GetPlayer()->SetDirection(DirectionEnum::Up) : 
+						levelManager->GetPlayer()->SetDirection(DirectionEnum::Up) :
 						levelManager->GetPlayer()->QueueDirection(DirectionEnum::Up);
 				}
-				break;
-			case SDLK_DOWN:
+			}
+			else if (currentEvent.key.keysym.sym == SDLK_DOWN
+				|| (currentEvent.jaxis.which == 0
+				&& currentEvent.jaxis.axis == 1
+				&& currentEvent.jaxis.value > Config::joystickDeadZone))
+			{
 				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile
 					&& levelManager->GetPlayer()->GetDirection() != DirectionEnum::Down)
 				{
 					// Quick movement if we are moving along the same axis
 					// queued movement otherwise
 					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Up) ?
-						levelManager->GetPlayer()->SetDirection(DirectionEnum::Down) : 
+						levelManager->GetPlayer()->SetDirection(DirectionEnum::Down) :
 						levelManager->GetPlayer()->QueueDirection(DirectionEnum::Down);
 				}
-				break;
-			case SDLK_LEFT:
+			}
+			else if (currentEvent.key.keysym.sym == SDLK_LEFT
+				|| (currentEvent.jaxis.which == 0
+				&& currentEvent.jaxis.axis == 0
+				&& currentEvent.jaxis.value < -Config::joystickDeadZone))
+			{
 				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile &&
 					levelManager->GetPlayer()->GetDirection() != DirectionEnum::Left)
 				{
 					// Quick movement if we are moving along the same axis
 					// queued movement otherwise
 					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Right) ?
-						levelManager->GetPlayer()->SetDirection(DirectionEnum::Left) : 
+						levelManager->GetPlayer()->SetDirection(DirectionEnum::Left) :
 						levelManager->GetPlayer()->QueueDirection(DirectionEnum::Left);
 				}
-				break;
-			case SDLK_RIGHT:
+			}
+			else if (currentEvent.key.keysym.sym == SDLK_RIGHT
+				|| (currentEvent.jaxis.which == 0
+				&& currentEvent.jaxis.axis == 0
+				&& currentEvent.jaxis.value > Config::joystickDeadZone))
+			{
 				if (!isPaused && levelManager->GetPlayer()->isAlignedWithTile
 					&& levelManager->GetPlayer()->GetDirection() != DirectionEnum::Right)
 				{
 					// Quick movement if we are moving along the same axis
 					// queued movement otherwise
 					(levelManager->GetPlayer()->GetDirection() == DirectionEnum::Left) ?
-						levelManager->GetPlayer()->SetDirection(DirectionEnum::Right) : 
+						levelManager->GetPlayer()->SetDirection(DirectionEnum::Right) :
 						levelManager->GetPlayer()->QueueDirection(DirectionEnum::Right);
 				}
-				break;
-			case SDLK_r:
+			}
+			else if (currentEvent.key.keysym.sym == SDLK_r)
+			{
 				// Reset the game
 				game->ChangeScreen(this);
-			case SDLK_LEFTBRACKET:
+			}
+			else if (currentEvent.key.keysym.sym == SDLK_LEFTBRACKET)
+			{
 				// Go to previous level
 				levelManager->PreviousLevel();
-				break;
-			case SDLK_RIGHTBRACKET:
+			}
+			else if (currentEvent.key.keysym.sym == SDLK_RIGHTBRACKET)
+			{
 				// Go to next level
 				levelManager->NextLevel();
-				break;
-			case SDLK_F3:
+			}
+			else if (currentEvent.key.keysym.sym == SDLK_F3)
+			{
 				// Toggle debugging information
 				isDebugging = !isDebugging;
-				break;
-			case SDLK_0:
+			}
+			else if (currentEvent.key.keysym.sym == SDLK_0)
+			{
 				nodeDisplayFlags[ID] = !nodeDisplayFlags[ID];
-				break;
-			case SDLK_1:
+			}
+			else if (currentEvent.key.keysym.sym == SDLK_1)
+			{
 				nodeDisplayFlags[G] = !nodeDisplayFlags[G];
-				break;
-			case SDLK_2:
+			}
+			else if (currentEvent.key.keysym.sym == SDLK_2)
+			{
 				nodeDisplayFlags[H] = !nodeDisplayFlags[H];
-				break;
-			case SDLK_3:
+			}
+			else if (currentEvent.key.keysym.sym == SDLK_3)
+			{
 				nodeDisplayFlags[F] = !nodeDisplayFlags[F];
-				break;
-			case SDLK_ESCAPE:
-			case SDLK_SPACE:
-			case SDLK_RETURN:
-			case SDLK_p:
+			}
+			else if (currentEvent.cbutton.button == 4 // Start button
+				|| currentEvent.key.keysym.sym == SDLK_ESCAPE
+				|| currentEvent.key.keysym.sym == SDLK_SPACE
+				|| currentEvent.key.keysym.sym == SDLK_RETURN
+				|| currentEvent.key.keysym.sym == SDLK_p)
+			{
 				if (!isLevelOver)
 				{
 					// Pause or resume the game
 					(isPaused) ? Resume() : Pause();
 				}
-				break;
 			}
 		}
 
