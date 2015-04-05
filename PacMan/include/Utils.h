@@ -28,6 +28,8 @@ public:
 	static void RenderText(SDL_Renderer* renderer, TTF_Font* fontType, std::string text, SDL_Color fontColor,
 		float x, float y, float w, float h);
 	static void SwapPointers(int* a, int* b);
+	static void Encrypt(std::string& data, std::string key);
+	static void Decrypt(std::string& data, std::string key);
 private:
 	Utils();
 };

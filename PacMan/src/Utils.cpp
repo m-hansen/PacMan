@@ -81,3 +81,19 @@ void Utils::SwapPointers(int* a, int* b)
 	*b = *a - *b;
 	*a = *a - *b;
 }
+
+void Utils::Encrypt(std::string& data, std::string key)
+{
+	for (int i = 0; i < data.size(); i++)
+	{
+		data[i] += key[i % key.size()];
+	}
+}
+
+void Utils::Decrypt(std::string& data, std::string key)
+{
+	for (unsigned i = 0; i < data.size(); i++)
+	{
+		data[i] -= key[i % key.size()];
+	}
+}
