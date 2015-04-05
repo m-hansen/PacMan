@@ -128,23 +128,17 @@ bool HighScoreTable::UploadScore(std::string name, int score)
 
 	if (isHighScore)
 	{
+		// Free the lowest table entry
+		delete highScores[MAX_TABLE_ENTRIES - 1];
+		highScores[MAX_TABLE_ENTRIES - 1] = NULL;
+
 		// Shift all values lower than the new score
 		for (int i = MAX_TABLE_ENTRIES - 2; i >= targetIndex; i--)
 		{
-			// Free old memory
-			delete highScores[i + 1];
-			highScores[i + 1] = NULL;
-
-			if (highScores[i] != NULL)
-			{
-				// Shift the values
-				memcpy(highScores[i + 1], highScores[i], sizeof(highScores[i]));
-			}
+			std::memmove(&highScores[i + 1], &highScores[i], sizeof(highScores[i]));
 		}
-
-		// Add the new score to the table
-		delete highScores[targetIndex];
-		highScores[targetIndex] = NULL;
+		
+		// Add the new score to the target index
 		highScores[targetIndex] = new TableEntry{ name, score };
 	}
 

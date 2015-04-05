@@ -191,8 +191,8 @@ void Ghost::Update(Uint32 deltaT)
 		{
 		case Scatter:
 			// TODO switch to ScatterMovement
-			//FrightenedMovement();
-			ScatterMovement();
+			FrightenedMovement();
+			//ScatterMovement();
 			break;
 		case Chase:
 			// TODO switch to a chase pattern
