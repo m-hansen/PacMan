@@ -103,59 +103,49 @@ void HighScoreTable::SaveHighScores(const std::string filename)
 	outputFile.close();
 }
 
-int* HighScoreTable::GetHighScores()
-{
-	int temp[MAX_TABLE_ENTRIES];
-	for (int i = 0; i < MAX_TABLE_ENTRIES; i++)
-	{
-		if (highScores[i] != NULL)
-		{
-			temp[i] = highScores[i]->score;
-		}
-	}
-	return temp;
-}
-
 // Return true if the score was accepted as a high score
 bool HighScoreTable::UploadScore(std::string name, int score)
 {
-	for (int i = 0; i < MAX_TABLE_ENTRIES; i++)
+	bool isHighScore = false;
+	int targetIndex = -1;
+
+	// Compare score against the table entries starting with the lowest score
+	for (int i = MAX_TABLE_ENTRIES - 1; i >= 0; i--)
 	{
-		if (highScores[i] == NULL)
+		if (highScores[i] == NULL || score > highScores[i]->score)
 		{
-			highScores[i] = new TableEntry{ name, score };
-			return true;
-			// TODO - insertion sort?
+			// We have a high score - set the target index to the current index
+			targetIndex = i;
+			isHighScore = true;
+		}
+		else
+		{
+			// We can break early, there is no need to check the whole 
+			// table since it is already sorted
+			break;
 		}
 	}
 
-	return false;
-}
-
-void HighScoreTable::SortAscending()
-{
-	for (int i = 1; i < MAX_TABLE_ENTRIES; i++)
+	if (isHighScore)
 	{
-		if (highScores[i - 1] != NULL && highScores[i] != NULL)
+		// Shift all values lower than the new score
+		for (int i = MAX_TABLE_ENTRIES - 2; i <= targetIndex; i--)
 		{
-			if (highScores[i]->score > highScores[i - 1]->score)
-			{
-				/*TableEntry temp = *highScores[i];
-				highScores[i] = highScores[i - 1];
-				highScores[i - 1] = &temp;*/
+			// Free old memory
+			delete highScores[i + 1];
+			highScores[i + 1] = NULL;
 
-				Swap(highScores[i], highScores[i - 1]);
-			}
+			// Shift the values
+			memcpy(highScores[i + 1], highScores[i], sizeof(highScores[i]));
 		}
-	}
-}
 
-void HighScoreTable::Swap(TableEntry* a, TableEntry* b)
-{
-	// TODO this is wrong -- they are pointers!!
-	TableEntry* temp = a;
-	a = b;
-	b = temp;
+		// Add the new score to the table
+		delete highScores[targetIndex];
+		highScores[targetIndex] = NULL;
+		highScores[targetIndex] = new TableEntry{ name, score };
+	}
+
+	return isHighScore;
 }
 
 void HighScoreTable::PrintHighScores()

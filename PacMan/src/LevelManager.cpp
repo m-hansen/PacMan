@@ -165,14 +165,15 @@ void LevelManager::ResetAgentPositions()
 void LevelManager::Update(Uint32 deltaTime)
 {
 	// Break out of the update function if the start level timer is still counting down
-	if ((startLevelTimer.IsStarted()) && (startLevelTimer.GetTicks() < 3000))
+	// TODO enable start timer
+	/*if ((startLevelTimer.IsStarted()) && (startLevelTimer.GetTicks() < 3000))
 	{
 		printf("Starting in ");
 		if (startLevelTimer.GetTicks() > 2000) printf("1\n");
 		else if (startLevelTimer.GetTicks() > 1000) printf("2\n");
 		else if (startLevelTimer.GetTicks() > 0) printf("3\n");
 		return;
-	}
+	}*/
 
 	if (startLevelTimer.IsStarted()) startLevelTimer.Stop();
 

@@ -3,7 +3,7 @@
 namespace Config
 {
 	const std::string debugLogFolder = "Logs/";
-	const std::string highScoresFile = "Resources/highscores.txt";
+	const std::string highScoresFile = "Resources/scores.dat";
 	const std::string key = "0bDSt673&doy$ns@d!vicHJ#tYnx8s"; // nothing serious, just a layer to prevent casual modifications
 	int gridSize = BoardSizeEnum::Medium * GRID_SIZE_MULTIPLIER; // use increments of 8
 	int numberOfHorizontalTiles = 28;

@@ -19,7 +19,6 @@ public:
 	~HighScoreTable();
 	void LoadHighScores(const std::string filename);
 	void SaveHighScores(const std::string filename);
-	int* GetHighScores();
 	bool UploadScore(std::string name, int score);
 	void PrintHighScores();
 private:
