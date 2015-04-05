@@ -47,6 +47,7 @@ private:
 	bool isRunning;
 	bool isDebugging;
 	bool isPaused;
+	bool isGameOver;
 	TTF_Font* arialFont;
 	SDL_Texture* scoreTexture;
 	SDL_Rect scoreTextRect;

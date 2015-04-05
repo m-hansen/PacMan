@@ -58,8 +58,9 @@ void GameplayScreen::Initialize(Game* game)
 	isLevelOver = false;
 	isDebugging = false;
 	isPaused = false;
+	isGameOver = false;
 	livesTexture = TextureManager::GetTexture("pacmanLeft");
-	livesRemaining = 3;
+	livesRemaining = 0;
 	// livesLeftRect.x intentionally not set here
 	livesLeftRect.y = Config::gridSize * 32; // 32 is the vertical node offset
 	livesLeftRect.w = Config::gridSize;
@@ -235,13 +236,14 @@ void GameplayScreen::HandleEvents(Game* game)
 void GameplayScreen::Update(Game* game)
 {
 	// Immediately return if paused
-	if (isPaused)
+	if (isPaused || isGameOver)
 		return;
 
 	// Check if the player has run out of lives
 	if (!levelManager->GetPlayer()->IsAlive())
 	{
 		GameEnd(0);
+		return;
 	}
 
 	// Check for victory condition
@@ -589,6 +591,7 @@ void GameplayScreen::HandleCollisions()
 void GameplayScreen::GameEnd(int condition)
 {
 	isLevelOver = true;
+	isGameOver = true;
 
 	if (condition == 1)
 	{
@@ -605,9 +608,13 @@ void GameplayScreen::GameEnd(int condition)
 	// Display the high score table
 	HighScoreTable table;
 	table.LoadHighScores(Config::highScoresFile);
-	int scores[10] = table.GetHighScores();
-	if (table.UploadScore(score))
+
+	if (table.UploadScore("GenericName", score))
 	{
-		table.SaveHighScores();
+		printf("Uploading your high score! Congratulations!\n");
+		table.SaveHighScores(Config::highScoresFile);
 	}
+
+	// Log the high score table
+	table.PrintHighScores();
 }

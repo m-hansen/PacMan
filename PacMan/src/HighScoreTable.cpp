@@ -29,8 +29,17 @@ void HighScoreTable::Cleanup()
 
 void HighScoreTable::LoadHighScores(const std::string filename)
 {
+	// Make sure the table is clean before loading data
+	Cleanup();
+
 	std::ifstream inputFile;
-	inputFile.open(filename);
+	inputFile.open(filename.c_str(), std::ifstream::in);
+
+	if (!inputFile.is_open())
+	{
+		printf("Error: Could not open file: %s\n", filename.c_str());
+		return;
+	}
 
 	int index = 0;
 	std::string line;
@@ -45,6 +54,8 @@ void HighScoreTable::LoadHighScores(const std::string filename)
 		bool foundDelim = false;
 		std::string nameStr;
 		std::string scoreStr;
+
+		Utils::Decrypt(line, Config::key);
 
 		// Split the string
 		for (int i = 0; i < line.length(); i++)
@@ -61,8 +72,10 @@ void HighScoreTable::LoadHighScores(const std::string filename)
 				scoreStr += line[i];
 		}
 
-		// Add a score to the table
-		highScores[index] = new TableEntry{ nameStr, atoi(scoreStr.c_str) };
+		// Add existing score to the table
+		highScores[index] = new TableEntry{ nameStr, atoi(scoreStr.c_str()) };
+
+		index++;
 	}
 
 	inputFile.close();
@@ -77,13 +90,17 @@ void HighScoreTable::SaveHighScores(const std::string filename)
 	{
 		if (highScores[i] != NULL)
 		{
-			outputFile << highScores[i]->name << " " << highScores[i]->score << std::endl;
+			std::string line;
+			line += highScores[i]->name + " " + 
+				std::to_string(highScores[i]->score);
+
+			Utils::Encrypt(line, Config::key);
+
+			outputFile << line << std::endl;
 		}
 	}
 
 	outputFile.close();
-
-	Cleanup();
 }
 
 int* HighScoreTable::GetHighScores()
@@ -100,15 +117,19 @@ int* HighScoreTable::GetHighScores()
 }
 
 // Return true if the score was accepted as a high score
-bool HighScoreTable::UploadScore(int score)
+bool HighScoreTable::UploadScore(std::string name, int score)
 {
 	for (int i = 0; i < MAX_TABLE_ENTRIES; i++)
 	{
-		if (highScores[i] != NULL)
+		if (highScores[i] == NULL)
 		{
+			highScores[i] = new TableEntry{ name, score };
+			return true;
 			// TODO - insertion sort?
 		}
 	}
+
+	return false;
 }
 
 void HighScoreTable::SortAscending()
@@ -135,4 +156,17 @@ void HighScoreTable::Swap(TableEntry* a, TableEntry* b)
 	TableEntry* temp = a;
 	a = b;
 	b = temp;
+}
+
+void HighScoreTable::PrintHighScores()
+{
+	printf("High Scores:\nName\tScore\n---------------\n");
+	for (int i = 0; i < MAX_TABLE_ENTRIES; i++)
+	{
+		if (highScores[i] != NULL)
+		{
+			printf("%s\t%d\n", highScores[i]->name.c_str(), highScores[i]->score);
+		}
+	}
+	printf("---------------\n");
 }

@@ -140,10 +140,10 @@ void LevelManager::LoadLevelData(std::string levelData)
 				break;
 			}
 
-			printf("%c ", line.at(i));
+			//printf("%c ", line.at(i));
 		}
 
-		printf("\n");
+		//printf("\n");
 		lineNumber++;
 	}
 	inputStream.close();

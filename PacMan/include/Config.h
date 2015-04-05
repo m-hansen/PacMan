@@ -13,8 +13,9 @@ namespace Config
 	};
 
 	// External config vars
-	extern std::string debugLogFolder;
-	extern std::string highScoresFile;
+	const extern std::string debugLogFolder;
+	const extern std::string highScoresFile;
+	const extern std::string key;
 	extern int gridSize;
 	extern int numberOfHorizontalTiles;
 	extern int numberOfVerticalTiles;
