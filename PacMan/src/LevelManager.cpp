@@ -89,6 +89,7 @@ void LevelManager::LoadLevelData(std::string levelData)
 	fprintf(stdout, "Loading level: %s\n", levelData.c_str());
 
 	const int ASCII_NUM_OFFSET = 48;
+	const int WALL_OFFSET = Config::gridSize / 2;
 
 	std::ifstream inputStream;
 	inputStream.open(levelData);
@@ -131,12 +132,59 @@ void LevelManager::LoadLevelData(std::string levelData)
 				break;
 			case NodeTypeEnum::WallNode:
 				// Create on the heap
-				const int WALL_OFFSET = Config::gridSize / 2;
 				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::WallNode);
 				level->AddNode(node);
 				wallList.push_back(new Sprite(
 					TextureManager::GetTexture("wall"), WALL_OFFSET + (node->GetPosition().x),
 					WALL_OFFSET  +(node->GetPosition().y), Config::gridSize, Config::gridSize));
+				break;
+			case NodeTypeEnum::TopLeftCorner:
+				// Create on the heap
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::TopLeftCorner);
+				level->AddNode(node);
+				wallList.push_back(new Sprite(
+					TextureManager::GetTexture("wall_top_left"), WALL_OFFSET + (node->GetPosition().x),
+					WALL_OFFSET + (node->GetPosition().y), Config::gridSize, Config::gridSize));
+				break;
+			case NodeTypeEnum::TopRightCorner:
+				// Create on the heap
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::TopRightCorner);
+				level->AddNode(node);
+				wallList.push_back(new Sprite(
+					TextureManager::GetTexture("wall_top_right"), WALL_OFFSET + (node->GetPosition().x),
+					WALL_OFFSET + (node->GetPosition().y), Config::gridSize, Config::gridSize));
+				break;
+			case NodeTypeEnum::BottomLeftCorner:
+				// Create on the heap
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::BottomLeftCorner);
+				level->AddNode(node);
+				wallList.push_back(new Sprite(
+					TextureManager::GetTexture("wall_bottom_left"), WALL_OFFSET + (node->GetPosition().x),
+					WALL_OFFSET + (node->GetPosition().y), Config::gridSize, Config::gridSize));
+				break;
+			case NodeTypeEnum::BottomRightCorner:
+				// Create on the heap
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::BottomRightCorner);
+				level->AddNode(node);
+				wallList.push_back(new Sprite(
+					TextureManager::GetTexture("wall_bottom_right"), WALL_OFFSET + (node->GetPosition().x),
+					WALL_OFFSET + (node->GetPosition().y), Config::gridSize, Config::gridSize));
+				break;
+			case NodeTypeEnum::HorizontalWall:
+				// Create on the heap
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::HorizontalWall);
+				level->AddNode(node);
+				wallList.push_back(new Sprite(
+					TextureManager::GetTexture("wall_horizontal"), WALL_OFFSET + (node->GetPosition().x),
+					WALL_OFFSET + (node->GetPosition().y), Config::gridSize, Config::gridSize));
+				break;
+			case NodeTypeEnum::VerticalWall:
+				// Create on the heap
+				node = new Node(i * Config::gridSize, lineNumber * Config::gridSize, NodeTypeEnum::VerticalWall);
+				level->AddNode(node);
+				wallList.push_back(new Sprite(
+					TextureManager::GetTexture("wall_vertical"), WALL_OFFSET + (node->GetPosition().x),
+					WALL_OFFSET + (node->GetPosition().y), Config::gridSize, Config::gridSize));
 				break;
 			}
 
