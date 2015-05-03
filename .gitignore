@@ -4,6 +4,7 @@
 # My files
 Logs/
 screenshots/
+Resources/scores.dat
 
 # User-specific files
 *.suo
