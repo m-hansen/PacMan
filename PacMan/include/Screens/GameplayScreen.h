@@ -60,4 +60,8 @@ private:
 	SDL_Texture* pauseTexture;
 	SDL_Texture* livesTexture;
 	SDL_Rect livesLeftRect;
+
+	// Audio
+	Mix_Chunk* pop;
+	Mix_Chunk* powerUp;
 };

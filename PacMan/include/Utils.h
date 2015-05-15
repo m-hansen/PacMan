@@ -4,6 +4,7 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 #include "boost/filesystem.hpp"
+#include "SDL_mixer.h"
 
 struct Vector2
 {
@@ -30,6 +31,7 @@ public:
 	static void SwapPointers(int* a, int* b);
 	static void Encrypt(std::string& data, std::string key);
 	static void Decrypt(std::string& data, std::string key);
+	static void LoadMixChunk(Mix_Chunk** chunk, std::string pathWithExtension);
 private:
 	Utils();
 };

@@ -39,6 +39,10 @@ void GameplayScreen::LoadContent(SDL_Renderer* renderer)
 	// Load in sprite sheets
 	TextureManager::LoadTexture(renderer, "player", "Resources/player-sprite-sheet.png");
 	TextureManager::LoadTexture(renderer, "walls", "Resources/wall-sprite-sheet.png");
+
+	// Load audio
+	Utils::LoadMixChunk(&pop, "Resources/Audio/pop.ogg");
+	Utils::LoadMixChunk(&powerUp, "Resources/Audio/power-up.ogg");
 }
 
 void GameplayScreen::Initialize(Game* game)
@@ -101,6 +105,10 @@ void GameplayScreen::Initialize(Game* game)
 
 	// Initialize the pathfinder with the legal playing nodes
 	//pathfinder = new Pathfinder(levelManager->GetLegalNodes());
+
+	// Adjust the sound based on settings
+	Mix_VolumeChunk(pop, MIX_MAX_VOLUME * Config::sfxVol);
+	Mix_VolumeChunk(powerUp, MIX_MAX_VOLUME * Config::sfxVol);
 }
 
 void GameplayScreen::Cleanup(Game* game)
@@ -112,6 +120,31 @@ void GameplayScreen::Cleanup(Game* game)
 
 	TTF_CloseFont(arialFont);
 	arialFont = NULL;
+
+	// Unload the textures that were loaded from the GameplayScreen
+	TextureManager::UnloadTexture("tile");
+	TextureManager::UnloadTexture("playerLives");
+	TextureManager::UnloadTexture("wall");
+	TextureManager::UnloadTexture("wall_top_left");
+	TextureManager::UnloadTexture("wall_top_right");
+	TextureManager::UnloadTexture("wall_bottom_left");
+	TextureManager::UnloadTexture("wall_bottom_right");
+	TextureManager::UnloadTexture("wall_horizontal");
+	TextureManager::UnloadTexture("wall_vertical");
+	TextureManager::UnloadTexture("pellet");
+	TextureManager::UnloadTexture("powerPellet");
+	TextureManager::UnloadTexture("redEnemy");
+	TextureManager::UnloadTexture("pinkEnemy");
+	TextureManager::UnloadTexture("blueEnemy");
+	TextureManager::UnloadTexture("orangeEnemy");
+	TextureManager::UnloadTexture("frightened");
+	TextureManager::UnloadTexture("frightenedWhite");
+	TextureManager::UnloadTexture("player");
+	TextureManager::UnloadTexture("walls");
+
+	// Free the sound effects
+	Mix_FreeChunk(pop);
+	Mix_FreeChunk(powerUp);
 }
 
 GameplayScreen::~GameplayScreen()
@@ -571,6 +604,16 @@ void GameplayScreen::HandleCollisions()
 
 			// Increment the score
 			score += (*iter)->GetValue();
+
+			// Play the appropriate sound clip
+			if ((*iter)->GetType() == PelletNode)
+			{
+				Mix_PlayChannel(-1, pop, 0);
+			}
+			else if ((*iter)->GetType() == PowerPelletNode)
+			{
+				Mix_PlayChannel(-1, powerUp, 0);
+			}
 
 			// Free memory, cleat the list, and break
 			delete (*iter);

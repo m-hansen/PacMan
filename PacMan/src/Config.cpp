@@ -11,6 +11,8 @@ namespace Config
 	int screenWidth = numberOfHorizontalTiles * gridSize; // 224 width with 8x8 tiles
 	int screenHeight = numberOfVerticalTiles * gridSize; // 288 height with 8x8 tiles
 	int highScoreTableCapacity = 10;
+	float sfxVol = 1.0f;
+	float musicVol = 1.0f;
 	bool isFullScreen = false;
 	bool isSoundMuted = false;
 	float joystickDeadZone = 15000.0f;
@@ -30,6 +32,8 @@ bool Config::LoadConfig(std::string& filename)
 	int boardSize = pt.get("config.size", 2);
 	isFullScreen = pt.get("config.fullscreen", false);
 	isSoundMuted = pt.get("config.muted", false);
+	sfxVol = pt.get("config.sfx-volume", 1.0f);
+	musicVol = pt.get("config.music-volume", 1.0f);
 
 	// Update the grid and window size
 	gridSize = boardSize * GRID_SIZE_MULTIPLIER; // use increments of 8
@@ -47,6 +51,8 @@ bool Config::SaveConfig(std::string& filename)
 	pt.get("config.size", gridSize / GRID_SIZE_MULTIPLIER);
 	pt.get("config.fullscreen", isFullScreen);
 	pt.get("config.muted", isSoundMuted);
+	pt.get("config.sfx-volume", sfxVol);
+	pt.get("config.music-volume", musicVol);
 
 	write_xml(filename, pt);
 

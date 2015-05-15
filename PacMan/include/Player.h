@@ -38,6 +38,12 @@ public:
 	bool HasDeathAnimationFinished() { return hasDeathAnimationFinished; }
 	bool IsAlive() { return isAlive; }
 private:
+	// Used to hold the starting index for the player's
+	// movement animations
+	enum MovementFrameDirectionIndex {
+		RightFrameIndex = 0, LeftFrameIndex = 2,
+		UpFrameIndex = 4, DownFrameIndex = 6
+	};
 	void ConsumeQueuedMovement();
 	bool isAlive;						// true if the player is still alive
 	bool isVisible;						// true if the player is actively being rendered

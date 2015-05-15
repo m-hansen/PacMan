@@ -3,4 +3,6 @@
   <size>2</size>
   <fullscreen>false</fullscreen>
   <muted>false</muted>
+  <sfx-volume>0.25</sfx-volume>
+  <music-volume>0.25</music-volume>
 </config>

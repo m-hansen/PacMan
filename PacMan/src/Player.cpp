@@ -9,7 +9,6 @@ Player::Player()
 	currentNode = NULL;
 	previousNode = NULL;
 	isAlignedWithTile = false;
-	//texture = TextureManager::GetTexture("pacmanRight");
 	texture = TextureManager::GetTexture("player");
 	isAlive = true;
 	isMoving = true;
@@ -98,6 +97,7 @@ void Player::ResetPosition()
 
 	animationFrame = 0;
 	directionFrameIndex = 0;
+	ClipSpriteSheets();
 	animationTimer.Start();
 	currentClip = &movementAnimation[animationFrame];
 
@@ -166,23 +166,19 @@ void Player::Update(Uint32 deltaT)
 		{
 		case Up:
 			position.y -= speed * deltaT;
-			//texture = TextureManager::GetTexture("pacmanUp");
-			directionFrameIndex = 4;
+			directionFrameIndex = UpFrameIndex;
 			break;
 		case Down:
 			position.y += speed * deltaT;
-			//texture = TextureManager::GetTexture("pacmanDown");
-			directionFrameIndex = 6;
+			directionFrameIndex = DownFrameIndex;
 			break;
 		case Left:
 			position.x -= speed * deltaT;
-			//texture = TextureManager::GetTexture("pacmanLeft");
-			directionFrameIndex = 2;
+			directionFrameIndex = LeftFrameIndex;
 			break;
 		case Right:
 			position.x += speed * deltaT;
-			//texture = TextureManager::GetTexture("pacmanRight");
-			directionFrameIndex = 0;
+			directionFrameIndex = RightFrameIndex;
 			break;
 		case None:
 			break;

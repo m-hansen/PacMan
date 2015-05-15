@@ -22,6 +22,8 @@ namespace Config
 	extern int screenWidth;
 	extern int screenHeight;
 	extern int highScoreTableCapacity;
+	extern float sfxVol;
+	extern float musicVol;
 	extern bool isFullScreen;
 	extern bool isSoundMuted;
 	extern float joystickDeadZone;

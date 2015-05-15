@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include "Config.h"
 #include "TextureManager.h"
 #include "Player.h"

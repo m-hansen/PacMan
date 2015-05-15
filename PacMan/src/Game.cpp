@@ -20,6 +20,11 @@ Game::~Game()
 	renderer = NULL;
 	SDL_DestroyWindow(window);
 	window = NULL;
+
+	// Quit SDL and its subsystems
+	Mix_Quit();
+	IMG_Quit();
+	SDL_Quit();
 }
 
 bool Game::Initialize()
@@ -39,6 +44,13 @@ bool Game::Initialize()
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
 	{
 		printf("SDL could not initailize! SDL_Error: %s\n", SDL_GetError());
+		return false;
+	}
+
+	// Initialize SDL_mixer
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 		return false;
 	}
 	

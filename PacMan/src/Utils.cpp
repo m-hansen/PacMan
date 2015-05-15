@@ -97,3 +97,12 @@ void Utils::Decrypt(std::string& data, std::string key)
 		data[i] -= key[i % key.size()];
 	}
 }
+
+void Utils::LoadMixChunk(Mix_Chunk** chunk, std::string pathWithExtension)
+{
+	*chunk = Mix_LoadWAV(pathWithExtension.c_str());
+	if (&chunk == NULL)
+	{
+		printf("Failed to load sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+	}
+}
