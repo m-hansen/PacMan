@@ -87,6 +87,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="src\AnimationManager.cpp" />
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Consumable.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -109,6 +111,8 @@
     <ClCompile Include="src\Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Animation.h" />
+    <ClInclude Include="include\AnimationManager.h" />
     <ClInclude Include="include\Config.h" />
     <ClInclude Include="include\Consumable.h" />
     <ClInclude Include="include\Enumerations\ConsumableTypeEnum.h" />
@@ -148,6 +152,7 @@
     <Image Include="Resources\pellet.png" />
     <Image Include="Resources\pinky.png" />
     <Image Include="Resources\tile.png" />
+    <Image Include="Resources\wall-sprite-sheet.png" />
     <Image Include="Resources\wall.png" />
   </ItemGroup>
   <ItemGroup>

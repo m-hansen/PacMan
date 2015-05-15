@@ -20,20 +20,25 @@ void GameplayScreen::LoadContent(SDL_Renderer* renderer)
 {
 	// Load textures
 	TextureManager::LoadTexture(renderer, "tile", "Resources/tile.png");
-	TextureManager::LoadTexture(renderer, "pacmanRight", "Resources/pac-man_R.png");
-	TextureManager::LoadTexture(renderer, "pacmanLeft", "Resources/pac-man_L.png");
-	TextureManager::LoadTexture(renderer, "pacmanUp", "Resources/pac-man_U.png");
-	TextureManager::LoadTexture(renderer, "pacmanDown", "Resources/pac-man_D.png");
-	TextureManager::LoadTexture(renderer, "pacmanClosed", "Resources/pac-man_closed.png");
+	TextureManager::LoadTexture(renderer, "playerLives", "Resources/player-lives.png");
 	TextureManager::LoadTexture(renderer, "wall", "Resources/wall.png");
+	TextureManager::LoadTexture(renderer, "wall_top_left", "Resources/wall_top_left_corner.png");
+	TextureManager::LoadTexture(renderer, "wall_top_right", "Resources/wall_top_right_corner.png");
+	TextureManager::LoadTexture(renderer, "wall_bottom_left", "Resources/wall_bottom_left_corner.png");
+	TextureManager::LoadTexture(renderer, "wall_bottom_right", "Resources/wall_bottom_right_corner.png");
+	TextureManager::LoadTexture(renderer, "wall_horizontal", "Resources/wall_horizontal.png");
+	TextureManager::LoadTexture(renderer, "wall_vertical", "Resources/wall_vertical.png");
 	TextureManager::LoadTexture(renderer, "pellet", "Resources/pellet.png");
 	TextureManager::LoadTexture(renderer, "powerPellet", "Resources/power-pellet.png");
-	TextureManager::LoadTexture(renderer, "blinky", "Resources/blinky.png");
-	TextureManager::LoadTexture(renderer, "pinky", "Resources/pinky.png");
-	TextureManager::LoadTexture(renderer, "inky", "Resources/inky.png");
-	TextureManager::LoadTexture(renderer, "clyde", "Resources/clyde.png");
+	TextureManager::LoadTexture(renderer, "redEnemy", "Resources/red-enemy.png");
+	TextureManager::LoadTexture(renderer, "pinkEnemy", "Resources/pink-enemy.png");
+	TextureManager::LoadTexture(renderer, "blueEnemy", "Resources/blue-enemy.png");
+	TextureManager::LoadTexture(renderer, "orangeEnemy", "Resources/orange-enemy.png");
 	TextureManager::LoadTexture(renderer, "frightened", "Resources/frightened-ghost.png");
 	TextureManager::LoadTexture(renderer, "frightenedWhite", "Resources/frightened-white.png");
+	// Load in sprite sheets
+	TextureManager::LoadTexture(renderer, "player", "Resources/player-sprite-sheet.png");
+	TextureManager::LoadTexture(renderer, "walls", "Resources/wall-sprite-sheet.png");
 }
 
 void GameplayScreen::Initialize(Game* game)
@@ -41,7 +46,15 @@ void GameplayScreen::Initialize(Game* game)
 	// Load all content first
 	LoadContent(game->renderer);
 	arialFont = TTF_OpenFont("Resources/Fonts/ARIAL.TTF", Config::gridSize);
-	SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
+	
+	const int WR = 0, WG = 150, WB = 255; // wall red, green, and blue
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), WR, WG, WB);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_top_left"), WR, WG, WB);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_top_right"), WR, WG, WB);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_bottom_left"), WR, WG, WB);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_bottom_right"), WR, WG, WB);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_horizontal"), WR, WG, WB);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_vertical"), WR, WG, WB);
 
 	nodeDisplayFlags[ID] = false;
 	nodeDisplayFlags[G] = false;
@@ -59,8 +72,8 @@ void GameplayScreen::Initialize(Game* game)
 	isDebugging = false;
 	isPaused = false;
 	isGameOver = false;
-	livesTexture = TextureManager::GetTexture("pacmanLeft");
-	livesRemaining = 0;
+	livesTexture = TextureManager::GetTexture("playerLives");
+	livesRemaining = 2;
 	// livesLeftRect.x intentionally not set here
 	livesLeftRect.y = Config::gridSize * 32; // 32 is the vertical node offset
 	livesLeftRect.w = Config::gridSize;
@@ -76,6 +89,7 @@ void GameplayScreen::Initialize(Game* game)
 	
 	// Construct the level list
 	std::vector<std::string> levelList;
+	levelList.push_back("Level1-New.txt");
 	levelList.push_back("Level1Quick.txt");
 	levelList.push_back("Level1.txt");
 	levelList.push_back("PowerPelletLevel.txt");
@@ -239,12 +253,29 @@ void GameplayScreen::Update(Game* game)
 	if (isPaused || isGameOver)
 		return;
 
+	if (levelManager->GetPlayer()->HasDeathAnimationFinished())
+	{
+		// Check if we are out of lives
+		if (livesRemaining <= 0)
+		{
+			fprintf(stdout, "Game Over!\n");
+			GameEnd(0);
+			return;
+		}
+		else
+		{
+			levelManager->ResetAgentPositions();
+		}
+	}
+
+	
+
 	// Check if the player has run out of lives
-	if (!levelManager->GetPlayer()->IsAlive())
+	/*if (!levelManager->GetPlayer()->IsAlive())
 	{
 		GameEnd(0);
 		return;
-	}
+	}*/
 
 	// Check for victory condition
 	if (levelManager->GetPellets().empty())
@@ -356,13 +387,16 @@ void GameplayScreen::RenderGUI(SDL_Renderer* renderer)
 
 	if (isLevelOver)
 	{
+		const int VERT_OFFSET = 7;
 		SDL_Rect endGameRect;
-		endGameRect.w = Config::gridSize * 10;
-		endGameRect.h = Config::gridSize * 2;
+		endGameRect.w = Config::gridSize * 6;
+		endGameRect.h = Config::gridSize * 1.2;
 		endGameRect.x = Config::screenWidth / 2 - endGameRect.w / 2;
-		endGameRect.y = Config::screenHeight / 2 - endGameRect.h / 2;
+		endGameRect.y = Config::screenHeight / 2 - endGameRect.h / 2 - VERT_OFFSET;
 
+		TTF_SetFontStyle(arialFont, TTF_STYLE_BOLD);
 		Utils::RenderText(renderer, arialFont, endGameMessage, SDL_Color{ 255, 255, 255 }, &endGameRect);
+		TTF_SetFontStyle(arialFont, TTF_STYLE_NORMAL);
 	}
 }
 
@@ -566,26 +600,25 @@ void GameplayScreen::HandleCollisions()
 				}
 				else
 				{
-					// Player is killed
-
-					// TODO play death animation
-					livesRemaining--;
-
-					// Check if we are out of lives
-					if (livesRemaining <= 0)
-					{
-						fprintf(stdout, "Game Over!\n");
-						levelManager->GetPlayer()->Kill();
-					}
-					else
-					{
-						levelManager->ResetAgentPositions();
-					}
+					PlayerDeath();
 				}
 			}
 		}
 	}
+}
 
+void GameplayScreen::PlayerDeath()
+{
+	// Player is killed
+	levelManager->GetPlayer()->Kill();
+
+	// Hide AI while player dies
+	for (int i = 0; i < levelManager->GetGhosts().size(); i++)
+	{
+		levelManager->GetGhosts()[i]->SetVisible(false);
+	}
+
+	livesRemaining--;
 }
 
 void GameplayScreen::GameEnd(int condition)
@@ -601,8 +634,8 @@ void GameplayScreen::GameEnd(int condition)
 	}
 	else
 	{
-		// Player died!
-
+		// Intentionally left blank
+		// Player died before completing the game
 	}
 
 	// Display the high score table

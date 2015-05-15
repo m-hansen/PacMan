@@ -38,6 +38,7 @@ public:
 	Node* GetPreviousNode();
 	//void SetPosition(Node* node);
 	bool IsFrightened() { return isFrightened; }
+	void SetVisible(const bool& visible) { isVisible = visible; }
 	void SetPreviousDirection(DirectionEnum dir);
 	static GhostStateEnum CurrentState() { return state; }
 	static char* CurrentStateName();
@@ -76,4 +77,5 @@ private:
 	bool isFrightened;
 	std::vector<Node*> pathStack;
 	Pathfinder* pf;
+	bool isVisible;
 };

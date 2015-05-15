@@ -5,6 +5,7 @@ Wall::Wall(Node* node)
 	int boundingSize = Config::gridSize - 2; // makes the collision rectangle slightly smaller
 	int renderingSize = Config::gridSize;
 
+	texture = TextureManager::GetTexture("wall");
 	location = node;
 
 	// Set the bounding rectangle
@@ -26,7 +27,7 @@ Wall::~Wall()
 
 void Wall::Render(SDL_Renderer* renderer)
 {
-	SDL_RenderCopy(renderer, TextureManager::GetTexture("wall"), NULL, &renderRect);
+	SDL_RenderCopy(renderer, texture, NULL, &renderRect);
 }
 
 SDL_Rect* Wall::GetBoundingRect()

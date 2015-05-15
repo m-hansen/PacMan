@@ -1,20 +1,32 @@
 #include "Player.h"
 
 Player::Player()
+	: spawnPoint({ 
+		112.0f * (Config::gridSize / Config::GRID_SIZE_MULTIPLIER), 
+		188.0f * (Config::gridSize / Config::GRID_SIZE_MULTIPLIER)
+	})
 {
 	currentNode = NULL;
 	previousNode = NULL;
 	isAlignedWithTile = false;
-	texture = TextureManager::GetTexture("pacmanRight");
+	//texture = TextureManager::GetTexture("pacmanRight");
+	texture = TextureManager::GetTexture("player");
 	isAlive = true;
 	isMoving = true;
 	isVisible = true;
+	hasDeathAnimationFinished = false;
 	queuedDirection = DirectionEnum::None;
 	boundingRect.w = 1;
 	boundingRect.h = 1;
 	spriteRect.w = Config::gridSize;
 	spriteRect.h = Config::gridSize;
 	speed = 0.05f * (Config::gridSize / 8); // adjust speed based on grid size
+	sprite = new Sprite(texture, spawnPoint.x, spawnPoint.y, 8, 8);
+	animationFrame = 0;
+	directionFrameIndex = 0;
+	ClipSpriteSheets();
+	animationTimer.Start();
+	currentClip = &movementAnimation[animationFrame];
 }
 
 Player::~Player()
@@ -22,6 +34,39 @@ Player::~Player()
 	// Do not free the texture here!
 	// The TextureManager will handle this
 	texture = NULL;
+
+	delete (sprite);
+	sprite = NULL;
+}
+
+// Deconstruct the sprite sheet into individual clips
+void Player::ClipSpriteSheets()
+{
+	const int SPRITE_WIDTH = 16;
+	const int SPRITE_HEIGHT = 16;
+
+	// Set the sprite clips for the player's movement
+	const int INNER_RANGE = 2;
+	for (int i = 0; i < MOVEMENT_FRAMES / INNER_RANGE; i++)
+	{
+		for (int j = 0; j < INNER_RANGE; j++)
+		{
+			movementAnimation[i * INNER_RANGE + j].x = SPRITE_WIDTH * j;
+			movementAnimation[i * INNER_RANGE + j].y = SPRITE_HEIGHT * i;
+			movementAnimation[i * INNER_RANGE + j].w = SPRITE_WIDTH;
+			movementAnimation[i * INNER_RANGE + j].h = SPRITE_HEIGHT;
+		}
+	}
+
+	// Player death animation
+	const int HORIZ_FRAME_OFFSET = 2;
+	for (int i = 0; i < DEATH_FRAMES; i++)
+	{
+		deathAnimation[i].x = SPRITE_WIDTH * (i + HORIZ_FRAME_OFFSET);
+		deathAnimation[i].y = 0;
+		deathAnimation[i].w = SPRITE_WIDTH;
+		deathAnimation[i].h = SPRITE_HEIGHT;
+	}
 }
 
 void Player::ResetPosition()
@@ -50,12 +95,34 @@ void Player::ResetPosition()
 
 	// Clear the queued direction
 	queuedDirection = DirectionEnum::None;
+
+	animationFrame = 0;
+	directionFrameIndex = 0;
+	animationTimer.Start();
+	currentClip = &movementAnimation[animationFrame];
+
+	isAlive = true;
+	isVisible = true;
+	hasDeathAnimationFinished = false;
 }
 
 void Player::Update(Uint32 deltaT)
 {
-	// Do not update is player has run out of lives
-	if (!isAlive) return;
+	// Only update death animation if player has been killed
+	if (!isAlive)
+	{
+		// Play the death animation
+		currentClip = &deathAnimation[animationFrame];
+		animationFrame++;
+		if (animationFrame > DEATH_FRAMES)
+		{
+			// Death animation is over
+			animationFrame = 0;
+			isVisible = false;
+			hasDeathAnimationFinished = true;
+		}
+		return;
+	}
 
 	// Check to see if we are centered at a node
 	if (currentNode != NULL)
@@ -99,23 +166,29 @@ void Player::Update(Uint32 deltaT)
 		{
 		case Up:
 			position.y -= speed * deltaT;
-			texture = TextureManager::GetTexture("pacmanUp");
+			//texture = TextureManager::GetTexture("pacmanUp");
+			directionFrameIndex = 4;
 			break;
 		case Down:
 			position.y += speed * deltaT;
-			texture = TextureManager::GetTexture("pacmanDown");
+			//texture = TextureManager::GetTexture("pacmanDown");
+			directionFrameIndex = 6;
 			break;
 		case Left:
 			position.x -= speed * deltaT;
-			texture = TextureManager::GetTexture("pacmanLeft");
+			//texture = TextureManager::GetTexture("pacmanLeft");
+			directionFrameIndex = 2;
 			break;
 		case Right:
 			position.x += speed * deltaT;
-			texture = TextureManager::GetTexture("pacmanRight");
+			//texture = TextureManager::GetTexture("pacmanRight");
+			directionFrameIndex = 0;
 			break;
 		case None:
 			break;
 		}
+		if (direction != previousDirection)
+			animationFrame = directionFrameIndex;
 	}
 
 	// Update the bounding rectangle
@@ -123,6 +196,27 @@ void Player::Update(Uint32 deltaT)
 	boundingRect.y = position.y;
 	spriteRect.x = position.x - (Config::gridSize / 2);
 	spriteRect.y = position.y - (Config::gridSize / 2);
+
+	// Play animations
+	AnimateMovement();
+}
+
+void Player::AnimateMovement()
+{
+	// Update the animation frames
+	const int TIME_BETWEEN_FRAMES = 60;
+
+	if (animationTimer.GetTicks() >	TIME_BETWEEN_FRAMES)
+	{
+		currentClip = &movementAnimation[animationFrame];
+		animationTimer.Start(); // reset the timer
+		animationFrame++;
+	}
+
+	if (animationFrame > (directionFrameIndex + 1))
+	{
+		animationFrame = directionFrameIndex; // previously 0
+	}
 }
 
 void Player::UpdateNodes(Node* newNode)
@@ -136,13 +230,14 @@ void Player::Render(SDL_Renderer* renderer)
 	// Don't render if object is not visible
 	if (!isVisible) return;
 
-	SDL_RenderCopy(renderer, texture, NULL, &spriteRect);
+	//sprite->Render(renderer);
+	SDL_RenderCopy(renderer, texture, currentClip, &spriteRect);
 }
 
 void Player::Kill()
 {
+	animationFrame = 0; // reset the animation frame
 	isAlive = false;
-	isVisible = false;
 }
 
 void Player::ConsumeQueuedMovement()

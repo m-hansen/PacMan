@@ -2,8 +2,9 @@
 #include "SDL.h"
 #include "Utils.h"
 #include "Config.h"
+#include "IRenderable.h"
 
-class Sprite
+class Sprite : public IRenderable
 {
 public:
 	Sprite(SDL_Texture* t, float x, float y, float w, float h);

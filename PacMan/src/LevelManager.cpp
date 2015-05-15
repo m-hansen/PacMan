@@ -29,19 +29,19 @@ void LevelManager::InitializeLevel()
 	// Load the AI
 	// TODO update scatter node locations
 	ghostList.push_back(
-		new Ghost("blinky", 12.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Left)
+		new Ghost("redEnemy", 12.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Left)
 		);
 
 	ghostList.push_back(
-		new Ghost("pinky", 15.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Right)
+		new Ghost("pinkEnemy", 15.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Right)
 		);
 
 	ghostList.push_back(
-		new Ghost("inky", 9.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Down)
+		new Ghost("blueEnemy", 9.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Down)
 		);
 
 	ghostList.push_back(
-		new Ghost("clyde", 18.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Down)
+		new Ghost("orangeEnemy", 18.0f, 5.0f, pathfinder, legalPlayingNodes[0], DirectionEnum::Down)
 		);
 
 	// Start the timer
@@ -136,7 +136,7 @@ void LevelManager::LoadLevelData(std::string levelData)
 				level->AddNode(node);
 				wallList.push_back(new Sprite(
 					TextureManager::GetTexture("wall"), WALL_OFFSET + (node->GetPosition().x),
-					WALL_OFFSET  +(node->GetPosition().y), Config::gridSize, Config::gridSize));
+					WALL_OFFSET + (node->GetPosition().y), Config::gridSize, Config::gridSize));
 				break;
 			case NodeTypeEnum::TopLeftCorner:
 				// Create on the heap
@@ -231,6 +231,13 @@ void LevelManager::Update(Uint32 deltaTime)
 	// Update the AI
 	for (int i = 0; i < ghostList.size(); i++)
 		ghostList[i]->Update(deltaTime);
+
+	// Update the power pellet animations
+	for (int i = 0; i < pelletList.size(); i++)
+	{
+		if (pelletList[i]->GetType() == PowerPelletNode)
+			pelletList[i]->PlayBlinkAnimation(500); // parameter is the blink rate in ms
+	}
 }
 
 void LevelManager::FindEdges()
@@ -332,18 +339,39 @@ bool LevelManager::LevelCompletedAnimation()
 	const int NUM_FLASHES = 7;
 	float  flashRate = END_LEVEL_PAUSE_LEN / NUM_FLASHES;
 
+	int r = 0, g = 0, b = 150; // wall red, green, and blue
 	if (endLevelTimer.GetTicks() > flashRate * 6)
-		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
+	{
+		r = 0; g = 0; b = 150;
+	}
 	else if (endLevelTimer.GetTicks() > flashRate * 5)
-		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 255, 255, 255);
+	{
+		r = 255; g = 255; b = 255;
+	}
 	else if (endLevelTimer.GetTicks() > flashRate * 4)
-		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
+	{
+		r = 0; g = 0; b = 150;
+	}
 	else if (endLevelTimer.GetTicks() > flashRate * 3)
-		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 255, 255, 255);
+	{
+		r = 255; g = 255; b = 255;
+	}
 	else if (endLevelTimer.GetTicks() > flashRate * 2)
-		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
+	{
+		r = 0; g = 0; b = 150;
+	}
 	else if (endLevelTimer.GetTicks() > flashRate)
-		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 255, 255, 255);
+	{
+		r = 255; g = 255; b = 255;
+	}
+
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), r, g, b);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_top_left"), r, g, b);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_top_right"), r, g, b);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_bottom_left"), r, g, b);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_bottom_right"), r, g, b);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_horizontal"), r, g, b);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_vertical"), r, g, b);
 
 	if (endLevelTimer.GetTicks() > END_LEVEL_PAUSE_LEN)
 	{

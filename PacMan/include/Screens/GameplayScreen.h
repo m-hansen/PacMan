@@ -29,6 +29,7 @@ public:
 	static GameplayScreen* Instance() { return &gameplayScreen; }
 private:
 	void LoadContent(SDL_Renderer* renderer);
+	void PlayerDeath();
 	void GameEnd(int condition);
 	static GameplayScreen gameplayScreen;
 	//Player* player;

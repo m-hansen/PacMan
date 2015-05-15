@@ -10,6 +10,7 @@ Ghost::Ghost(std::string textureName, float spawnX, float spawnY, Pathfinder* pf
 
 	texture = TextureManager::GetTexture(textureName.c_str());
 	frightenedTexture = TextureManager::GetTexture("frightened");
+	isVisible = true;
 
 	// Set the location and size
 	spawnPoint = { spawnX * Config::gridSize, spawnY * Config::gridSize};
@@ -72,6 +73,8 @@ void Ghost::Respawn()
 	// The ghost should never be frightened after a respawn
 	// even if the overall state is frightened
 	LeaveFrightenedState();
+
+	isVisible = true;
 }
 
 void Ghost::FollowPath()
@@ -420,6 +423,8 @@ void Ghost::UpdateNodes(Node* newNode)
 
 void Ghost::Render(SDL_Renderer* renderer)
 {
+	if (!isVisible)	return;
+
 	if (isFrightened)
 	{
 		SDL_RenderCopy(renderer, frightenedTexture, NULL, &boundingRect);
