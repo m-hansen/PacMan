@@ -106,3 +106,12 @@ void Utils::LoadMixChunk(Mix_Chunk** chunk, std::string pathWithExtension)
 		printf("Failed to load sound effect! SDL_mixer Error: %s\n", Mix_GetError());
 	}
 }
+
+void Utils::LoadMusic(Mix_Music** music, std::string pathWithExtension)
+{
+	*music = Mix_LoadMUS(pathWithExtension.c_str());
+	if (&music == NULL)
+	{
+		printf("Failed to load sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+	}
+}

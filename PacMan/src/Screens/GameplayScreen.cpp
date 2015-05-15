@@ -41,8 +41,12 @@ void GameplayScreen::LoadContent(SDL_Renderer* renderer)
 	TextureManager::LoadTexture(renderer, "walls", "Resources/wall-sprite-sheet.png");
 
 	// Load audio
+	Utils::LoadMusic(&background, "Resources/Audio/background.ogg");
+	Utils::LoadMusic(&backgroundPower, "Resources/Audio/background-power.ogg");
+	Utils::LoadMixChunk(&eatEnemy, "Resources/Audio/eat-enemy.ogg");
 	Utils::LoadMixChunk(&pop, "Resources/Audio/pop.ogg");
 	Utils::LoadMixChunk(&powerUp, "Resources/Audio/power-up.ogg");
+	Utils::LoadMixChunk(&death, "Resources/Audio/death.ogg");
 }
 
 void GameplayScreen::Initialize(Game* game)
@@ -50,15 +54,21 @@ void GameplayScreen::Initialize(Game* game)
 	// Load all content first
 	LoadContent(game->renderer);
 	arialFont = TTF_OpenFont("Resources/Fonts/ARIAL.TTF", Config::gridSize);
-	
-	const int WR = 0, WG = 150, WB = 255; // wall red, green, and blue
-	SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), WR, WG, WB);
-	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_top_left"), WR, WG, WB);
-	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_top_right"), WR, WG, WB);
-	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_bottom_left"), WR, WG, WB);
-	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_bottom_right"), WR, WG, WB);
-	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_horizontal"), WR, WG, WB);
-	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_vertical"), WR, WG, WB);
+
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 
+		Config::boardColor.r, Config::boardColor.g, Config::boardColor.b);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_top_left"), 
+		Config::boardColor.r, Config::boardColor.g, Config::boardColor.b);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_top_right"), 
+		Config::boardColor.r, Config::boardColor.g, Config::boardColor.b);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_bottom_left"),
+		Config::boardColor.r, Config::boardColor.g, Config::boardColor.b);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_bottom_right"), 
+		Config::boardColor.r, Config::boardColor.g, Config::boardColor.b);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_horizontal"), 
+		Config::boardColor.r, Config::boardColor.g, Config::boardColor.b);
+	SDL_SetTextureColorMod(TextureManager::GetTexture("wall_vertical"), 
+		Config::boardColor.r, Config::boardColor.g, Config::boardColor.b);
 
 	nodeDisplayFlags[ID] = false;
 	nodeDisplayFlags[G] = false;
@@ -76,6 +86,7 @@ void GameplayScreen::Initialize(Game* game)
 	isDebugging = false;
 	isPaused = false;
 	isGameOver = false;
+	isPowerUpState = false;
 	livesTexture = TextureManager::GetTexture("playerLives");
 	livesRemaining = 2;
 	// livesLeftRect.x intentionally not set here
@@ -107,8 +118,14 @@ void GameplayScreen::Initialize(Game* game)
 	//pathfinder = new Pathfinder(levelManager->GetLegalNodes());
 
 	// Adjust the sound based on settings
+	Mix_VolumeMusic(MIX_MAX_VOLUME * Config::musicVol);
+	Mix_VolumeChunk(eatEnemy, MIX_MAX_VOLUME * Config::sfxVol);
 	Mix_VolumeChunk(pop, MIX_MAX_VOLUME * Config::sfxVol);
 	Mix_VolumeChunk(powerUp, MIX_MAX_VOLUME * Config::sfxVol);
+	Mix_VolumeChunk(death, MIX_MAX_VOLUME * Config::sfxVol);
+
+	// Play the background music
+	Mix_PlayMusic(background, -1); // -1 means loop until stopped
 }
 
 void GameplayScreen::Cleanup(Game* game)
@@ -143,8 +160,12 @@ void GameplayScreen::Cleanup(Game* game)
 	TextureManager::UnloadTexture("walls");
 
 	// Free the sound effects
+	Mix_FreeMusic(background);
+	Mix_FreeMusic(backgroundPower);
+	Mix_FreeChunk(eatEnemy);
 	Mix_FreeChunk(pop);
 	Mix_FreeChunk(powerUp);
+	Mix_FreeChunk(death);
 }
 
 GameplayScreen::~GameplayScreen()
@@ -286,6 +307,16 @@ void GameplayScreen::Update(Game* game)
 	if (isPaused || isGameOver)
 		return;
 
+	if (isPowerUpState)
+	{
+		if (Ghost::CurrentState() != Frightened)
+		{
+			// Return to standard background music
+			isPowerUpState = false;
+			Mix_PlayMusic(background, -1);
+		}
+	}
+
 	if (levelManager->GetPlayer()->HasDeathAnimationFinished())
 	{
 		// Check if we are out of lives
@@ -300,15 +331,6 @@ void GameplayScreen::Update(Game* game)
 			levelManager->ResetAgentPositions();
 		}
 	}
-
-	
-
-	// Check if the player has run out of lives
-	/*if (!levelManager->GetPlayer()->IsAlive())
-	{
-		GameEnd(0);
-		return;
-	}*/
 
 	// Check for victory condition
 	if (levelManager->GetPellets().empty())
@@ -599,6 +621,8 @@ void GameplayScreen::HandleCollisions()
 					(*iter)->ReverseDirection();
 					(*iter)->EnterFrightenedState(0.55f);
 					Ghost::ChangeState(GhostStateEnum::Frightened);
+					Mix_PlayMusic(backgroundPower, -1);
+					isPowerUpState = true;
 				}
 			}
 
@@ -640,6 +664,7 @@ void GameplayScreen::HandleCollisions()
 					// Eat the ghost
 					(*iter)->Respawn();
 					score += 500; // TODO adjust this 
+					Mix_PlayChannel(-1, eatEnemy, 0);
 				}
 				else
 				{
@@ -654,6 +679,7 @@ void GameplayScreen::PlayerDeath()
 {
 	// Player is killed
 	levelManager->GetPlayer()->Kill();
+	Mix_PlayChannel(-1, death, 0);
 
 	// Hide AI while player dies
 	for (int i = 0; i < levelManager->GetGhosts().size(); i++)

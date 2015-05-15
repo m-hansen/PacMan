@@ -1,4 +1,5 @@
 #pragma once
+#include <SDL.h>
 #include <string>
 #include "boost/property_tree/ptree.hpp"
 #include "boost/property_tree/xml_parser.hpp"
@@ -27,6 +28,7 @@ namespace Config
 	extern bool isFullScreen;
 	extern bool isSoundMuted;
 	extern float joystickDeadZone;
+	extern SDL_Color boardColor;
 
 	// Internal constants
 	const int GRID_SIZE_MULTIPLIER = 8;

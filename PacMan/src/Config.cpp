@@ -16,6 +16,7 @@ namespace Config
 	bool isFullScreen = false;
 	bool isSoundMuted = false;
 	float joystickDeadZone = 15000.0f;
+	SDL_Color boardColor = { 0, 150, 255 };
 }
 
 bool Config::LoadConfig(std::string& filename)

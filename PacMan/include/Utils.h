@@ -32,6 +32,7 @@ public:
 	static void Encrypt(std::string& data, std::string key);
 	static void Decrypt(std::string& data, std::string key);
 	static void LoadMixChunk(Mix_Chunk** chunk, std::string pathWithExtension);
+	static void LoadMusic(Mix_Music** music, std::string pathWithExtension);
 private:
 	Utils();
 };

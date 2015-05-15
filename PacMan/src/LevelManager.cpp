@@ -339,10 +339,12 @@ bool LevelManager::LevelCompletedAnimation()
 	const int NUM_FLASHES = 7;
 	float  flashRate = END_LEVEL_PAUSE_LEN / NUM_FLASHES;
 
-	int r = 0, g = 0, b = 150; // wall red, green, and blue
+	int r = Config::boardColor.r;
+	int g = Config::boardColor.g;
+	int b = Config::boardColor.b;
 	if (endLevelTimer.GetTicks() > flashRate * 6)
 	{
-		r = 0; g = 0; b = 150;
+		r = Config::boardColor.r, g = Config::boardColor.g, b = Config::boardColor.b;
 	}
 	else if (endLevelTimer.GetTicks() > flashRate * 5)
 	{
@@ -350,7 +352,7 @@ bool LevelManager::LevelCompletedAnimation()
 	}
 	else if (endLevelTimer.GetTicks() > flashRate * 4)
 	{
-		r = 0; g = 0; b = 150;
+		r = Config::boardColor.r, g = Config::boardColor.g, b = Config::boardColor.b;
 	}
 	else if (endLevelTimer.GetTicks() > flashRate * 3)
 	{
@@ -358,7 +360,7 @@ bool LevelManager::LevelCompletedAnimation()
 	}
 	else if (endLevelTimer.GetTicks() > flashRate * 2)
 	{
-		r = 0; g = 0; b = 150;
+		r = Config::boardColor.r, g = Config::boardColor.g, b = Config::boardColor.b;
 	}
 	else if (endLevelTimer.GetTicks() > flashRate)
 	{
@@ -376,7 +378,8 @@ bool LevelManager::LevelCompletedAnimation()
 	if (endLevelTimer.GetTicks() > END_LEVEL_PAUSE_LEN)
 	{
 		endLevelTimer.Stop();
-		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 0, 0, 100);
+		SDL_SetTextureColorMod(TextureManager::GetTexture("wall"), 
+			Config::boardColor.r, Config::boardColor.g, Config::boardColor.b);
 		return true;
 	}
 

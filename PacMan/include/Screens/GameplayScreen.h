@@ -49,6 +49,7 @@ private:
 	bool isDebugging;
 	bool isPaused;
 	bool isGameOver;
+	bool isPowerUpState;
 	TTF_Font* arialFont;
 	SDL_Texture* scoreTexture;
 	SDL_Rect scoreTextRect;
@@ -62,6 +63,10 @@ private:
 	SDL_Rect livesLeftRect;
 
 	// Audio
+	Mix_Music* background;
+	Mix_Music* backgroundPower;
+	Mix_Chunk* eatEnemy;
 	Mix_Chunk* pop;
 	Mix_Chunk* powerUp;
+	Mix_Chunk* death;
 };
